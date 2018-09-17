@@ -150,6 +150,9 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\HomeProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
+        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -209,6 +212,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
     ],
 
 ];
