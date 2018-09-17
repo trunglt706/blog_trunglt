@@ -17,8 +17,8 @@ class TableVisitors extends Migration
             $table->increments('id');
             $table->string('ip');
             $table->string('device');
-            $table->dateTime('last_time_activation');
-            $table->string('accessing_count');
+            $table->dateTime('last_time_activation')->nullable();
+            $table->string('accessing_count')->default(0);
             $table->timestamp('last_time_accessing');
             $table->timestamps();
         });

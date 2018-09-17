@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\danhmucbaiviets;
 use Illuminate\Console\Command;
+use Carbon\Carbon;
 use File;
 
 class runSiteMap extends Command

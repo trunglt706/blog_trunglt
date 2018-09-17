@@ -8,15 +8,6 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * @function go to home page
@@ -53,6 +44,8 @@ class HomeController extends Controller
      */
     public function baiviet($slug) {
         $data = baiviets::where('slug', $slug)->findOrFail();
+        $data->view += 1;
+        $data->save();
         return view('detail-baiviet', compact('data'));
     }
 
