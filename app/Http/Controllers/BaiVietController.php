@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BaiVietRequest;
-use Illuminate\Http\Request;
 use App\baiviets;
 use Image;
 use File;

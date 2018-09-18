@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DanhMucBaiVietRequest;
-use Illuminate\Http\Request;
 use App\danhmucbaiviets;
 use Illuminate\Support\Facades\Log;
 use Exception;

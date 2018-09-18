@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoaiThanhVienRequest;
-use Illuminate\Http\Request;
 use App\loaithanhviens;
 use Illuminate\Support\Facades\Log;
 use Exception;

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GopYRequest;
-use Illuminate\Http\Request;
 use App\gopys;
 use Exception;
 use Illuminate\Support\Facades\Log;

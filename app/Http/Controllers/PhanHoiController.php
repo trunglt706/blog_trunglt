@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PhanHoiRequest;
-use Illuminate\Http\Request;
 use App\phanhois;
 use Illuminate\Support\Facades\Log;
 use Exception;

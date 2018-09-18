@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\baiviets;
 use App\danhmucbaiviets;
+use App\Http\Requests\NhanBaiVietRequest;
+use App\nhanbaiviets;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -65,7 +67,31 @@ class HomeController extends Controller
         return view('search');
     }
 
+    /**
+     * @function post data by ajax
+     * @param Request $request
+     */
     public function searchAjax(Request $request) {
+        $data = baiviets::where("name", "like", "%".$request->key."%")
+                        ->where("keyword", "like", "%".$request->key."%")
+                        ->where("status", 1)
+                        ->orderBy('created_at')->paginate(10);
+        echo $data;
+    }
 
+    /**
+     * @function dang ky nhan bai viet by ajax
+     * @param NhanBaiVietRequest $request
+     */
+    public function dangky_nhanbaiviet(NhanBaiVietRequest $request) {
+        try {
+            $nhan = new nhanbaiviets();
+            $nhan->email = $request->email;
+            $nhan->save();
+            echo ['status' => 'success', 'ms' => 'Đăng ký nhận bài viết thành công'];
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            echo ['status' => 'success', 'ms' => 'Lỗi, đăng ký nhận bài viết thất bại!'];
+        }
     }
 }
