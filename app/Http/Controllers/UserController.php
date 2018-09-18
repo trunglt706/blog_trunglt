@@ -7,6 +7,8 @@ use App\users;
 use Image;
 use File;
 use Auth;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class UserController extends Controller
 {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\researchs;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class ResearchController extends Controller
 {

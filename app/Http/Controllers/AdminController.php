@@ -19,6 +19,8 @@ use Image;
 use File;
 use Auth;
 use Hash;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class AdminController extends Controller
 {
@@ -44,41 +46,51 @@ class AdminController extends Controller
     }
 
     public function updateInforAdmin(UpdateInfoAdminRequest $request) {
-        $ad = new admins();
-        $ad->name = $request->name;
-        $ad->intro = $request->intro;
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $filename = time() . '.' . $avatar->getClientOriginalExtension();
-            $dir = 'uploads/baiviets/';
-            if (!File::exists($dir)) {
-                File::makeDirectory($dir, $mode = 0777, true, true);
+        try {
+            $ad = new admins();
+            $ad->name = $request->name;
+            $ad->intro = $request->intro;
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $filename = time() . '.' . $avatar->getClientOriginalExtension();
+                $dir = 'uploads/baiviets/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($avatar)->save(base_path($path));
+                $ad->avatar = '/' . $path;
             }
-            $path = $dir . $filename;
-            Image::make($avatar)->save(base_path($path));
-            $ad->avatar = '/' . $path;
-        }
-        if ($request->hasFile('background')) {
-            $bg = $request->file('background');
-            $filename = time() . '.' . $bg->getClientOriginalExtension();
-            $dir = 'uploads/baiviets/';
-            if (!File::exists($dir)) {
-                File::makeDirectory($dir, $mode = 0777, true, true);
+            if ($request->hasFile('background')) {
+                $bg = $request->file('background');
+                $filename = time() . '.' . $bg->getClientOriginalExtension();
+                $dir = 'uploads/baiviets/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($bg)->save(base_path($path));
+                $ad->background = '/' . $path;
             }
-            $path = $dir . $filename;
-            Image::make($bg)->save(base_path($path));
-            $ad->background = '/' . $path;
+            $ad->save();
+            return route('admin.info')->with('success', 'Cập nhật thông tin admin thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return route('admin.info')->with('error', 'Lỗi, cập nhật thông tin admin thất bại!');
         }
-        $ad->save();
-        return route('admin.info')->with('success', 'Cập nhật thông tin admin thành công!');
     }
 
     public function updateAccountAdmin(UpdateAccountAdminRequest $request) {
-        $ad = new admins();
-        $ad->email = $request->email;
-        $ad->password = bcrypt($request->password);
-        $ad->save();
-        return route('admin.info')->with('success', 'Cập nhật tài khoản admin thành công!');
+        try {
+            $ad = new admins();
+            $ad->email = $request->email;
+            $ad->password = bcrypt($request->password);
+            $ad->save();
+            return route('admin.info')->with('success', 'Cập nhật tài khoản admin thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return route('admin.info')->with('error', 'Lỗi, cập nhật tài khoản admin thất bại!');
+        }
     }
 
     /**
@@ -252,6 +264,10 @@ class AdminController extends Controller
         return view('admin.user.detail', compact('data'));
     }
 
+    /**
+     * @function logout
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout() {
         Auth::guard('admin')->logout();
         return redirect()->route('home');
