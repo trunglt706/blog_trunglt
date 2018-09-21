@@ -26,9 +26,8 @@ use Exception;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
+    public function __construct() {
+        $this->middleware('auth:admin');
     }
 
     /**
@@ -439,7 +438,10 @@ class AdminController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function logout() {
+        $admin = admins::where(auth()->id)->first();
+        $admin->status = 0;
+        $admin->save();
         Auth::guard('admin')->logout();
-        return redirect()->route('home');
+        return redirect()->route('login')->with('success', 'Đăng xuất hệ thống thành công');
     }
 }

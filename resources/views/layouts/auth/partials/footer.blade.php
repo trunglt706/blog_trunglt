@@ -3,80 +3,38 @@
     <div class="container">
         <div class="row">
             <!-- START FOOTER BOX (About) -->
-            <div class="col-sm-3 footer-box">
+            <div class="col-sm-6 footer-box">
                 <div class="about-inner">
                     <img src="/images/logo-white.png" class="img-responsive" alt="">
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy </p>
+                    <p>Những bài viết của tôi gắn liền với cuộc đời tôi và cuộc sống xung quang tôi</p>
                     <ul>
-                        <li><i class="ti-location-arrow"></i>1234 Heaven Stress, Beverly Hill.</li>
-                        <li><i class="ti-mobile"></i>(800) 123 456 789</li>
-                        <li><i class="ti-email"></i>Contact@erentheme.com</li>
+                        <li><i class="ti-location-arrow"></i>Hoàng Văn Thụ, Q. Tân Bình, TP. Hồ Chí Minh</li>
+                        <li><i class="ti-mobile"></i>(+84)1677 300 950</li>
+                        <li><i class="ti-email"></i>lamthanhtrung706@gmail.com</li>
                     </ul>
                 </div>
             </div>
             <!--  END OF /. FOOTER BOX (About) -->
-            <!-- START FOOTER BOX (Twitter feeds) -->
-            <div class="col-sm-3 footer-box">
-                <div class="twitter-inner">
-                    <h3 class="wiget-title">twitter feeds</h3>
-                    <ul class="margin-top-60">
-                        <li>Typi non habent claritatem insitam est usus legent is iis qui facit claritatem. Investigatione <a href="https://t.co/erenthemeGHTQ">https://t.co/erenthemeGHTQ</a>
-                            <span><i class="ti-twitter"></i>12 days ago</span>
-                        </li>
-                        <li>Typi non habent claritatem insitam est usus legent is <a href="https://t.co/erenthemeGHTQ">https://t.co/erenthemeGHTQ</a>
-                            <span><i class="ti-twitter"></i>10 days ago</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <!-- END OF /. FOOTER BOX (Twitter feeds) -->
             <!-- START FOOTER BOX (Category) -->
-            <div class="col-sm-2 footer-box">
-                <h3 class="wiget-title">Category</h3>
-                <ul class="menu-services">
-                    <li><a href="http://inews.uiart.io/inews_v1.0/index.html#">Business</a></li>
-                    <li><a href="http://inews.uiart.io/inews_v1.0/index.html#">LifeStyle</a></li>
-                    <li><a href="http://inews.uiart.io/inews_v1.0/index.html#">Technology</a></li>
-                    <li><a href="http://inews.uiart.io/inews_v1.0/index.html#">Culture</a></li>
-                    <li><a href="http://inews.uiart.io/inews_v1.0/index.html#">Entertainment</a></li>
-                </ul>
+            <div class="col-sm-3 footer-box hidden-xs">
+                <h3 class="wiget-title">Danh mục bài viết</h3>
+                @if(!is_null($data['danhmuc']))
+                    <ul class="menu-services">
+                        @foreach($data['danhmuc'] as $dmuc)
+                            <li><a href="{{route('danhmuc.baiviet', ['slug' => $dmuc->slug])}}">{{$dmuc->name}}</a></li>
+                        @endforeach
+                    </ul>
+                @endif
             </div>
             <!-- END OF /. FOOTER BOX (Category) -->
             <!-- START FOOTER BOX (Recent Post) -->
-            <div class="col-sm-4 footer-box">
-                <h3 class="wiget-title">Recent Post</h3>
+            <div class="col-sm-3 footer-box hidden-xs">
+                <h3 class="wiget-title">Góp ý của khách</h3>
                 <div class="footer-news-grid">
                     <div class="news-list-item">
-                        <div class="img-wrapper">
-                            <a href="http://inews.uiart.io/inews_v1.0/index.html#" class="thumb">
-                                <img src="/images/115x85-1.jpg" alt="" class="img-responsive">
-                                <div class="link-icon">
-                                    <i class="fa fa-camera"></i>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="post-info-2">
-                            <h5><a href="http://inews.uiart.io/inews_v1.0/index.html#" class="title">Cooking Recipes Anytime And Anywhere</a></h5>
-                            <ul class="authar-info">
-                                <li><i class="ti-timer"></i> May 15, 2016</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="news-list-item">
-                        <div class="img-wrapper">
-                            <a href="http://inews.uiart.io/inews_v1.0/index.html#" class="thumb">
-                                <img src="/images/115x85-2.jpg" alt="" class="img-responsive">
-                                <div class="link-icon">
-                                    <i class="fa fa-camera"></i>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="post-info-2">
-                            <h5><a href="http://inews.uiart.io/inews_v1.0/index.html#" class="title">Cooking Recipes Anytime And Anywhere</a></h5>
-                            <ul class="authar-info">
-                                <li><i class="ti-timer"></i> May 15, 2016</li>
-                            </ul>
-                        </div>
+                        <textarea rows="3" class="form-control" placeholder="Góp ý website"></textarea>
+                        <br/>
+                        <button class="btn btn-danger" type="submit">Gửi</button>
                     </div>
                 </div>
             </div>
@@ -92,7 +50,7 @@
             <div class="col-xs-12 col-sm-5 col-md-5">
                 <div class="copy">Copyright@2018 TrungLT.</div>
             </div>
-            <div class="col-xs-12 col-sm-7 col-md-7">
+            <div class="col-xs-12 col-sm-7 col-md-7 hidden-xs">
                 <ul class="footer-nav">
                     <li>Số lượt truy cập: <b>1.000</b></li>
                 </ul>

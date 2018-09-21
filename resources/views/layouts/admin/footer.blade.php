@@ -1,10 +1,6 @@
-<div class="footer">
-    <div style="border-top: 1px #fff solid">
-        <div class="pull-left">
-            Copyright © 2017 <a href="http://vccimekong.com.vn/">VCCI Cần Thơ</a> &nbsp; Developed by Group T&T
-        </div>
-        <div class="pull-right hide-mobile">
-            Hôm nay: <?php echo date('d/m/Y'); ?>
-        </div>
+<footer class="main-footer">
+    <div class="pull-right hidden-xs">
+        <b>Version</b> 1.0.0
     </div>
-</div>
+    <strong>Copyright &copy; 2018 <a href="https://fb.com/trunglt706">TrungLT</a></strong>
+</footer>

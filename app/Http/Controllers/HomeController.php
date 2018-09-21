@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\baiviets;
 use App\danhmucbaiviets;
+use App\hoidap;
 use App\Http\Requests\NhanBaiVietRequest;
 use App\nhanbaiviets;
+use App\quangcaos;
 use Illuminate\Http\Request;
+use Auth;
+use App\Http\Requests\LoginRequest;
 
 class HomeController extends Controller
 {
@@ -17,7 +21,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        //get 5 lasted news
+        $data['news'] = baiviets::orderBy('created_at')->limit(5)->get();
+        //get news important
+        $data['important'] = baiviets::where('important', 1)->first();
+        //get 2 advs
+        $data['advs'] = quangcaos::orderBy('status', 'asc')->limit(2)->get();
+        return view('home', compact('data'));
     }
 
     /**
@@ -29,13 +39,27 @@ class HomeController extends Controller
     }
 
     /**
+     * @function go to answer and question page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function hoidap() {
+        //Get list hoidap
+        $data['hoidap'] = hoidap::where('status', 1)->orderBy('order', 'asc')->get();
+        return view('hoidap', compact('data'));
+    }
+
+    /**
      * @function get list baiviet
      * @param $slug
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function danhmuc_baiviet($slug) {
-        $dmuc = danhmucbaiviets::where('slug', $slug)->findOrFail();
-        $data = baiviets::where('id_danhmuc', $dmuc->id)->orderBy('created_at')->paginate(10);
+        //Lay chi tiet danh muc bai viet
+        $data['danhmuc'] = danhmucbaiviets::where('slug', $slug)->where('status', 1)->first();
+        //Lay danh sach bai viet cua danh muc
+        $data['list_baiviet'] = baiviets::where('id_danhmuc', $data['danhmuc']->id)->where('status', 1)->orderBy('created_at')->paginate(10);
+        //Lay danh sach 5 bai viet co luot view cao nhat
+        $data['list_view'] = baiviets::where('status', 1)->orderBy('view', 'desc')->limit(5);
         return view('danhmuc-baiviet', compact('data'));
     }
 
@@ -45,7 +69,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function baiviet($slug) {
-        $data = baiviets::where('slug', $slug)->findOrFail();
+        $data = baiviets::where('slug', $slug)->first();
         $data->view += 1;
         $data->save();
         return view('detail-baiviet', compact('data'));
@@ -55,7 +79,7 @@ class HomeController extends Controller
      * @function go to gioithieu page
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function gioithieu() {
+    public function introduce() {
         return view('gioi-thieu');
     }
 

@@ -18,20 +18,25 @@
                 <a href="{{route('home')}}">Trang chủ
             </li>
             <li class="menu-item menu-item-type-custom menu-item-1050 lien-he">
-                <a href="">Giới thiệu chung
+                <a href="{{route('introduce')}}">Giới thiệu chung
+                </a>
+            </li>
+            <li class="dropdown menu-item menu-item-type-custom menu-item-1050">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Danh mục bài viết</a>
+                @if(!is_null($data['danhmuc']))
+                <ul class="dropdown-menu animated" style="display: none;">
+                    @foreach($data['danhmuc'] as $dmuc)
+                    <li><a href="{{route('danhmuc.baiviet', ['slug' => $dmuc->slug])}}">{{$dmuc->name}}</a></li>
+                    @endforeach
+                </ul>
+                @endif
+            </li>
+            <li class="menu-item menu-item-type-custom menu-item-1050">
+                <a href="{{route('contact')}}">Liên hệ
                 </a>
             </li>
             <li class="menu-item menu-item-type-custom menu-item-1050">
-                <a href="">Danh mục bài viết
-                </a>
-            </li>
-            <li class="menu-item menu-item-type-custom menu-item-1050">
-                <a href="">Liên hệ
-                </a>
-            </li>
-            <li class="menu-item menu-item-type-custom menu-item-1051 lang">
-                <a href="/changeLang/vi" class="flag" style="padding: 15px 15px 10px 15px">
-                    <img src="/images/vi.png" alt="Tiếng Việt"/>
+                <a href="{{route('hoidap')}}">Hỏi đáp
                 </a>
             </li>
         </ul>

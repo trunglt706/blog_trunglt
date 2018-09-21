@@ -1,6 +1,3 @@
-<!-- PAGE LOADER -->
-<div class="se-pre-con" style="display: none;"></div>
-<!-- *** START PAGE HEADER SECTION *** -->
 <header>
     <!-- START HEADER TOP SECTION -->
     <div class="header-top">
@@ -17,7 +14,7 @@
                     <!-- End of /. header social -->
                 </div>
                 <!-- Start header top right menu -->
-                <div class="hidden-xs col-md-6 col-sm-6 col-lg-6">
+                <div class="col-md-6 col-sm-6 col-lg-6">
                     <div class="header-right-menu">
                         <ul>
                             <li><a href="">Đăng ký</a></li>
@@ -82,19 +79,20 @@
                             <a href="{{route('home')}}">Trang chủ</a>
                         </li>
                         <li class="dropdown megamenu-fw">
-                            <a href="" class="dropdown-toggle" data-toggle="dropdown">Giới thiệu</a>
-                            <ul class="dropdown-menu megamenu-content animated" role="menu" style="display: none; opacity: 1;">
-                                <li>
-                                    Giới thiệu chung
-                                </li>
-                                <li>
-                                    Ý tưởng website
-                                </li>
-                            </ul>
+                            <a href="{{route('introduce')}}">Giới thiệu</a>
                         </li>
-                        <li><a href="">Danh mục bài viết</a></li>
-                        <li><a href="">Liên hệ</a></li>
-                        <li><a href="">Hỏi đáp</a></li>
+                        <li class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">Danh mục bài viết</a>
+                            @if(!is_null($data['danhmuc']))
+                                <ul class="dropdown-menu animated" style="display: none;">
+                                    @foreach($data['danhmuc'] as $dmuc)
+                                        <li><a href="{{route('danhmuc.baiviet', ['slug' => $dmuc->slug])}}">{{$dmuc->name}}</a></li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </li>
+                        <li><a href="{{route('contact')}}">Liên hệ</a></li>
+                        <li><a href="{{route('hoidap')}}">Hỏi đáp</a></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div>

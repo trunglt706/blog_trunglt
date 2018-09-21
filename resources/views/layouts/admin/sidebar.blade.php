@@ -1,91 +1,80 @@
-<aside class="left-side sidebar-offcanvas">
+<aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
         <!-- Sidebar user panel -->
-        <div class="user-panel" style="background: #428bca;">
-            <div class="image text-center">
-                @if($data['user']->NguoiDungAvatar != "")
-                <img src="{{url( $data['user']->NguoiDungAvatar)}}" class="img-circle" alt="<?= $data['user']->NguoiDungTen ?>" />
-                @else
-                <img src="{{url( 'images/no-img.jpg' )}}" class="img-circle" alt="<?= $data['user']->NguoiDungTen ?>" />
-                @endif
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="{{url(auth()->user()->avatar)}}" class="img-circle" alt="{{auth()->user()->name}}">
             </div>
-            <div class="info text-center">
-                <p>Hello, <?= $data['user']->NguoiDungTen ?></p>
-                <i class="fa fa-circle text-success"></i> Online
+            <div class="pull-left info">
+                <p style="text-transform: capitalize">{{auth()->user()->name}}</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
+        <!-- search form -->
+        <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+        </form>
+        <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu">
-            <li class="" id="trangchu">
-                <a href="{{route('admin.home')}}">
-                    <i class="fa fa-home"></i> <span>Trang chủ</span>
-                </a>
-            </li>
-            <li class="treeview" id="qldanhmuc">
-                <a href="javascript:;">
-                    <i class="fa fa-bars"></i>
-                    <span>Danh mục</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+        <ul class="sidebar-menu" data-widget="tree">
+            <li class="treeview {{areActiveRoutes([])}}">
+                <a href="#">
+                    <i class="fa fa-th"></i> <span>Danh mục</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li id="qlloaigianhang"><a href="{{route('admin.loaigianhang.list')}}"><i class="fa fa-angle-double-right"></i> Loại gian hàng</a></li>
-                    <li id="qlloaitaitro"><a href="{{route('admin.loaitaitro.list')}}"><i class="fa fa-angle-double-right"></i> Loại tài trợ</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href="index.html"><i class="fa fa-circle-o"></i> Loại thành viên</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href="index2.html"><i class="fa fa-circle-o"></i> Danh mục bài viết</a></li>
                 </ul>
             </li>
-            <li class="treeview" id="qlchung">
-                <a href="javascript:;">
-                    <i class="fa fa-indent"></i>
-                    <span>Quản lý chung</span>
-                    <i class="fa fa-angle-left pull-right"></i>
-                </a>
-                <ul class="treeview-menu">
-                    <li id="qlnguoidung"><a href="{{route('admin.user.list')}}"><i class="fa fa-angle-double-right"></i> Quản lý người dùng</a></li>
-                    <li id="qltaitro"><a href="{{route('admin.sponsor.list')}}"><i class="fa fa-angle-double-right"></i> Quản lý tài trợ</a></li>
-                    <li id="qlgianhang"><a href="{{route('admin.gianhang.list')}}"><i class="fa fa-angle-double-right"></i> Quản lý gian hàng</a></li>
-                </ul>
-            </li>
-            <li class="treeview" id="noidung">
-                <a href="javascript:;">
-                    <i class="fa fa-file-text-o"></i>
+            <li class="treeview {{areActiveRoutes([])}}">
+                <a href="#">
+                    <i class="fa fa-book"></i>
                     <span>Nội dung</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li id="qltintuc"><a href="{{route('admin.news.list')}}"><i class="fa fa-angle-double-right"></i> Quản lý tin tức</a></li>
-                    <li id="qllienhe"><a href="{{route('admin.lienhe.list')}}"><i class="fa fa-angle-double-right"></i> Quản lý liên hệ</a></li>
-                    <li id="qlgopy"><a href="{{route('admin.gopy.list')}}"><i class="fa fa-angle-double-right"></i> Quản lý góp ý</a></li>
-                    <li id="qlnhanbaiviet"><a href="{{route('admin.nhanbaiviet.list')}}"><i class="fa fa-angle-double-right"></i> Quản lý nhận bài viết</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href=""><i class="fa fa-circle-o"></i> Bài viết</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href=""><i class="fa fa-circle-o"></i> Thành viên</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href=""><i class="fa fa-circle-o"></i> Quảng cáo</a></li>
                 </ul>
             </li>
-            <li class="treeview" id="thongkechung">
-                <a href="javascript:;">
-                    <i class="fa fa-bar-chart-o"></i>
-                    <span>Thống kê</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+            <li class="treeview {{areActiveRoutes([])}}">
+                <a href="#">
+                    <i class="fa fa-folder"></i>
+                    <span>Khác</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li id="tktaitro"><a href="{{route('admin.thongke', ['key' => 'tai-tro'])}}"><i class="fa fa-angle-double-right"></i> Thống kê tài trợ</a></li>
-                    <li id="tkgianhang"><a href="{{route('admin.thongke', ['key' => 'gian-hang'])}}"><i class="fa fa-angle-double-right"></i> Thống kê gian hàng</a></li>
-                    <li id="tktintuc"><a href="{{route('admin.thongke', ['key' => 'tin-tuc'])}}"><i class="fa fa-angle-double-right"></i> Thống kê tin tức</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href=""><i class="fa fa-circle-o"></i> Góp ý</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href=""><i class="fa fa-circle-o"></i> Hỏi đáp</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href=""><i class="fa fa-circle-o"></i> Nhận bài viết</a></li>
+                    <li class="{{isActiveRoute('')}}"><a href=""><i class="fa fa-circle-o"></i> Phản hồi</a></li>
                 </ul>
             </li>
-            <li id="new-letter">
-                <a href="{{route('admin.newletter.list')}}">
-                    <i class="fa fa-envelope"></i> Newsletters
-                    <small class="label pull-right bg-yellow">{{count($data['dsnewletter'])}}</small>
+            <li class="{{isActiveRoute('')}}">
+                <a href="pages/widgets.html">
+                    <i class="fa fa-cogs"></i> <span>Cấu hình chung</span>
                 </a>
             </li>
-            <li id="cauhinhhethong">
-                <a href="{{route('admin.system.config')}}">
-                    <i class="fa fa-cog"></i> Cấu hình hệ thống
+            <li class="{{isActiveRoute('')}}">
+                <a href="pages/widgets.html">
+                    <i class="fa fa-pie-chart"></i> <span>Phân tích dữ liệu</span>
                 </a>
             </li>
-<!--            <li id="language">
-                <a href="/changeLang/@lang('index.flag')" class="flag">
-                    <i class="fa fa-flag-o"></i> Ngôn ngữ: <img src="/images/@lang('index.flag').png" alt="flag"/>
-                </a>
-            </li>-->
         </ul>
     </section>
     <!-- /.sidebar -->

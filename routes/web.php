@@ -13,10 +13,13 @@
 //============================== Router for auth
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/lien-he', 'HomeController@contact')->name('contact');
+Route::get('/hoi-dap', 'HomeController@hoidap')->name('hoidap');
 Route::get('/danh-muc-bai-viet/{slug}', 'HomeController@danhmuc_baiviet')->name('danhmuc.baiviet');
 Route::get('/bai-viet/{slug}', 'HomeController@baiviet')->name('detail.baiviet');
 Route::get('/gioi-thieu', 'HomeController@introduce')->name('introduce');
 Route::get('/search', 'HomeController@search')->name('search');
+
+Route::post('/login-admin', 'Auth\LoginController@loginAdmin')->name('login-admin');
 
 Route::prefix('ajax')->group(function () {
     Route::get('/search', 'HomeController@searchAjax')->name('ajax.search');
@@ -30,5 +33,7 @@ Route::prefix('user')->group(function () {
 //============================== Router for admin
 Route::prefix('admin')->group(function () {
     Route::get('/', 'AdminController@index')->name('admin.index');
+
+    Route::get('logout', 'AdminController@logout')->name('admin.logout');
 });
 Auth::routes();
