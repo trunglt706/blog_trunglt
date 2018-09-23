@@ -35,3 +35,12 @@
 <script src="{{url('js/admin/dashboard.js')}}" type="text/javascript"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{url('js/admin/demo.js')}}" type="text/javascript"></script>
+<script src="{{url('js/admin/toastr.js')}}" type="text/javascript"></script>
+<script type="text/javascript">
+    @if(session('error'))
+    toastr.error(session('error'));
+    @endif
+    @if(session('success'))
+    toastr.success(session('success'));
+    @endif
+</script>

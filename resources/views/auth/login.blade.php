@@ -4,10 +4,10 @@
     <div class="login-logo">
         <a href="../../index2.html"><b>Admin</b>TrungLT</a>
     </div>
+    @include('layouts.auth.partials.notify')
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">Đăng nhập để quản lý dữu liệu</p>
-
         <form action="{{route('login-admin')}}" method="post">
             <div class="form-group has-feedback">
                 @csrf

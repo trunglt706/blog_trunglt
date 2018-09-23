@@ -25,6 +25,7 @@
         @include('layouts.auth.partials.script_header')
     </head>
     <body>
+    @include('layouts.auth.partials.sdk_facebook')
     <div id="wrapper">
         @include('layouts.auth.partials.header')
         @yield('content')

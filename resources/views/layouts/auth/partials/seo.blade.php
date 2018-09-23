@@ -9,7 +9,7 @@
 <meta property="og:title" content="{{isset($object['title']) ? $object['title'] : $data['title']}}"/>
 <meta property="og:type" content="article"/>
 <meta property="og:image" content="{{isset($object['image']) ? url($object['image']) : url('images/qrcode-vj.png')}}"/>
-<meta property="og:url" content="{{url('')}}"/>
+<meta property="og:url" content="{{isset($object['url']) ? url($object['url']) : route('home')}}"/>
 <meta property="og:description" content="{{isset($object['intro']) ? $object['intro'] : $data['intro']->value}}"/>
 <!-- End for Facebook -->
 

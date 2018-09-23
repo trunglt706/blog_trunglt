@@ -14,7 +14,6 @@ use App\danhmucbaiviets;
 use App\gopys;
 use App\loaithanhviens;
 use App\nhanbaiviets;
-use App\phanhois;
 use App\researchs;
 use App\users;
 use Image;
@@ -39,11 +38,29 @@ class AdminController extends Controller
     }
 
     /**
+     * @function logout
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout() {
+        try {
+            $admin = admins::find(auth()->user()->id);
+            $admin->status = 0;
+            $admin->save();
+            Auth::guard('admin')->logout();
+            return redirect()->route('login')->with('success', 'Đăng xuất hệ thống thành công');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.index')->with('error', 'Lỗi, hệ thống không lấy được dữ liệu! Vui lòng thử lại.');
+        }
+    }
+
+    //======================================================= Profile
+    /**
      * @function go to account page
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function account() {
-        return view('admin.account');
+    public function profile() {
+        return view('admin.profile');
     }
 
     /**
@@ -51,7 +68,7 @@ class AdminController extends Controller
      * @param UpdateInfoAdminRequest $request
      * @return mixed
      */
-    public function update_info_admin(UpdateInfoAdminRequest $request) {
+    public function inforUpdate(UpdateInfoAdminRequest $request) {
         try {
             $ad = new admins();
             $ad->name = $request->name;
@@ -91,7 +108,7 @@ class AdminController extends Controller
      * @param UpdateAccountAdminRequest $request
      * @return mixed
      */
-    public function update_account_admin(UpdateAccountAdminRequest $request) {
+    public function accountUpdate(UpdateAccountAdminRequest $request) {
         try {
             $ad = new admins();
             $ad->email = $request->email;
@@ -104,30 +121,44 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * @function go to detail baiviet
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function baiviet($id) {
-        $data = baiviets::findOrFail($id);
-        return view('admin.baiviet.detail', compact('data'));
-    }
-
+    //======================================================= Bai viet
     /**
      * @function go to list baiviet
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_baiviet() {
+    public function baiViet() {
         $data = baiviets::all();
         return view('admin.baiviet.list', compact('data'));
     }
 
     /**
+     * @function go to detail baiviet
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function baiVietChiTiet($id) {
+        $data = baiviets::findOrFail($id);
+        return view('admin.baiviet.detail', compact('data'));
+    }
+
+    public function baiVietInsert() {
+
+    }
+
+    public function baiVietUpdate() {
+
+    }
+
+    public function baiVietDelete() {
+
+    }
+
+    //======================================================= cau hinh chung
+    /**
      * @function go to list cauhinhchung
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_cauhinhchung() {
+    public function cauHinhChung() {
         $data = cauhinhchungs::all();
         return view('admin.cauhinhchung.list', compact('data'));
     }
@@ -137,16 +168,29 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function cauhinhchung($id) {
+    public function cauHinhChungChiTiet($id) {
         $data = cauhinhchungs::findOrFail($id);
         return view('admin.cauhinhchung.detail', compact('data'));
     }
 
+    public function cauHinhChungInsert() {
+
+    }
+
+    public function cauHinhChungUpdate() {
+
+    }
+
+    public function cauHinhChungDelete() {
+
+    }
+
+    //======================================================= danh muc
     /**
      * @function go to list danhmuc baiviet
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_danhmuc() {
+    public function danhMuc() {
         $data = danhmucbaiviets::all();
         return view('admin.danhmuc-baiviet.list', compact('data'));
     }
@@ -156,16 +200,17 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function danhmuc($id) {
+    public function danhMucChiTiet($id) {
         $data = danhmucbaiviets::findOrFail($id);
         return view('admin.danhmuc-baiviet.detail', compact('data'));
     }
 
+    //======================================================= gop y
     /**
      * @function go to list gopy
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_gopy() {
+    public function gopY() {
         $data = gopys::all();
         return view('admin.gopy.list', compact('data'));
     }
@@ -175,16 +220,17 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function gopy($id) {
+    public function gopYChiTiet($id) {
         $data = gopys::findOrFail($id);
         return view('admin.gopy.detail', compact('data'));
     }
 
+    //======================================================= Loai thanh vien
     /**
      * @function go to list loai thanhvien
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_loai_thanhvien() {
+    public function loaiThanhVien() {
         $data = loaithanhviens::all();
         return view('admin.loai-thanhvien.list', compact('data'));
     }
@@ -194,16 +240,17 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function loai_thanhvien($id) {
+    public function loaiThanhVienChiTiet($id) {
         $data = loaithanhviens::findOrFail($id);
         return view('admin.loai-thanhvien.detail', compact('data'));
     }
 
+    //======================================================= nhan bai viet
     /**
      * @function go to list nhan baiviet
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_nhan_baiviet() {
+    public function nhanBaiViet() {
         $data = nhanbaiviets::all();
         return view('admin.nhan-baiviet.list', compact('data'));
     }
@@ -213,35 +260,17 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function nhan_baiviet($id) {
+    public function nhanBaiVietChiTiet($id) {
         $data = nhanbaiviets::findOrFail($id);
         return view('admin.nhan-baiviet.detail', compact('data'));
     }
 
-    /**
-     * @function go to list phanhoi
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function list_phanhoi() {
-        $data = phanhois::all();
-        return view('admin.phanhoi.list', compact('data'));
-    }
-
-    /**
-     * @function go to detail phanhoi
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function phanhoi($id) {
-        $data = phanhois::findOrFail($id);
-        return view('admin.phanhoi.detail', compact('data'));
-    }
-
+    //======================================================= research
     /**
      * @function go to list research
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_research() {
+    public function research() {
         $data = researchs::all();
         return view('admin.research.list', compact('data'));
     }
@@ -251,16 +280,17 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function research($id) {
+    public function researchChiTiet($id) {
         $data = researchs::findOrFail($id);
         return view('admin.research.detail', compact('data'));
     }
 
+    //======================================================= thanh vien
     /**
      * @function go to list user
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_user() {
+    public function thanhVien() {
         $data = users::all();
         return view('admin.user.list', compact('data'));
     }
@@ -270,7 +300,7 @@ class AdminController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function user($id) {
+    public function thanhVienChiTiet($id) {
         $data = users::findOrFail($id);
         return view('admin.user.detail', compact('data'));
     }
@@ -280,7 +310,7 @@ class AdminController extends Controller
      * @param UpdateInforUserRequest $request
      * @return mixed
      */
-    public function update_info_user(UpdateInforUserRequest $request, $id) {
+    public function thanhVienUpdateInfo(UpdateInforUserRequest $request, $id) {
         try {
             $u = users::findOrFail($id);
             $u->name = $request->name;
@@ -321,7 +351,7 @@ class AdminController extends Controller
      * @param UpdateAccountUserRequest $request
      * @return mixed
      */
-    public function update_account_user(UpdateAccountUserRequest $request, $id) {
+    public function thanhVienUpdateAccount(UpdateAccountUserRequest $request, $id) {
         try {
             $ad = users::findOrFail($id);
             $ad->email = $request->email;
@@ -339,7 +369,7 @@ class AdminController extends Controller
      * @param UserRequest $request
      * @return mixed
      */
-    public function insert_user(UserRequest $request) {
+    public function thanhVienInsert(UserRequest $request) {
         try {
             $u = new users();
             $u->username = substr(md5(microtime()), rand(0, 15), 15);
@@ -384,7 +414,7 @@ class AdminController extends Controller
      * @param $id
      * @return mixed
      */
-    public function delete_user($id) {
+    public function thanhVienDelete($id) {
         try {
             $u = users::findOrFail($id);
             //Delete all baiviet cua user
@@ -411,7 +441,7 @@ class AdminController extends Controller
     /**
      * @function block account user
      */
-    public function block_account_user($id) {
+    public function thanhVienBlock($id) {
         //block account user
         $u = users::findOrFail($id);
         $u->status = -1;
@@ -431,17 +461,5 @@ class AdminController extends Controller
             }
         }
         echo array('status' => 'success', 'ms' => 'Block tài khoản '.$u->email.' thành công. Có '.$count.'/'.count($list).' bài viết đã khóa kèm theo!');
-    }
-
-    /**
-     * @function logout
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function logout() {
-        $admin = admins::where(auth()->id)->first();
-        $admin->status = 0;
-        $admin->save();
-        Auth::guard('admin')->logout();
-        return redirect()->route('login')->with('success', 'Đăng xuất hệ thống thành công');
     }
 }

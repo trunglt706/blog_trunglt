@@ -9,18 +9,22 @@
                         <ul>
                             <li><a href="https://fb.com/trunglt706"><i class="fa fa-facebook"></i></a></li>
                             <li><a href="https://goo.gl/xP7MdL"><i class="fa fa-youtube-play"></i></a></li>
+                            <li class="hidden-lg hidden-md hidden-sm"><a href=""><i class="fa fa-user"></i> Đăng ký thành viên</a></li>
+                            <li class="hidden-lg hidden-md hidden-sm"><a href=""><i class="fa fa-sign-in"></i> Đăng nhập</a></li>
                         </ul>
                     </div>
                     <!-- End of /. header social -->
                 </div>
                 <!-- Start header top right menu -->
-                <div class="col-md-6 col-sm-6 col-lg-6">
+                <div class="col-xs-12 col-md-6 col-sm-6 col-lg-6 hidden-xs">
+                    <!-- Start header social -->
                     <div class="header-right-menu">
                         <ul>
-                            <li><a href="">Đăng ký</a></li>
-                            <li><a href="">Đăng nhập</a></li>
+                            <li><a href=""><i class="fa fa-user"></i> Đăng ký thành viên</a></li>
+                            <li><a href=""><i class="fa fa-sign-in"></i> Đăng nhập</a></li>
                         </ul>
                     </div>
+                    <!-- End of /. header social -->
                 </div> <!-- end of /. header top right menu -->
             </div> <!-- end of /. row -->
         </div> <!-- end of /. container -->
@@ -29,7 +33,7 @@
     <!-- START MIDDLE SECTION -->
     <div class="header-mid hidden-xs">
         <div class="container">
-            <div class="row">
+            <div class="row">Start Top Search
                 <div class="col-sm-4">
                     <div class="logo">
                         <a href="{{route('home')}}"><img src="/images/logo.png" class="img-responsive" alt=""></a>
@@ -48,11 +52,13 @@
             <!-- Start Top Search -->
             <div class="top-search" style="display: none;">
                 <div class="container">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search">
-                        <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
-                    </div>
+                    <form class="search-form" action="{{route('search')}}" method="get">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            <input type="text" class="form-control" name="key" placeholder="Tìm kiếm ...">
+                            <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
+                        </div>
+                    </form>
                 </div>
             </div>
             <!-- End Top Search -->
@@ -76,13 +82,13 @@
                 <div class="collapse navbar-collapse" id="navbar-menu">
                     <ul class="nav navbar-nav navbar-left" data-in="" data-out="">
                         <li class="dropdown active">
-                            <a href="{{route('home')}}">Trang chủ</a>
+                            <a href="{{route('home')}}"><i class="fa fa-home"></i> Trang chủ</a>
                         </li>
                         <li class="dropdown megamenu-fw">
-                            <a href="{{route('introduce')}}">Giới thiệu</a>
+                            <a href="{{route('introduce')}}"><i class="fa fa-th-large"></i> Giới thiệu</a>
                         </li>
                         <li class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">Danh mục bài viết</a>
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-newspaper-o"></i> Danh mục bài viết</a>
                             @if(!is_null($data['danhmuc']))
                                 <ul class="dropdown-menu animated" style="display: none;">
                                     @foreach($data['danhmuc'] as $dmuc)
@@ -91,8 +97,8 @@
                                 </ul>
                             @endif
                         </li>
-                        <li><a href="{{route('contact')}}">Liên hệ</a></li>
-                        <li><a href="{{route('hoidap')}}">Hỏi đáp</a></li>
+                        <li><a href="{{route('contact')}}"><i class="fa fa-address-card-o"></i> Liên hệ</a></li>
+                        <li><a href="{{route('hoidap')}}"><i class="fa fa-question-circle"></i> Hỏi đáp</a></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div>

@@ -14,7 +14,7 @@ class HomeProvider extends ServiceProvider
     public function boot()
     {
         view()->composer(
-                ['auth.*', 'layouts.auth.*'], 'App\Http\ViewComposers\HomeComposer'
+                ['auth.*', 'layouts.auth.*', 'social-right'], 'App\Http\ViewComposers\HomeComposer'
         );
         view()->composer(
                 ['admin.*', 'layouts.admin.*'], 'App\Http\ViewComposers\AdminComposer'

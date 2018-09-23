@@ -24,32 +24,43 @@
                         <div class="contact_form_inner">
                             <div class="panel_inner">
                                 <div class="panel_header">
-                                    <h4><strong>Hãy gửi liên hệ cho chúng tôi (nếu bạn muốn)</strong></h4>
+                                    <h4><strong>Hãy gửi liên hệ cho chúng tôi</strong></h4>
                                 </div>
                                 <div class="panel_body">
+                                    @include('layouts.auth.partials.notify')
                                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
                                         text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
                                         survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
-                                    <form class="comment-form" action="#" method="post">
+                                    <form class="comment-form" action="{{route('lienhe.post')}}" method="post">
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label for="name">Họ và tên *</label>
-                                                    <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên ...">
+                                                    @csrf
+                                                    <input type="text" required class="form-control" id="name" name="name" placeholder="Nhập tên ...">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="email">Email *</label>
                                                 <div class="form-group">
-                                                    <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email ...">
+                                                    <input type="email" required class="form-control" id="email" name="email" placeholder="Nhập email ...">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="email">Nôi dung</label>
-                                            <textarea class="form-control" id="content" name="content" placeholder="Nhập nội dung ..." rows="5"></textarea>
+                                            <label for="content">Nôi dung *</label>
+                                            <textarea class="form-control" required id="content" name="content" placeholder="Nhập nội dung ..." rows="5"></textarea>
                                         </div>
-                                        <button class="btn btn-danger" type="submit"><i class="fa fa-send-o"></i> Gửi</button>
+                                        <div class="row">
+                                            <div class="col-sm-6 text-left">
+                                                <button class="btn btn-danger" type="submit"><i class="fa fa-send-o"></i> Gửi</button>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group m-form__group">
+                                                    {!! NoCaptcha::display() !!}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -72,52 +83,7 @@
                         </div>
                         <!-- END OF /. CONTACT INFO -->
                         <!-- START SOCIAL ICON -->
-                        <div class="social-media-inner">
-                            <ul class="social-media clearfix">
-                                <li>
-                                    <a href="#" class="rss">
-                                        <i class="fa fa-rss"></i>
-                                        <div>2,035</div>
-                                        <p>Subscribers</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="fb">
-                                        <i class="fa fa-facebook"></i>
-                                        <div>3,794</div>
-                                        <p>Fans</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="g_plus">
-                                        <i class="fa fa-google-plus"></i>
-                                        <div>941</div>
-                                        <p>Followers</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="you_tube">
-                                        <i class="fa fa-youtube-play"></i>
-                                        <div>7,820</div>
-                                        <p>Subscribers</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="twitter">
-                                        <i class="fa fa-twitter"></i>
-                                        <div>1,562</div>
-                                        <p>Followers</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="pint">
-                                        <i class="fa fa-pinterest"></i>
-                                        <div>1,310</div>
-                                        <p>Followers</p>
-                                    </a>
-                                </li>
-                            </ul> <!-- /.social icon -->
-                        </div>
+                        @include('social-right');
                         <!-- END OF /. SOCIAL ICON -->
                     </div>
                 </div>

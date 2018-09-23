@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <!-- START FOOTER BOX (About) -->
-            <div class="col-sm-6 footer-box">
+            <div class="col-sm-5 footer-box">
                 <div class="about-inner">
                     <img src="/images/logo-white.png" class="img-responsive" alt="">
                     <p>Những bài viết của tôi gắn liền với cuộc đời tôi và cuộc sống xung quang tôi</p>
@@ -17,7 +17,7 @@
             <!--  END OF /. FOOTER BOX (About) -->
             <!-- START FOOTER BOX (Category) -->
             <div class="col-sm-3 footer-box hidden-xs">
-                <h3 class="wiget-title">Danh mục bài viết</h3>
+                <h4 class="wiget-title">DANH MỤC BÀI VIẾT</h4>
                 @if(!is_null($data['danhmuc']))
                     <ul class="menu-services">
                         @foreach($data['danhmuc'] as $dmuc)
@@ -28,13 +28,11 @@
             </div>
             <!-- END OF /. FOOTER BOX (Category) -->
             <!-- START FOOTER BOX (Recent Post) -->
-            <div class="col-sm-3 footer-box hidden-xs">
-                <h3 class="wiget-title">Góp ý của khách</h3>
+            <div class="col-sm-4 footer-box hidden-xs">
+                <h4 class="wiget-title">FANPAGE MY BLOCK</h4>
                 <div class="footer-news-grid">
                     <div class="news-list-item">
-                        <textarea rows="3" class="form-control" placeholder="Góp ý website"></textarea>
-                        <br/>
-                        <button class="btn btn-danger" type="submit">Gửi</button>
+                        <div class="fb-page" data-href="https://www.facebook.com/clbmekongsp" data-tabs="timeline" data-width="350" data-height="180" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://www.facebook.com/clbmekongsp" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/clbmekongsp">CLB Sản phẩm đặc trưng ĐBSCL</a></blockquote></div>
                     </div>
                 </div>
             </div>
@@ -48,11 +46,11 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-5 col-md-5">
-                <div class="copy">Copyright@2018 TrungLT.</div>
+                <div class="copy">Copyright @ 2018 TrungLT.</div>
             </div>
             <div class="col-xs-12 col-sm-7 col-md-7 hidden-xs">
                 <ul class="footer-nav">
-                    <li>Số lượt truy cập: <b>1.000</b></li>
+                    <li>Số lượt truy cập: &nbsp;&nbsp;&nbsp;<b><?php echo $data['countVisitor']; ?></b></li>
                 </ul>
             </div>
         </div>
