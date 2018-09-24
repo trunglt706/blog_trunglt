@@ -2,25 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\NhanBaiVietRequest;
 use App\nhanbaiviets;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class NhanBaiVietController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        $this->middleware('auth:admin');
     }
 
-    public function insert(Request $request) {
-
+    /**
+     * @function go to list nhan baiviet
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function nhanBaiViet() {
+        $data = nhanbaiviets::all();
+        return view('admin.nhan-baiviet.list', compact('data'));
     }
 
-    public function update(Request $request) {
-
+    /**
+     * @function go to detail nhan baiviet
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function nhanBaiVietChiTiet($id) {
+        $data = nhanbaiviets::findOrFail($id);
+        return view('admin.nhan-baiviet.detail', compact('data'));
     }
 
-    public function delete($id) {
+    /**
+     * @functio insert nhan bai viet
+     * @param NhanBaiVietRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function nhanBaiVietInsert(NhanBaiVietRequest $request) {
+        try {
+            $nhanbv = new nhanbaiviets();
+            $nhanbv->email = $request->email;
+            $nhanbv->status = $request->status;
+            $nhanbv->save();
+            return redirect()->route('admin.nhanbaiviet')->with('success', 'Thêm mới thông tin nhận bài viết thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.nhanbaiviet')->with('error', 'Lỗi, thêm mới thông tin nhận bài viết thất bại!');
+        }
+    }
 
+    /**
+     * @function update nhan bai viet
+     * @param NhanBaiVietUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function nhanBaiVietUpdate(NhanBaiVietUpdateRequest $request, $id) {
+        try {
+            $nhanbv = nhanbaiviets::find($id);
+            $nhanbv->email = $request->email;
+            $nhanbv->status = $request->status;
+            $nhanbv->save();
+            return redirect()->route('admin.nhanbaiviet.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin nhận bài viết thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.nhanbaiviet.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin nhận bài viết thất bại!');
+        }
+    }
+
+    /**
+     * @function delete nhan bai viet
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function nhanBaiVietDelete($id) {
+        try {
+            $nhanbv = nhanbaiviets::find($id);
+            $nhanbv->delete();
+            return redirect()->route('admin.nhanbaiviet')->with('success', 'xóa nhận bài viết thành công');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.nhanbaiviet')->with('error', 'Lỗi, xóa nhận bài viết thất bại!');
+        }
     }
 }

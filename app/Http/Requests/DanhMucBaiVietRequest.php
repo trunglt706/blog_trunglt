@@ -13,7 +13,7 @@ class DanhMucBaiVietRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,21 @@ class DanhMucBaiVietRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'slug' => 'required',
+            'name' => 'required',
+            'intro' => 'required',
+            'status' => 'required'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'slug.required' => 'Chưa chọn đường link cấu hình',
+            'name.required' => 'Tên cấu hình không được để trống',
+            'intro.required' => 'Mô tả cấu hình không được để trống',
+            'status.required' => 'Chưa chọn trạng thái'
         ];
     }
 }

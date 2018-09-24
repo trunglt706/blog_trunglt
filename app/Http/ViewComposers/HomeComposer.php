@@ -3,6 +3,7 @@
 namespace App\Http\ViewComposers;
 
 use App\cauhinhchungs;
+use App\danhmucbaiviets;
 use App\visitors;
 use Illuminate\View\View;
 
@@ -39,6 +40,8 @@ class HomeComposer
         $data['facebook'] = cauhinhchungs::getHeThong("slug", "link-facebook");
         $data['youtube'] = cauhinhchungs::getHeThong("slug", "link-youtube");
         $data['email'] = cauhinhchungs::getHeThong("slug", "email-website");
+        //Get list danh muc bai viet
+        $data['danhmuc'] = danhmucbaiviets::where('status', 1)->get();
 
         $visit = new visitors();
         $data['countVisitor'] = $visit->countVisitor();

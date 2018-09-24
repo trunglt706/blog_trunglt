@@ -13,7 +13,7 @@ class NhanBaiVietRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,17 @@ class NhanBaiVietRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'email' => 'required',
+            'status' => 'required'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'email.required' => 'Email không được để trống',
+            'status.required' => 'Chưa chọn status',
         ];
     }
 }

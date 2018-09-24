@@ -13,7 +13,7 @@ class PhanHoiRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,23 @@ class PhanHoiRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'email' => 'required|email',
+            'name' => 'required',
+            'content' => 'required',
+            'g-recaptcha-response' => 'required|captcha',
+        ];
+    }
+
+    public function messages() {
+        return [
+            'email.required' => 'Email không được để trống',
+            'email.email' => 'Email nhập vào không đúng định dạng',
+            'name.required' => 'Họ tên không được để trống',
+            'content.required' => 'Nội dung bình luận không được để trống',
+            'g-recaptcha-response.required' => 'Chưa chọn recaptcha',
+            'g-recaptcha-response.captcha' => 'Lỗi recaptcha',
         ];
     }
 }
