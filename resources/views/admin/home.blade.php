@@ -7,7 +7,7 @@
             TỔNG QUAN
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{{route('admin.index')}}"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Tổng quan</li>
         </ol>
     </section>
@@ -19,13 +19,13 @@
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>5</h3>
-                        <p>Thành viên</p>
+                        <h3>{{$object['thanhviens']}}</h3>
+                        <p>Thành viên chờ duyệt</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-users"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{route('admin.thanhvien')}}" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -33,13 +33,13 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>10</h3>
-                        <p>Bài viết</p>
+                        <h3>{{$object['baiviets']}}</h3>
+                        <p>Bài viết chờ duyệt</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-newspaper-o"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{route('admin.baiviet')}}" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -47,13 +47,13 @@
                 <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3>10</h3>
-                        <p>Góp ý</p>
+                        <h3>{{$object['lienhes']}}</h3>
+                        <p>Liên hệ chờ duyệt</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-comment-o"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{route('admin.lienhe')}}" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -61,13 +61,13 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>5</h3>
+                        <h3>{{$object['nhanbaiviets']}}</h3>
                         <p>Nhận bài viết</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-envelope-open-o"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{route('admin.nhanbaiviet')}}" class="small-box-footer">Xem chi tiết <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->

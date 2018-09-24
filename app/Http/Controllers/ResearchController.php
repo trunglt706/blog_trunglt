@@ -15,55 +15,76 @@ class ResearchController extends Controller
     }
 
     /**
-     * @function insert new research
-     * @param ResearchRequest $request
+     * @function go to list research
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function insert(ResearchRequest $request) {
+    public function research() {
+        $data = researchs::all();
+        return view('admin.research.list', compact('data'));
+    }
+
+    /**
+     * @function go to detail research
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function researchChiTiet($id) {
+        $data = researchs::findOrFail($id);
+        return view('admin.research.detail', compact('data'));
+    }
+
+    /**
+     * @function insert research
+     * @param ResearchRequest $request
+     * @return \Illuminate\Http\RedirectResponse'
+     */
+    public function researchInsert(ResearchRequest $request) {
         try {
-            $find = new researchs();
-            $find->keyword = $request->keyword;
-            $phoi->count = $request->count;
-            $find->save();
-            return view('admin.research.list')->with('success', 'Thêm mới từ khóa tìm kiếm thành công');
+            $rs = new researchs();
+            $rs->email = $request->email;
+            $rs->keyword = $request->keyword;
+            $rs->count = $request->count;
+            $rs->save();
+            return redirect()->route('admin.research')->with('success', 'Thêm mới thông tin tìm kiếm thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.research.list')->with('error', 'Lỗi, thêm mới từ khóa tìm kiếm thất bại!');
+            return redirect()->route('admin.research')->with('error', 'Lỗi, thêm mới thông tin tìm kiếm thất bại!');
         }
     }
 
     /**
-     * @function update info research
-     * @param ResearchRequest $request
+     * @function update research
+     * @param ResearchUpdateRequest $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ResearchRequest $request, $id) {
+    public function researchUpdate(ResearchUpdateRequest $request, $id) {
         try {
-            $find = researchs::findOrFail($id);
-            $find->keyword = $request->keyword;
-            $phoi->count = $request->count;
-            $find->save();
-            return view('admin.research.detail', ['id' => $id])->with('success', 'Cập nhật thông tin từ khóa tìm kiếm thành công');
+            $rs = researchs::find($id);
+            $rs->email = $request->email;
+            $rs->keyword = $request->keyword;
+            $rs->count = $request->count;
+            $rs->save();
+            return redirect()->route('admin.research.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin tìm kiếm thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.research.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin từ khóa tìm kiếm thất bại!');
+            return redirect()->route('admin.research.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin tìm kiếm thất bại!');
         }
     }
 
     /**
      * @function delete research
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete($id) {
+    public function researchDelete($id) {
         try {
-            $find = researchs::findOrFail($id);
-            $find->delete();
-            return view('admin.research.list')->with('success', 'Xóa từ khóa tìm kiếm thành công');
+            $rs = researchs::find($id);
+            $rs->delete();
+            return redirect()->route('admin.research')->with('success', 'xóa thông tin tìm kiếm thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.research.list')->with('error', 'Lỗi, xóa từ khóa tìm kiếm thất bại!');
+            return redirect()->route('admin.research')->with('error', 'Lỗi, xóa thông tin tìm kiếm thất bại!');
         }
     }
 }

@@ -15,55 +15,74 @@ class GopYController extends Controller
     }
 
     /**
-     * @function insert new gopy
-     * @param GopYRequest $request
+     * @function go to list gopy
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function insert(GopYRequest $request) {
+    public function gopY() {
+        $data = gopys::all();
+        return view('admin.gopy.list', compact('data'));
+    }
+
+    /**
+     * @function go to detail gopy
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function gopYChiTiet($id) {
+        $data = gopys::findOrFail($id);
+        return view('admin.gopy.detail', compact('data'));
+    }
+
+    /**
+     * @function insert gop y
+     * @param GopYRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function gopYInsert(GopYRequest $request) {
         try {
-            $gy = new gopys();
-            $gy->email = $request->email;
-            $gy->content = $request->content;
-            $gy->save();
-            return view('admin.gopy.list')->with('success', 'Thêm mới góp ý thành công');
+            $gopy = new gopys();
+            $gopy->email = $request->email;
+            $gopy->content = $request->input('content');
+            $gopy->save();
+            return redirect()->route('admin.gopy')->with('success', 'Thêm mới góp ý thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.gopy.list')->with('error', 'Lỗi, thêm mới góp ý thất bại!');
+            return redirect()->route('admin.gopy')->with('error', 'Lỗi, thêm mới góp ý thất bại!');
         }
     }
 
     /**
-     * @function update info gopy
-     * @param GopYRequest $request
+     * @function update gop y
+     * @param GopYUpdateRequest $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(GopYRequest $request, $id) {
+    public function gopYUpdate(GopYUpdateRequest $request, $id) {
         try {
-            $gy = gopys::findOrFail($id);
-            $gy->email = $request->email;
-            $gy->content = $request->content;
-            $gy->save();
-            return view('admin.gopy.detail', ['id' => $id])->with('success', 'Cập nhật thông tin góp ý thành công');
+            $gopy = gopys::find($id);
+            $gopy->email = $request->email;
+            $gopy->content = $request->input('content');
+            $gopy->save();
+            return redirect()->route('admin.gopy.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin góp ý thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.gopy.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin góp ý thất bại!');
+            return redirect()->route('admin.gopy.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin góp ý thất bại!');
         }
     }
 
     /**
-     * @function delete gopy
+     * @function delete gop y
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete($id) {
+    public function gopYDelete($id) {
         try {
-            $gy = gopys::findOrFail($id);
-            $gy->delete();
-            return view('admin.gopy.list')->with('success', 'Xóa góp ý thành công');
+            $gopy = gopys::find($id);
+            $gopy->delete();
+            return redirect()->route('admin.gopy')->with('success', 'xóa góp ý thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.gopy.list')->with('error', 'Lỗi, xóa góp ý thất bại!');
+            return redirect()->route('admin.gopy')->with('error', 'Lỗi, xóa góp ý thất bại!');
         }
     }
 }

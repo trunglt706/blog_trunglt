@@ -6,6 +6,8 @@ use App\Http\Requests\LoaiThanhVienRequest;
 use App\loaithanhviens;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use File;
+use Image;
 
 class LoaiThanhVienController extends Controller
 {
@@ -15,61 +17,103 @@ class LoaiThanhVienController extends Controller
     }
 
     /**
-     * @function insert loai thanh vien
-     * @param LoaiThanhVienRequest $request
+     * @function go to list loai thanhvien
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function insert(LoaiThanhVienRequest $request) {
+    public function loaiThanhVien() {
+        $data['loaitv'] = loaithanhviens::all();
+        return view('admin.loai-thanhvien.list', compact('data'));
+    }
+
+    /**
+     * @function go to detail loai thanhvien
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function loaiThanhVienChiTiet($id) {
+        $data['loaitv'] = loaithanhviens::findOrFail($id);
+        return view('admin.loai-thanhvien.detail', compact('data'));
+    }
+
+    /**
+     * @function insert loai thanh vien
+     * @param LoaiThanhVienRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function loaiThanhVienInsert(LoaiThanhVienRequest $request) {
         try {
-            $loai = new loaithanhviens();
-            $loai->slug = $request->slug;
-            $loai->name = $request->name;
-            $loai->intro = $request->intro;
-            $loai->mark = $request->mark;
-            $loai->status = $request->status;
-            $loai->save();
-            return view('admin.loaithanhvien.list')->with('success', 'Thêm mới loại thành viên thành công');
+            $loaitv = new loaithanhviens();
+            $loaitv->name = $request->name;
+            $loaitv->slug = $request->slug;
+            $loaitv->intro = $request->intro;
+            $loaitv->mark = $request->mark;
+            $loaitv->status = $request->status;
+            if ($request->hasFile('logo')) {
+                $loai = $request->file('logo');
+                $filename = time() . '.' . $loai->getClientOriginalExtension();
+                $dir = 'uploads/loaithanhviens/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($loai)->save(base_path($path));
+                $loaitv->logo = '/' . $path;
+            }
+            $loaitv->save();
+            return redirect()->route('admin.loaithanhvien')->with('success', 'Thêm mới loại thành viên thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.loaithanhvien.list')->with('error', 'Lỗi, thêm mới loại thành viên thất bại!');
+            return redirect()->route('admin.loaithanhvien')->with('error', 'Lỗi, thêm mới loại thành viên thất bại!');
         }
     }
 
     /**
-     * @function update loai thanh vien
-     * @param LoaiThanhVienRequest $request
+     * @function update loai thah vien
+     * @param LoaiThanhVienUpdateRequest $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(LoaiThanhVienRequest $request, $id) {
+    public function loaiThanhVienUpdate(LoaiThanhVienUpdateRequest $request, $id) {
         try {
-            $loai = loaithanhviens::findOrFail($id);
-            $loai->slug = $request->slug;
-            $loai->name = $request->name;
-            $loai->intro = $request->intro;
-            $loai->mark = $request->mark;
-            $loai->status = $request->status;
-            $loai->save();
-            return view('admin.loaithanhvien.detail', ['id' => $id])->with('success', 'Cập nhật thông tin loại thành viên thành công');
+            $loaitv = loaithanhviens::find($id);
+            $loaitv->name = $request->name;
+            $loaitv->slug = $request->slug;
+            $loaitv->intro = $request->intro;
+            $loaitv->mark = $request->mark;
+            $loaitv->status = $request->status;
+            if ($request->hasFile('logo')) {
+                $loai = $request->file('logo');
+                $filename = time() . '.' . $loai->getClientOriginalExtension();
+                $dir = 'uploads/loaithanhviens/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($loai)->save(base_path($path));
+                $loaitv->logo = '/' . $path;
+            }
+            $loaitv->save();
+            return redirect()->route('admin.loaithanhvien.chitiet', ['id'=>$id])->with('success', 'Cập nhật loại thành viên thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.loaithanhvien.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin loại thành viên thất bại!');
+            return redirect()->route('admin.loaithanhvien.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật loại thành viên thất bại!');
         }
     }
 
     /**
      * @function delete loai thanh vien
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete($id) {
+    public function loaiThanhVienDelete($id) {
         try {
-            $loai = loaithanhviens::findOrFail($id);
-            $loai->delete();
-            return view('admin.loaithanhvien.list')->with('success', 'Xóa loại thành viên thành công');
+            $loaitv = loaithanhviens::find($id);
+            File::delete($loaitv->logo);
+            $loaitv->delete();
+            return redirect()->route('admin.loaithanhvien')->with('success', 'xóa loại thành viên thành công.');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return view('admin.loaithanhvien.list')->with('error', 'Lỗi, xóa loại thành viên thất bại!');
+            return redirect()->route('admin.loaithanhvien')->with('error', 'Lỗi, xóa loại thành viên thất bại!');
         }
     }
 }

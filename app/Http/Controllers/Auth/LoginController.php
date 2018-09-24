@@ -56,6 +56,8 @@ class LoginController extends Controller
                 $admin->save();
                 return redirect()->route('admin.index')->with('success', 'Đăng nhập hệ thống thành công');
             }
+        } else {
+            return redirect()->route('login')->with('error', 'Lỗi, tên tài khoản hoặc mật khẩu không chính xác!');
         }
     }
 }
