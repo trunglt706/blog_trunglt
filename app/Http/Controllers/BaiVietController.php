@@ -22,8 +22,8 @@ class BaiVietController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function baiViet() {
-        $data = baiviets::all();
-        return view('admin.baiviet.list', compact('data'));
+        $object['listbv'] = baiviets::paginate(10);
+        return view('admin.baiviet.list', ['object' => $object]);
     }
 
     /**

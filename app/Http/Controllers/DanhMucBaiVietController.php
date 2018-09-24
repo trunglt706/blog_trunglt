@@ -19,8 +19,8 @@ class DanhMucBaiVietController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function danhMuc() {
-        $data = danhmucbaiviets::all();
-        return view('admin.danhmuc-baiviet.list', compact('data'));
+        $object['danhmuc'] = danhmucbaiviets::paginate(10);
+        return view('admin.danhmuc-baiviet.list', ['object' => $object]);
     }
 
     /**

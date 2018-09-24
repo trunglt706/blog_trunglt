@@ -45,9 +45,7 @@ class AdminController extends Controller
      */
     public function logout() {
         try {
-            $admin = admins::find(auth()->user()->id);
-            $admin->status = 0;
-            $admin->save();
+            admins::updateStatus(auth()->user()->id);
             Auth::guard('admin')->logout();
             return redirect()->route('login')->with('success', 'Đăng xuất hệ thống thành công');
         } catch (Exception $e) {

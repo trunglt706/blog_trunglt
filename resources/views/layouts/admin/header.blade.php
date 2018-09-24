@@ -24,7 +24,7 @@
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="{{auth()->user()->avatar}}" class="img-circle" alt="{{auth()->user()->name}}">
+                            <img src="{{url(auth()->user()->avatar)}}" class="img-circle" alt="{{auth()->user()->name}}">
                             <p>
                                 {{auth()->user()->email}}
                                 <small>{{date('d-m-Y', strtotime(auth()->user()->created_at))}}</small>

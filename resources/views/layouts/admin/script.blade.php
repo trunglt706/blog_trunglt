@@ -16,6 +16,8 @@
 <!-- jvectormap -->
 <script src="{{url('plugin/jvectormap/jquery-jvectormap-1.2.2.min.js')}}" type="text/javascript"></script>
 <script src="{{url('plugin/jvectormap/jquery-jvectormap-world-mill-en.js')}}" type="text/javascript"></script>
+{{--data table--}}
+<script src="{{url('plugin/datatable/js/jquery.dataTables.min.js')}}" type="text/javascript"></script>
 <!-- jQuery Knob Chart -->
 <script src="{{url('js/admin/jquery.knob.min.js')}}" type="text/javascript"></script>
 <!-- daterangepicker -->

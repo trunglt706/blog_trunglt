@@ -22,8 +22,8 @@ class ThanhVienController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function thanhVien() {
-        $data = users::all();
-        return view('admin.user.list', compact('data'));
+        $object['thanhvien'] = users::paginate(10);
+        return view('admin.user.list', ['object' => $object]);
     }
 
     /**

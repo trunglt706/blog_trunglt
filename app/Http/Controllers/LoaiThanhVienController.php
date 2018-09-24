@@ -21,8 +21,8 @@ class LoaiThanhVienController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function loaiThanhVien() {
-        $data['loaitv'] = loaithanhviens::all();
-        return view('admin.loai-thanhvien.list', compact('data'));
+        $object['loaitv'] = loaithanhviens::paginate(10);
+        return view('admin.loai-thanhvien.list', ['object' => $object]);
     }
 
     /**
