@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DanhMucBaiVietRequest extends FormRequest
+class GopYUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,19 +23,15 @@ class DanhMucBaiVietRequest extends FormRequest
      */
     public function rules() {
         return [
-            'slug' => 'required',
-            'name' => 'required',
-            'intro' => 'required',
-            'status' => 'required'
+            'email' => 'required',
+            'content' => 'required'
         ];
     }
 
     public function messages() {
         return [
-            'slug.required' => 'Chưa chọn đường link cấu hình',
-            'name.required' => 'Tên cấu hình không được để trống',
-            'intro.required' => 'Mô tả cấu hình không được để trống',
-            'status.required' => 'Chưa chọn trạng thái'
+            'email.required' => 'Email không được để trống',
+            'content.required' => 'Nội dung không được để trống',
         ];
     }
 }

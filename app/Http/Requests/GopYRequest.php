@@ -13,7 +13,7 @@ class GopYRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,17 @@ class GopYRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'email' => 'required',
+            'content' => 'required'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'email.required' => 'Email không được để trống',
+            'content.required' => 'Nội dung không được để trống',
         ];
     }
 }

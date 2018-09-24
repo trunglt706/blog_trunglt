@@ -2,6 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BaiVietRequest;
+use App\Http\Requests\BaiVietUpdateRequest;
+use App\Http\Requests\CauHinhChungRequest;
+use App\Http\Requests\CauHinhChungUpdateRequest;
+use App\Http\Requests\DanhMucBaiVietRequest;
+use App\Http\Requests\DanhMucUpdateRequest;
+use App\Http\Requests\GopYRequest;
+use App\Http\Requests\GopYUpdateRequest;
+use App\Http\Requests\LoaiThanhVienRequest;
+use App\Http\Requests\LoaiThanhVienUpdateRequest;
+use App\Http\Requests\NhanBaiVietRequest;
+use App\Http\Requests\NhanBaiVietUpdateRequest;
+use App\Http\Requests\ResearchRequest;
+use App\Http\Requests\ResearchUpdateRequest;
 use App\Http\Requests\UpdateAccountAdminRequest;
 use App\Http\Requests\UpdateAccountUserRequest;
 use App\Http\Requests\UpdateInfoAdminRequest;
@@ -70,7 +84,7 @@ class AdminController extends Controller
      */
     public function inforUpdate(UpdateInfoAdminRequest $request) {
         try {
-            $ad = new admins();
+            $ad = admins::find(auth()->user()->id);
             $ad->name = $request->name;
             $ad->intro = $request->intro;
             if ($request->hasFile('avatar')) {
@@ -110,7 +124,7 @@ class AdminController extends Controller
      */
     public function accountUpdate(UpdateAccountAdminRequest $request) {
         try {
-            $ad = new admins();
+            $ad = admins::find(auth()->user()->id);
             $ad->email = $request->email;
             $ad->password = bcrypt($request->password);
             $ad->save();
@@ -141,16 +155,117 @@ class AdminController extends Controller
         return view('admin.baiviet.detail', compact('data'));
     }
 
-    public function baiVietInsert() {
-
+    /**
+     * @function delete bai viet
+     * @param BaiVietRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function baiVietInsert(BaiVietRequest $request) {
+        try {
+            $bviet = new baiviets();
+            $bviet->id_danhmuc = $request->id_danhmuc;
+            $bviet->username = auth()->user()->id;
+            $bviet->name = $request->name;
+            $bviet->slug = str_slug($request->name, '-');
+            $bviet->intro = $request->intro;
+            $bviet->content = $request['content'];
+            $bviet->keyword = $request->keyword;
+            $bviet->important = isset($request->important) ? 1 : 0;
+            $bviet->rating = $request->rating;
+            $bviet->status = $request->status;
+            if ($request->hasFile('thumn')) {
+                $thumn = $request->file('thumn');
+                $filename = time() . '.' . $thumn->getClientOriginalExtension();
+                $dir = 'uploads/baiviets/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($thumn)->save(base_path($path));
+                $bviet->thumn = '/' . $path;
+            }
+            if ($request->hasFile('background')) {
+                $background = $request->file('background');
+                $filename = time() . '.' . $background->getClientOriginalExtension();
+                $dir = 'uploads/baiviets/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($background)->save(base_path($path));
+                $bviet->background = '/' . $path;
+            }
+            $bviet->save();
+            return redirect()->route('admin.baiviet')->with('success', 'Thêm bài viết mới thành công.');
+        } catch(Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.baiviet')->with('error', 'Lỗi, thêm bài viết mới thất bại!');
+        }
     }
 
-    public function baiVietUpdate() {
-
+    /**
+     * @function update bai viet
+     * @param BaiVietUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function baiVietUpdate(BaiVietUpdateRequest $request, $id) {
+        try {
+            $bviet = baiviets::find($id);
+            $bviet->id_danhmuc = $request->id_danhmuc;
+            $bviet->name = $request->name;
+            $bviet->intro = $request->intro;
+            $bviet->content = $request['content'];
+            $bviet->keyword = $request->keyword;
+            $bviet->important = isset($request->important) ? 1 : 0;
+            $bviet->rating = $request->rating;
+            $bviet->status = $request->status;
+            if ($request->hasFile('thumn')) {
+                $thumn = $request->file('thumn');
+                $filename = time() . '.' . $thumn->getClientOriginalExtension();
+                $dir = 'uploads/baiviets/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($thumn)->save(base_path($path));
+                $bviet->thumn = '/' . $path;
+            }
+            if ($request->hasFile('background')) {
+                $background = $request->file('background');
+                $filename = time() . '.' . $background->getClientOriginalExtension();
+                $dir = 'uploads/baiviets/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($background)->save(base_path($path));
+                $bviet->background = '/' . $path;
+            }
+            $bviet->save();
+            return redirect()->route('admin.baiviet.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin bài viết thành công.');
+        } catch(Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.baiviet.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin bài viết thất bại!');
+        }
     }
 
-    public function baiVietDelete() {
-
+    /**
+     * @function xoa bai viet
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function baiVietDelete($id) {
+        try {
+            $bviet = baiviets::find($id);
+            File::delete($bviet->thumn);
+            File::delete($bviet->thumn);
+            $bviet->delete();
+            return redirect()->route('admin.baiviet')->with('success', 'Xóa bài viết thất bại!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.baiviet')->with('error', 'Lỗi, xóa bài viết thất bại!');
+        }
     }
 
     //======================================================= cau hinh chung
@@ -173,16 +288,62 @@ class AdminController extends Controller
         return view('admin.cauhinhchung.detail', compact('data'));
     }
 
-    public function cauHinhChungInsert() {
-
+    /**
+     * @function insert cau hinh chung
+     * @param CauHinhChungRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function cauHinhChungInsert(CauHinhChungRequest $request) {
+        try {
+            $chinh = new cauhinhchungs();
+            $chinh->name = $request->name;
+            $chinh->slug = $request->slug;
+            $chinh->intro = $request->intro;
+            $chinh->value = $request->value;
+            $chinh->save();
+            return redirect()->route('admin.cauhinhchung')->with('success', 'Thêm mới cấu hình chung thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.cauhinhchung')->with('error', 'Lỗi, thêm mới cấu hình chung thất bại!');
+        }
     }
 
-    public function cauHinhChungUpdate() {
-
+    /**
+     * @function update cau hinh chung
+     * @param CauHinhChungUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function cauHinhChungUpdate(CauHinhChungUpdateRequest $request, $id) {
+        try {
+            $chinh = cauhinhchungs::find($id);
+            $chinh->name = $request->name;
+            $chinh->slug = $request->slug;
+            $chinh->intro = $request->intro;
+            $chinh->value = $request->value;
+            $chinh->save();
+            return redirect()->route('admin.cauhinhchung.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin cấu hình chung thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.cauhinhchung.chitiet', ['id' => $id])->with('error', 'Lỗi, câp nhật thôn tin cấu hình chung thất bại!');
+        }
     }
 
-    public function cauHinhChungDelete() {
-
+    /**
+     * @function delete cau hinh chung
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function cauHinhChungDelete($id) {
+        try {
+            $chinh = cauhinhchungs::find($id);
+            File::delete($chinh->value);
+            $chinh->delete();
+            return redirect()->route('admin.cauhinhchung')->with('success', 'Xóa cấu hình thành công');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.cauhinhchung')->with('error', 'Lỗi, xóa cấu hình thất bại!');
+        }
     }
 
     //======================================================= danh muc
@@ -205,6 +366,63 @@ class AdminController extends Controller
         return view('admin.danhmuc-baiviet.detail', compact('data'));
     }
 
+    /**
+     * @function insert danh muc bai viet
+     * @param DanhMucBaiVietRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function danhMucInsert(DanhMucBaiVietRequest $request) {
+        try {
+            $dmuc = new danhmucbaiviets();
+            $dmuc->name = $request->name;
+            $dmuc->slug = $request->slug;
+            $dmuc->intro = $request->intro;
+            $dmuc->status = $request->status;
+            $dmuc->save();
+            return redirect()->route('admin.danhmuc')->with('success', 'Thêm mới danh mục bài viết thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.danhmuc')->with('error', 'Lỗi, thêm mới danh mục bài viết thất bại!');
+        }
+    }
+
+    /**
+     * @function update danh muc bai viet
+     * @param DanhMucUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function danhMucUpdate(DanhMucUpdateRequest $request, $id) {
+        try {
+            $dmuc = danhmucbaiviets::find($id);
+            $dmuc->name = $request->name;
+            $dmuc->slug = $request->slug;
+            $dmuc->intro = $request->intro;
+            $dmuc->status = $request->status;
+            $dmuc->save();
+            return redirect()->route('admin.danhmuc.chitiet', ['id' => $id])->with('success', 'cập nhật thông tin danh mục bài viết thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.danhmuc.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin danh mục bài viết thất bại!');
+        }
+    }
+
+    /**
+     * @function delete danh muc bai viet
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function danhMucDelete($id) {
+        try {
+            $dmuc = danhmucbaiviets::find($id);
+            $dmuc->delete();
+            return redirect()->route('admin.danhmuc')->with('success', 'xóa danh mục bài viết thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.danhmuc')->with('error', 'Lỗi, xóa danh mục bài viết thất bại!');
+        }
+    }
+
     //======================================================= gop y
     /**
      * @function go to list gopy
@@ -223,6 +441,59 @@ class AdminController extends Controller
     public function gopYChiTiet($id) {
         $data = gopys::findOrFail($id);
         return view('admin.gopy.detail', compact('data'));
+    }
+
+    /**
+     * @function insert gop y
+     * @param GopYRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function gopYInsert(GopYRequest $request) {
+        try {
+            $gopy = new gopys();
+            $gopy->email = $request->email;
+            $gopy->content = $request->input('content');
+            $gopy->save();
+            return redirect()->route('admin.gopy')->with('success', 'Thêm mới góp ý thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.gopy')->with('error', 'Lỗi, thêm mới góp ý thất bại!');
+        }
+    }
+
+    /**
+     * @function update gop y
+     * @param GopYUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function gopYUpdate(GopYUpdateRequest $request, $id) {
+        try {
+            $gopy = gopys::find($id);
+            $gopy->email = $request->email;
+            $gopy->content = $request->input('content');
+            $gopy->save();
+            return redirect()->route('admin.gopy.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin góp ý thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.gopy.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin góp ý thất bại!');
+        }
+    }
+
+    /**
+     * @function delete gop y
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function gopYDelete($id) {
+        try {
+            $gopy = gopys::find($id);
+            $gopy->delete();
+            return redirect()->route('admin.gopy')->with('success', 'xóa góp ý thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.gopy')->with('error', 'Lỗi, xóa góp ý thất bại!');
+        }
     }
 
     //======================================================= Loai thanh vien
@@ -245,6 +516,87 @@ class AdminController extends Controller
         return view('admin.loai-thanhvien.detail', compact('data'));
     }
 
+    /**
+     * @function insert loai thanh vien
+     * @param LoaiThanhVienRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function loaiThanhVienInsert(LoaiThanhVienRequest $request) {
+        try {
+            $loaitv = new loaithanhviens();
+            $loaitv->name = $request->email;
+            $loaitv->slug = $request->slug;
+            $loaitv->intro = $request->intro;
+            $loaitv->mark = $request->mark;
+            $loaitv->status = $request->status;
+            if ($request->hasFile('logo')) {
+                $loai = $request->file('logo');
+                $filename = time() . '.' . $loai->getClientOriginalExtension();
+                $dir = 'uploads/loaithanhviens/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($loai)->save(base_path($path));
+                $loaitv->logo = '/' . $path;
+            }
+            $loaitv->save();
+            return redirect()->route('admin.loaithanhvien')->with('success', 'Thêm mới loại thành viên thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.loaithanhvien')->with('error', 'Lỗi, thêm mới loại thành viên thất bại!');
+        }
+    }
+
+    /**
+     * @function update loai thah vien
+     * @param LoaiThanhVienUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function loaiThanhVienUpdate(LoaiThanhVienUpdateRequest $request, $id) {
+        try {
+            $loaitv = loaithanhviens::find($id);
+            $loaitv->name = $request->email;
+            $loaitv->slug = $request->slug;
+            $loaitv->intro = $request->intro;
+            $loaitv->mark = $request->mark;
+            $loaitv->status = $request->status;
+            if ($request->hasFile('logo')) {
+                $loai = $request->file('logo');
+                $filename = time() . '.' . $loai->getClientOriginalExtension();
+                $dir = 'uploads/loaithanhviens/';
+                if (!File::exists($dir)) {
+                    File::makeDirectory($dir, $mode = 0777, true, true);
+                }
+                $path = $dir . $filename;
+                Image::make($loai)->save(base_path($path));
+                $loaitv->logo = '/' . $path;
+            }
+            $loaitv->save();
+            return redirect()->route('admin.loaithanhvien.chitiet', ['id'=>$id])->with('success', 'Cập nhật loại thành viên thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.loaithanhvien.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật loại thành viên thất bại!');
+        }
+    }
+
+    /**
+     * @function delete loai thanh vien
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function loaiThanhVienDelete($id) {
+        try {
+            $loaitv = loaithanhviens::find($id);
+            $loaitv->delete();
+            return redirect()->route('admin.loaithanhvien')->with('success', 'xóa loại thành viên thành công.');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.loaithanhvien')->with('error', 'Lỗi, xóa loại thành viên thất bại!');
+        }
+    }
+
     //======================================================= nhan bai viet
     /**
      * @function go to list nhan baiviet
@@ -265,6 +617,59 @@ class AdminController extends Controller
         return view('admin.nhan-baiviet.detail', compact('data'));
     }
 
+    /**
+     * @functio insert nhan bai viet
+     * @param NhanBaiVietRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function nhanBaiVietInsert(NhanBaiVietRequest $request) {
+        try {
+            $nhanbv = new nhanbaiviets();
+            $nhanbv->email = $request->email;
+            $nhanbv->status = $request->status;
+            $nhanbv->save();
+            return redirect()->route('admin.nhanbaiviet')->with('success', 'Thêm mới thông tin nhận bài viết thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.nhanbaiviet')->with('error', 'Lỗi, thêm mới thông tin nhận bài viết thất bại!');
+        }
+    }
+
+    /**
+     * @function update nhan bai viet
+     * @param NhanBaiVietUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function nhanBaiVietUpdate(NhanBaiVietUpdateRequest $request, $id) {
+        try {
+            $nhanbv = nhanbaiviets::find($id);
+            $nhanbv->email = $request->email;
+            $nhanbv->status = $request->status;
+            $nhanbv->save();
+            return redirect()->route('admin.nhanbaiviet.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin nhận bài viết thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.nhanbaiviet.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin nhận bài viết thất bại!');
+        }
+    }
+
+    /**
+     * @function delete nhan bai viet
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function nhanBaiVietDelete($id) {
+        try {
+            $nhanbv = nhanbaiviets::find($id);
+            $nhanbv->delete();
+            return redirect()->route('admin.nhanbaiviet')->with('success', 'xóa nhận bài viết thành công');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.nhanbaiviet')->with('error', 'Lỗi, xóa nhận bài viết thất bại!');
+        }
+    }
+
     //======================================================= research
     /**
      * @function go to list research
@@ -283,6 +688,61 @@ class AdminController extends Controller
     public function researchChiTiet($id) {
         $data = researchs::findOrFail($id);
         return view('admin.research.detail', compact('data'));
+    }
+
+    /**
+     * @function insert research
+     * @param ResearchRequest $request
+     * @return \Illuminate\Http\RedirectResponse'
+     */
+    public function researchInsert(ResearchRequest $request) {
+        try {
+            $rs = new researchs();
+            $rs->email = $request->email;
+            $rs->keyword = $request->keyword;
+            $rs->count = $request->count;
+            $rs->save();
+            return redirect()->route('admin.research')->with('success', 'Thêm mới thông tin tìm kiếm thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.research')->with('error', 'Lỗi, thêm mới thông tin tìm kiếm thất bại!');
+        }
+    }
+
+    /**
+     * @function update research
+     * @param ResearchUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function researchUpdate(ResearchUpdateRequest $request, $id) {
+        try {
+            $rs = researchs::find($id);
+            $rs->email = $request->email;
+            $rs->keyword = $request->keyword;
+            $rs->count = $request->count;
+            $rs->save();
+            return redirect()->route('admin.research.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin tìm kiếm thành công!');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.research.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin tìm kiếm thất bại!');
+        }
+    }
+
+    /**
+     * @function delete research
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function researchDelete($id) {
+        try {
+            $rs = researchs::find($id);
+            $rs->delete();
+            return redirect()->route('admin.research')->with('success', 'xóa thông tin tìm kiếm thành công');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->route('admin.research')->with('error', 'Lỗi, xóa thông tin tìm kiếm thất bại!');
+        }
     }
 
     //======================================================= thanh vien
@@ -422,14 +882,14 @@ class AdminController extends Controller
             if(!is_null($list_bv)) {
                 foreach ($list_bv as $l) {
                     $b = baiviets::findOrFail($l->id);
-                    File::delete(($b->thumn));
-                    File::delete(($b->background));
+                    File::delete($b->thumn);
+                    File::delete($b->background);
                     $b->delete();
                 }
             }
             //delete user
-            File::delete(($u->avatar));
-            File::delete(($u->background));
+            File::delete($u->avatar);
+            File::delete($u->background);
             $u->delete();
             return route('admin.user.list')->with('success', 'Xóa người dùng thành công');
         } catch (Exception $e) {

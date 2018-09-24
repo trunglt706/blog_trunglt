@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NhanBaiVietRequest extends FormRequest
+class ResearchUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class NhanBaiVietRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -21,17 +21,10 @@ class NhanBaiVietRequest extends FormRequest
      *
      * @return array
      */
-    public function rules() {
+    public function rules()
+    {
         return [
-            'email' => 'required',
-            'status' => 'required'
-        ];
-    }
-
-    public function messages() {
-        return [
-            'email.required' => 'Email không được để trống',
-            'status.required' => 'Chưa chọn status',
+            //
         ];
     }
 }

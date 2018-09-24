@@ -13,7 +13,7 @@ class CauHinhChungRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,19 @@ class CauHinhChungRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'slug' => 'required',
+            'name' => 'required',
+            'intro' => 'required'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'slug.required' => 'Chưa chọn đường link cấu hình',
+            'name.required' => 'Tên cấu hình không được để trống',
+            'intro.required' => 'Mô tả cấu hình không được để trống'
         ];
     }
 }
