@@ -153,7 +153,7 @@ return [
         App\Providers\HomeProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
-
+        Intervention\Image\ImageServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -215,6 +215,7 @@ return [
 
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

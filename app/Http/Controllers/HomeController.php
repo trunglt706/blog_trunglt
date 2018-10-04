@@ -13,7 +13,6 @@ use App\nhanbaiviets;
 use App\phanhois;
 use App\quangcaos;
 use Illuminate\Http\Request;
-use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 

@@ -21,8 +21,8 @@ class CauHinhChungController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function cauHinhChung() {
-        $data = cauhinhchungs::all();
-        return view('admin.cauhinhchung.list', compact('data'));
+        $object['list_cauhinh'] = cauhinhchungs::paginate(10);
+        return view('admin.cauhinhchung.list', ['object' => $object]);
     }
 
     /**

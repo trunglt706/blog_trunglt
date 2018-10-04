@@ -23,7 +23,7 @@ class LoaiThanhVienRequest extends FormRequest
      */
     public function rules() {
         return [
-            'slug' => 'required',
+            'mark' => 'required|integer',
             'name' => 'required',
             'intro' => 'required'
         ];
@@ -31,7 +31,8 @@ class LoaiThanhVienRequest extends FormRequest
 
     public function messages() {
         return [
-            'slug.required' => 'Chưa chọn đường link cấu hình',
+            'mark.required' => 'Chưa nhập số điểm',
+            'mark.integer' => 'Số điểm phải là số nguyên',
             'name.required' => 'Tên cấu hình không được để trống',
             'intro.required' => 'Mô tả cấu hình không được để trống'
         ];

@@ -19,8 +19,8 @@ class HoiDapController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function hoiDap() {
-        $data = hoidap::all();
-        return view('admin.hoidap.list', compact('data'));
+        $object['list_hoidap'] = hoidap::paginate(10);
+        return view('admin.hoidap.list', ['object' => $object]);
     }
 
     /**

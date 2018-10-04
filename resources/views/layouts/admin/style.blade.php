@@ -21,4 +21,3 @@
 <link href="{{url('plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}" rel="stylesheet" type="text/css" />
 {{--data table--}}
 <script src="{{url('plugin/datatable/js/jquery.dataTables.min.css')}}" type="text/javascript"></script>
-<link href="{{url('css/admin/toastr.css')}}" rel="stylesheet" type="text/css" />

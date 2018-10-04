@@ -21,8 +21,8 @@ class QuangCaoController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function quangCao() {
-        $data = quangcaos::all();
-        return view('admin.quangcao.list', compact('data'));
+        $object['listqc'] = quangcaos::paginate(10);
+        return view('admin.quangcao.list', ['object' => $object]);
     }
 
     /**
@@ -57,7 +57,7 @@ class QuangCaoController extends Controller
                 }
                 $path = $dir . $filename;
                 Image::make($loai)->save(base_path($path));
-                $qcao->logo = '/' . $path;
+                $qcao->logo = $path;
             }
             $qcao->save();
             return redirect()->route('admin.quangcao')->with('success', 'Thêm mới quảng cáo thành công!');
@@ -83,6 +83,7 @@ class QuangCaoController extends Controller
             $qcao->order = $request->order;
             $qcao->status = $request->status;
             if ($request->hasFile('photo')) {
+                File::delete($qcao->photo);
                 $loai = $request->file('photo');
                 $filename = time() . '.' . $loai->getClientOriginalExtension();
                 $dir = 'uploads/quangcaos/';
@@ -91,7 +92,7 @@ class QuangCaoController extends Controller
                 }
                 $path = $dir . $filename;
                 Image::make($loai)->save(base_path($path));
-                $qcao->photo = '/' . $path;
+                $qcao->photo = $path;
             }
             $qcao->save();
             return redirect()->route('admin.quangcao.chitiet', ['id'=>$id])->with('success', 'Cập nhật quảng cáo thành công!');

@@ -1,20 +1,22 @@
 @extends('layouts.error.main')
 @section('content')
-<div id="content" style="margin-top: 20px !important;margin-bottom: 0px !important;">
-    <div class="m-grid__item m-grid__item--fluid m-grid  m-error-3">
-        <div class="m-error_container">
-            <span class="m-error_number">
-                <h1>
-                    503
-                </h1>
-            </span>
-            <p class="m-error_title m--font-light">
-                Service Unavailable
-            </p>
-            <p class="m-error_subtitle">
-                <a href="{{route('home')}}" class="btn btn-sm btn-info">Trở về trang chủ</a>
-            </p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h1>
+                        Oops!</h1>
+                    <h2>
+                        503 Service Unavailable</h2>
+                    <div class="error-details">
+                        Sorry, Service Unavailable!
+                    </div>
+                    <div class="error-actions">
+                        <a href="{{route('home')}}" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
+                            Home page </a><a href="{{route('contact')}}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-envelope"></span> Contact Support </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 @endsection

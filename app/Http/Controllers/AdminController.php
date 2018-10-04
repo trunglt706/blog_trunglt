@@ -74,26 +74,28 @@ class AdminController extends Controller
             $ad->name = $request->name;
             $ad->intro = $request->intro;
             if ($request->hasFile('avatar')) {
+                File::delete($ad->avtar);
                 $avatar = $request->file('avatar');
                 $filename = time() . '.' . $avatar->getClientOriginalExtension();
-                $dir = 'uploads/baiviets/';
+                $dir = 'uploads/admins/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
                 Image::make($avatar)->save(base_path($path));
-                $ad->avatar = '/' . $path;
+                $ad->avatar = $path;
             }
             if ($request->hasFile('background')) {
+                File::delete($ad->background);
                 $bg = $request->file('background');
                 $filename = time() . '.' . $bg->getClientOriginalExtension();
-                $dir = 'uploads/baiviets/';
+                $dir = 'uploads/admins/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
                 Image::make($bg)->save(base_path($path));
-                $ad->background = '/' . $path;
+                $ad->background = $path;
             }
             $ad->save();
             return route('admin.info')->with('success', 'Cập nhật thông tin admin thành công!');
@@ -121,5 +123,11 @@ class AdminController extends Controller
         }
     }
 
-    public function phanTichDuLieu() {}
+    /**
+     * @function go to annalytics page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function phanTichDuLieu() {
+        return view('admin.phantich.index');
+    }
 }

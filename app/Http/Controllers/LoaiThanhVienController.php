@@ -31,8 +31,8 @@ class LoaiThanhVienController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function loaiThanhVienChiTiet($id) {
-        $data['loaitv'] = loaithanhviens::findOrFail($id);
-        return view('admin.loai-thanhvien.detail', compact('data'));
+        $object['loaitv'] = loaithanhviens::findOrFail($id);
+        return view('admin.loai-thanhvien.detail', ['object' => $object]);
     }
 
     /**
@@ -44,7 +44,7 @@ class LoaiThanhVienController extends Controller
         try {
             $loaitv = new loaithanhviens();
             $loaitv->name = $request->name;
-            $loaitv->slug = $request->slug;
+            $loaitv->slug = str_slug($request->name, '-');
             $loaitv->intro = $request->intro;
             $loaitv->mark = $request->mark;
             $loaitv->status = $request->status;
@@ -56,8 +56,8 @@ class LoaiThanhVienController extends Controller
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
-                Image::make($loai)->save(base_path($path));
-                $loaitv->logo = '/' . $path;
+                Image::make($loai)->save($path);
+                $loaitv->logo = $path;
             }
             $loaitv->save();
             return redirect()->route('admin.loaithanhvien')->with('success', 'Thêm mới loại thành viên thành công!');
@@ -73,15 +73,15 @@ class LoaiThanhVienController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function loaiThanhVienUpdate(LoaiThanhVienUpdateRequest $request, $id) {
+    public function loaiThanhVienUpdate(LoaiThanhVienRequest $request, $id) {
         try {
             $loaitv = loaithanhviens::find($id);
             $loaitv->name = $request->name;
-            $loaitv->slug = $request->slug;
             $loaitv->intro = $request->intro;
             $loaitv->mark = $request->mark;
             $loaitv->status = $request->status;
             if ($request->hasFile('logo')) {
+                File::delete($loaitv->logo);
                 $loai = $request->file('logo');
                 $filename = time() . '.' . $loai->getClientOriginalExtension();
                 $dir = 'uploads/loaithanhviens/';
@@ -89,8 +89,8 @@ class LoaiThanhVienController extends Controller
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
-                Image::make($loai)->save(base_path($path));
-                $loaitv->logo = '/' . $path;
+                Image::make($loai)->save($path);
+                $loaitv->logo = $path;
             }
             $loaitv->save();
             return redirect()->route('admin.loaithanhvien.chitiet', ['id'=>$id])->with('success', 'Cập nhật loại thành viên thành công!');

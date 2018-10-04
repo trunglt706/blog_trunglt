@@ -29,7 +29,7 @@
             <!-- END OF /. FOOTER BOX (Category) -->
             <!-- START FOOTER BOX (Recent Post) -->
             <div class="col-sm-4 footer-box hidden-xs">
-                <h4 class="wiget-title">FANPAGE MY BLOCK</h4>
+                <h4 class="wiget-title">FANPAGE MY BLOG</h4>
                 <div class="footer-news-grid">
                     <div class="news-list-item">
                         <div class="fb-page" data-href="https://www.facebook.com/clbmekongsp" data-tabs="timeline" data-width="350" data-height="180" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://www.facebook.com/clbmekongsp" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/clbmekongsp">CLB Sản phẩm đặc trưng ĐBSCL</a></blockquote></div>

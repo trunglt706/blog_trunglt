@@ -29,8 +29,8 @@ class DanhMucBaiVietController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function danhMucChiTiet($id) {
-        $data = danhmucbaiviets::findOrFail($id);
-        return view('admin.danhmuc-baiviet.detail', compact('data'));
+        $object['danhmuc'] = danhmucbaiviets::findOrFail($id);
+        return view('admin.danhmuc-baiviet.detail', ['object' => $object]);
     }
 
     /**
@@ -42,11 +42,11 @@ class DanhMucBaiVietController extends Controller
         try {
             $dmuc = new danhmucbaiviets();
             $dmuc->name = $request->name;
-            $dmuc->slug = $request->slug;
+            $dmuc->slug = str_slug($request->name, '-');
             $dmuc->intro = $request->intro;
             $dmuc->status = $request->status;
             $dmuc->save();
-            return redirect()->route('admin.danhmuc')->with('success', 'Thêm mới danh mục bài viết thành công!');
+            return redirect()->route('admin.danhmuc')->with('success', 'Thêm mới danh mục bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('admin.danhmuc')->with('error', 'Lỗi, thêm mới danh mục bài viết thất bại!');
@@ -59,15 +59,14 @@ class DanhMucBaiVietController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function danhMucUpdate(DanhMucUpdateRequest $request, $id) {
+    public function danhMucUpdate(DanhMucBaiVietRequest $request, $id) {
         try {
             $dmuc = danhmucbaiviets::find($id);
             $dmuc->name = $request->name;
-            $dmuc->slug = $request->slug;
             $dmuc->intro = $request->intro;
             $dmuc->status = $request->status;
             $dmuc->save();
-            return redirect()->route('admin.danhmuc.chitiet', ['id' => $id])->with('success', 'cập nhật thông tin danh mục bài viết thành công!');
+            return redirect()->route('admin.danhmuc.chitiet', ['id' => $id])->with('success', 'cập nhật thông tin danh mục bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('admin.danhmuc.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin danh mục bài viết thất bại!');
@@ -83,7 +82,7 @@ class DanhMucBaiVietController extends Controller
         try {
             $dmuc = danhmucbaiviets::find($id);
             $dmuc->delete();
-            return redirect()->route('admin.danhmuc')->with('success', 'xóa danh mục bài viết thành công!');
+            return redirect()->route('admin.danhmuc')->with('success', 'xóa danh mục bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('admin.danhmuc')->with('error', 'Lỗi, xóa danh mục bài viết thất bại!');

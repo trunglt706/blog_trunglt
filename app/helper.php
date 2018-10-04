@@ -17,7 +17,7 @@ function isActiveRoute($route, $output = "active") {
  * @param string $output
  * @return string
  */
-function areActiveRoutes(Array $routes, $output = "active'") {
+function areActiveRoutes(Array $routes, $output = "active") {
     foreach ($routes as $route) {
         if (Route::currentRouteName() == $route) {
             return $output;

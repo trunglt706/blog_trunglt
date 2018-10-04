@@ -19,8 +19,8 @@ class GopYController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function gopY() {
-        $data = gopys::all();
-        return view('admin.gopy.list', compact('data'));
+        $object['listgopy'] = gopys::paginate(10);
+        return view('admin.gopy.list', ['object' => $object]);
     }
 
     /**

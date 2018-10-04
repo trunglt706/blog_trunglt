@@ -45,7 +45,7 @@ class BaiVietController extends Controller
         try {
             $bviet = new baiviets();
             $bviet->id_danhmuc = $request->id_danhmuc;
-            $bviet->username = auth()->user()->id;
+            $bviet->username = auth()->user()->username;
             $bviet->name = $request->name;
             $bviet->slug = str_slug($request->name, '-');
             $bviet->intro = $request->intro;
@@ -63,7 +63,7 @@ class BaiVietController extends Controller
                 }
                 $path = $dir . $filename;
                 Image::make($thumn)->save(base_path($path));
-                $bviet->thumn = '/' . $path;
+                $bviet->thumn = $path;
             }
             if ($request->hasFile('background')) {
                 $background = $request->file('background');
@@ -74,7 +74,7 @@ class BaiVietController extends Controller
                 }
                 $path = $dir . $filename;
                 Image::make($background)->save(base_path($path));
-                $bviet->background = '/' . $path;
+                $bviet->background = $path;
             }
             $bviet->save();
             return redirect()->route('admin.baiviet')->with('success', 'Thêm bài viết mới thành công.');
@@ -102,6 +102,7 @@ class BaiVietController extends Controller
             $bviet->rating = $request->rating;
             $bviet->status = $request->status;
             if ($request->hasFile('thumn')) {
+                File::delete($bviet->thumn);
                 $thumn = $request->file('thumn');
                 $filename = time() . '.' . $thumn->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
@@ -110,9 +111,10 @@ class BaiVietController extends Controller
                 }
                 $path = $dir . $filename;
                 Image::make($thumn)->save(base_path($path));
-                $bviet->thumn = '/' . $path;
+                $bviet->thumn = $path;
             }
             if ($request->hasFile('background')) {
+                File::delete($bviet->background);
                 $background = $request->file('background');
                 $filename = time() . '.' . $background->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
@@ -121,7 +123,7 @@ class BaiVietController extends Controller
                 }
                 $path = $dir . $filename;
                 Image::make($background)->save(base_path($path));
-                $bviet->background = '/' . $path;
+                $bviet->background = $path;
             }
             $bviet->save();
             return redirect()->route('admin.baiviet.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin bài viết thành công.');
@@ -142,7 +144,7 @@ class BaiVietController extends Controller
             File::delete($bviet->thumn);
             File::delete($bviet->thumn);
             $bviet->delete();
-            return redirect()->route('admin.baiviet')->with('success', 'Xóa bài viết thất bại!');
+            return redirect()->route('admin.baiviet')->with('success', 'Xóa bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('admin.baiviet')->with('error', 'Lỗi, xóa bài viết thất bại!');

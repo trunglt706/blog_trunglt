@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
-        @include('layouts.auth.partials.style')
+        @include('layouts.error.style')
     </head>
     <body>
         @yield('content')
-        @include('layouts.auth.partials.script')
+        @include('layouts.error.script')
     </body>
 </html>

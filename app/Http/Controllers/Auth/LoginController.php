@@ -48,14 +48,7 @@ class LoginController extends Controller
     public function loginAdmin(LoginRequest $request) {
         $credentials = $request->only('email', 'password');
         if (Auth::guard('admin')->attempt($credentials)) {
-            $admin = admins::where('email', $credentials['email'])->first();
-            if($admin->status == 1) {
-                return redirect()->route('login')->with('error', 'Đã có người đăng nhập tài khoản này!!');
-            } else {
-                $admin->status = 1;
-                $admin->save();
-                return redirect()->route('admin.index')->with('success', 'Đăng nhập hệ thống thành công');
-            }
+            return redirect()->route('admin.index')->with('success', 'Đăng nhập hệ thống thành công');
         } else {
             return redirect()->route('login')->with('error', 'Lỗi, tên tài khoản hoặc mật khẩu không chính xác!');
         }

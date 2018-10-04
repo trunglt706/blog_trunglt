@@ -4803,3 +4803,8 @@ blockquote.no-sign p {
     transform: scale(1);
     transition: all 0.5s;
 }
+/*Add css trunglt*/
+.post-info>h4 {
+    height: 57px; overflow: hidden;
+}
+/*End add css trunglt*/

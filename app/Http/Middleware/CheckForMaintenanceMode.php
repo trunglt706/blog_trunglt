@@ -2,16 +2,19 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode as Middleware;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CheckForMaintenanceMode extends Middleware
 {
-    /**
-     * The URIs that should be reachable while maintenance mode is enabled.
-     *
-     * @var array
-     */
-    protected $except = [
-        //
-    ];
+
+    public function handle($request, Closure $next)
+    {
+//        throw new HttpException(503);
+
+        return $next($request);
+    }
 }

@@ -19,8 +19,8 @@ class NhanBaiVietController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function nhanBaiViet() {
-        $data = nhanbaiviets::all();
-        return view('admin.nhan-baiviet.list', compact('data'));
+        $object['list_nhanbv'] = nhanbaiviets::paginate(10);
+        return view('admin.nhan-baiviet.list', ['object' => $object]);
     }
 
     /**

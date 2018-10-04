@@ -81,10 +81,10 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbar-menu">
                     <ul class="nav navbar-nav navbar-left" data-in="" data-out="">
-                        <li class="dropdown active">
+                        <li class="{{isActiveRoute('home')}}">
                             <a href="{{route('home')}}"><i class="fa fa-home"></i> Trang chủ</a>
                         </li>
-                        <li class="dropdown megamenu-fw">
+                        <li class="{{isActiveRoute('introduce')}}">
                             <a href="{{route('introduce')}}"><i class="fa fa-th-large"></i> Giới thiệu</a>
                         </li>
                         <li class="dropdown">
@@ -97,8 +97,8 @@
                                 </ul>
                             @endif
                         </li>
-                        <li><a href="{{route('contact')}}"><i class="fa fa-address-card-o"></i> Liên hệ</a></li>
-                        <li><a href="{{route('hoidap')}}"><i class="fa fa-question-circle"></i> Hỏi đáp</a></li>
+                        <li class="{{isActiveRoute('contact')}}"><a href="{{route('contact')}}"><i class="fa fa-address-card-o"></i> Liên hệ</a></li>
+                        <li class="{{isActiveRoute('hoidap')}}"><a href="{{route('hoidap')}}"><i class="fa fa-question-circle"></i> Hỏi đáp</a></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div>

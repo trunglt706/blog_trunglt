@@ -48,26 +48,28 @@ class ThanhVienController extends Controller
             $u->intro = $request->intro;
             $u->id_loaithanhvien = $request->id_loaithanhvien;
             if ($request->hasFile('avatar')) {
+                File::delete($u->avatar);
                 $avatar = $request->file('avatar');
                 $filename = time() . '.' . $avatar->getClientOriginalExtension();
-                $dir = 'uploads/baiviets/';
+                $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
                 Image::make($avatar)->save(base_path($path));
-                $u->avatar = '/' . $path;
+                $u->avatar = $path;
             }
             if ($request->hasFile('background')) {
+                File::delete($u->background);
                 $bg = $request->file('background');
                 $filename = time() . '.' . $bg->getClientOriginalExtension();
-                $dir = 'uploads/baiviets/';
+                $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
                 Image::make($bg)->save(base_path($path));
-                $u->background = '/' . $path;
+                $u->background = $path;
             }
             $u->save();
             return route('admin.user.detail', ['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công');
@@ -113,24 +115,24 @@ class ThanhVienController extends Controller
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
                 $filename = time() . '.' . $avatar->getClientOriginalExtension();
-                $dir = 'uploads/users/';
+                $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
                 Image::make($avatar)->save(base_path($path));
-                $u->avatar = '/' . $path;
+                $u->avatar = $path;
             }
             if ($request->hasFile('background')) {
                 $bg = $request->file('background');
                 $filename = time() . '.' . $bg->getClientOriginalExtension();
-                $dir = 'uploads/users/';
+                $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
                 Image::make($bg)->save(base_path($path));
-                $u->background = '/' . $path;
+                $u->background = $path;
             }
             $u->save();
             return route('admin.user.list')->with('success', 'Thêm mới người dùng thành công');
