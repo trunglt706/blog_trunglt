@@ -18,6 +18,8 @@
 <!-- Daterange picker -->
 <link href="{{url('css/admin/daterangepicker.css')}}" rel="stylesheet" type="text/css" />
 <!-- bootstrap wysihtml5 - text editor -->
-<link href="{{url('plugin/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}" rel="stylesheet" type="text/css" />
-{{--data table--}}
-<script src="{{url('plugin/datatable/js/jquery.dataTables.min.css')}}" type="text/javascript"></script>
+<link href="{{url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}" rel="stylesheet" type="text/css" />
+ <!-- Select2 -->
+<link rel="stylesheet" href="{{url('plugins/select2/dist/css/select2.min.css')}}">
+<!--data table-->
+<script src="{{url('plugins/datatable/css/jquery.dataTables.min.css')}}" type="text/javascript"></script>

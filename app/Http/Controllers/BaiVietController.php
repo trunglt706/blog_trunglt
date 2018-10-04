@@ -23,6 +23,7 @@ class BaiVietController extends Controller
      */
     public function baiViet() {
         $object['listbv'] = baiviets::paginate(10);
+        $object['list_danhmuc'] = \App\danhmucbaiviets::where('status', 1)->get();
         return view('admin.baiviet.list', ['object' => $object]);
     }
 
@@ -33,6 +34,7 @@ class BaiVietController extends Controller
      */
     public function baiVietChiTiet($id) {
         $object['bviet'] = baiviets::findOrFail($id);
+        $object['list_danhmuc'] = \App\danhmucbaiviets::where('status', 1)->get();
         return view('admin.baiviet.detail', ['object' => $object]);
     }
 
@@ -52,11 +54,11 @@ class BaiVietController extends Controller
             $bviet->content = $request['content'];
             $bviet->keyword = $request->keyword;
             $bviet->important = isset($request->important) ? 1 : 0;
-            $bviet->rating = $request->rating;
+            $bviet->rating = 0;
             $bviet->status = $request->status;
             if ($request->hasFile('thumn')) {
                 $thumn = $request->file('thumn');
-                $filename = time() . '.' . $thumn->getClientOriginalExtension();
+                $filename = 'thumn'.time() . '.' . $thumn->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -67,7 +69,7 @@ class BaiVietController extends Controller
             }
             if ($request->hasFile('background')) {
                 $background = $request->file('background');
-                $filename = time() . '.' . $background->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $background->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -90,7 +92,7 @@ class BaiVietController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function baiVietUpdate(BaiVietUpdateRequest $request, $id) {
+    public function baiVietUpdate(BaiVietRequest $request, $id) {
         try {
             $bviet = baiviets::find($id);
             $bviet->id_danhmuc = $request->id_danhmuc;
@@ -104,7 +106,7 @@ class BaiVietController extends Controller
             if ($request->hasFile('thumn')) {
                 File::delete($bviet->thumn);
                 $thumn = $request->file('thumn');
-                $filename = time() . '.' . $thumn->getClientOriginalExtension();
+                $filename = 'thumn'.time() . '.' . $thumn->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -116,7 +118,7 @@ class BaiVietController extends Controller
             if ($request->hasFile('background')) {
                 File::delete($bviet->background);
                 $background = $request->file('background');
-                $filename = time() . '.' . $background->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $background->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -142,7 +144,7 @@ class BaiVietController extends Controller
         try {
             $bviet = baiviets::find($id);
             File::delete($bviet->thumn);
-            File::delete($bviet->thumn);
+            File::delete($bviet->background);
             $bviet->delete();
             return redirect()->route('admin.baiviet')->with('success', 'Xóa bài viết thành công');
         } catch (Exception $e) {

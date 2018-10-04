@@ -13,4 +13,10 @@
      padding: 2px;
  }
  #image-holder > img, #image-holder > a > img {max-width: 205px !important; max-height: 100px !important;}
+ #image-holder-background {
+     border: 1px dotted #888888;
+     padding: 2px;
+ }
+ #image-holder-background > img, #image-holder-background > a > img {max-width: 205px !important; max-height: 100px !important;}
+ .select2 { width: 100% !important; }
  /*End add css trunglt*/

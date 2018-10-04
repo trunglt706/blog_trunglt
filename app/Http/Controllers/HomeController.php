@@ -59,13 +59,17 @@ class HomeController extends Controller
     public function danhmuc_baiviet($slug) {
         //Lay chi tiet danh muc bai viet
         $data['danhmuc'] = danhmucbaiviets::where('slug', $slug)->where('status', 1)->first();
-        //Lay danh sach bai viet cua danh muc
-        $data['list_baiviet'] = baiviets::where('id_danhmuc', $data['danhmuc']->id)->where('status', 1)->orderBy('created_at')->paginate(6);
-        //Lay danh sach 5 bai viet co luot view cao nhat
-        $data['list_view'] = baiviets::where('status', 1)->orderBy('view', 'desc')->limit(5)->get();
-        //Lay danh sach 3 bai viet co luot like cao nhat
-        $data['list_like'] = baiviets::where('status', 1)->orderBy('like', 'desc')->limit(3)->get();
-        return view('danhmuc-baiviet', compact('data'));
+        if (!is_null($data['danhmuc'])) {
+            //Lay danh sach bai viet cua danh muc
+            $data['list_baiviet'] = baiviets::where('id_danhmuc', $data['danhmuc']->id)->where('status', 1)->orderBy('created_at')->paginate(6);
+            //Lay danh sach 5 bai viet co luot view cao nhat
+            $data['list_view'] = baiviets::where('status', 1)->orderBy('view', 'desc')->limit(5)->get();
+            //Lay danh sach 3 bai viet co luot like cao nhat
+            $data['list_like'] = baiviets::where('status', 1)->orderBy('like', 'desc')->limit(3)->get();
+            return view('danhmuc-baiviet', compact('data'));
+        } else {
+            return route('home')->with('error', 'Danh mục này không tồn tại!');
+        }
     }
 
     /**
@@ -98,7 +102,7 @@ class HomeController extends Controller
             $data['new_other'] = baiviets::where('id_danhmuc', $data['news']->id_danhmuc)->where('id', '<>', $data['news']->id)->where('status', 1)->orderBy('created_at', 'desc')->limit(3)->get();
             return view('detail-baiviet', ['data' => $data, 'object' => $object]);
         } else {
-            return redirect()->route('danhmuc.baiviet')->with('error', 'Bài viết này không tồn tại!');
+            return redirect()->route('home')->with('error', 'Bài viết này không tồn tại!');
         }
     }
 
