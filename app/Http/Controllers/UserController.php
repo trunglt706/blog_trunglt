@@ -121,8 +121,8 @@ class UserController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function baiviet($id) {
-        $data = baiviets::where('id', $id)->where('username', auth()->user()->username)->first();
-        return view('user.baiviet.detail', compact('data'));
+        $object['bviet'] = baiviets::where('id', $id)->where('username', auth()->user()->username)->first();
+        return view('user.baiviet.detail', ['object' => $object]);
     }
 
     /**
@@ -130,8 +130,8 @@ class UserController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function list_baiviet() {
-        $data = baiviets::where('username', auth()->user()->username)->get();
-        return view('user.baiviet.list', compact('data'));
+        $object['list_bviet'] = baiviets::where('username', auth()->user()->username)->get();
+        return view('user.baiviet.list', ['object' => $object]);
     }
     
     /**

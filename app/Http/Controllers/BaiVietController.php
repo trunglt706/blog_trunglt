@@ -32,8 +32,8 @@ class BaiVietController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function baiVietChiTiet($id) {
-        $data = baiviets::findOrFail($id);
-        return view('admin.baiviet.detail', compact('data'));
+        $object['bviet'] = baiviets::findOrFail($id);
+        return view('admin.baiviet.detail', ['object' => $object]);
     }
 
     /**

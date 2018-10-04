@@ -29,8 +29,8 @@ class NhanBaiVietController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function nhanBaiVietChiTiet($id) {
-        $data = nhanbaiviets::findOrFail($id);
-        return view('admin.nhan-baiviet.detail', compact('data'));
+        $object['nhan_bviet'] = nhanbaiviets::findOrFail($id);
+        return view('admin.nhan-baiviet.detail', ['object' => $object]);
     }
 
     /**

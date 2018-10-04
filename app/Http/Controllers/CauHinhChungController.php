@@ -31,8 +31,8 @@ class CauHinhChungController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function cauHinhChungChiTiet($id) {
-        $data = cauhinhchungs::findOrFail($id);
-        return view('admin.cauhinhchung.detail', compact('data'));
+        $object['chinh'] = cauhinhchungs::findOrFail($id);
+        return view('admin.cauhinhchung.detail', ['object' => $object]);
     }
 
     /**

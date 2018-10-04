@@ -29,8 +29,8 @@ class HoiDapController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function hoiDapChiTiet($id) {
-        $data = hoidap::findOrFail($id);
-        return view('admin.hoidap.detail', compact('data'));
+        $object['hdap'] = hoidap::findOrFail($id);
+        return view('admin.hoidap.detail', ['object' => $object]);
     }
 
     /**

@@ -32,8 +32,8 @@ class ThanhVienController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function thanhVienChiTiet($id) {
-        $data = users::findOrFail($id);
-        return view('admin.user.detail', compact('data'));
+        $object['tvien'] = users::findOrFail($id);
+        return view('admin.user.detail', ['object' => $object]);
     }
 
     /**

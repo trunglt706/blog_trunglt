@@ -31,8 +31,8 @@ class QuangCaoController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function quangCaoChiTiet($id) {
-        $data = quangcaos::findOrFail($id);
-        return view('admin.quangcao.detail', compact('data'));
+        $object['qcao'] = quangcaos::findOrFail($id);
+        return view('admin.quangcao.detail', ['object' => $object]);
     }
 
     /**

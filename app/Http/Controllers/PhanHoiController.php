@@ -13,6 +13,25 @@ class PhanHoiController extends Controller
     {
         $this->middleware('auth:admin');
     }
+    
+    /**
+     * @function go to list phan hoi
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function phanHoi() {
+        $object['phanhoi'] = phanhois::paginate(10);
+        return view('admin.phanhoi.list', ['object' => $object]);
+    }
+
+    /**
+     * @function go to detail phan hoi
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function phanHoiChiTiet($id) {
+        $object['phoi'] = phanhois::findOrFail($id);
+        return view('admin.phanhoi.detail', ['object' => $object]);
+    }
 
     /**
      * @function insert new phan hoi

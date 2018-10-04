@@ -29,8 +29,8 @@ class GopYController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function gopYChiTiet($id) {
-        $data = gopys::findOrFail($id);
-        return view('admin.gopy.detail', compact('data'));
+        $object['goiy'] = gopys::findOrFail($id);
+        return view('admin.gopy.detail', ['object' => $object]);
     }
 
     /**

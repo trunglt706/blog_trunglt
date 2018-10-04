@@ -18,8 +18,8 @@ class LienHeController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function lienHe() {
-        $data = lienhe::all();
-        return view('admin.lienhe.list', compact('data'));
+        $object['lienhe'] = lienhe::all();
+        return view('admin.lienhe.list', ['object' => $object]);
     }
 
     /**
@@ -28,8 +28,8 @@ class LienHeController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function lienHeChiTiet($id) {
-        $data = lienhe::findOrFail($id);
-        return view('admin.lienhe.detail', compact('data'));
+        $object['lhe'] = lienhe::findOrFail($id);
+        return view('admin.lienhe.detail', ['object' => $object]);
     }
 
     /**

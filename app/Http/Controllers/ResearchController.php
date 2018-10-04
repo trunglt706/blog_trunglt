@@ -19,8 +19,8 @@ class ResearchController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function research() {
-        $data = researchs::all();
-        return view('admin.research.list', compact('data'));
+        $object['researchs'] = researchs::all();
+        return view('admin.research.list', ['object' => $object]);
     }
 
     /**
@@ -29,8 +29,8 @@ class ResearchController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function researchChiTiet($id) {
-        $data = researchs::findOrFail($id);
-        return view('admin.research.detail', compact('data'));
+        $object['research'] = researchs::findOrFail($id);
+        return view('admin.research.detail', ['object' => $object]);
     }
 
     /**
