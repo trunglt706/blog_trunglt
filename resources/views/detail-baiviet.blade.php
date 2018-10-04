@@ -45,7 +45,7 @@
                                 <li><i class="ti-eye"></i>{{$data['news']->view}} views</a></li>
                             </ul>
                             <div class="content-baiviet">
-                                {{$data['news']->content}}
+                                <?= $data['news']->content ?>
                             </div>
                         </div>
                         @if (!is_null($data['news']->keyword))

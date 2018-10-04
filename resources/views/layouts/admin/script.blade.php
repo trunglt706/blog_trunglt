@@ -39,6 +39,8 @@
 <script src="{{url('plugins/ckeditor/ckeditor.js')}}" type="text/javascript"></script>
 <!-- Select2 -->
 <script src="{{url('plugins/select2/dist/js/select2.full.min.js')}}"></script>
+<!-- iCheck -->
+<script src="{{url('plugin/iCheck/icheck.min.js'.'?v='.env("APP_VERSION"))}}"></script>
 <!-- Hien thi hinh anh khi chon lua tu form -->
 <script type="text/javascript">
     $("#AvatarPerson").on('change', function () {
@@ -126,4 +128,12 @@
     });
     
     $('.select2').select2();
+    
+    $(function () {
+                $('input').iCheck({
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue',
+                    increaseArea: '20%' /* optional */
+                });
+            });
 </script>

@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Log;
 use File;
 use Image;
 
-class ThanhVienController extends Controller
-{
+class ThanhVienController extends Controller {
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -23,6 +21,7 @@ class ThanhVienController extends Controller
      */
     public function thanhVien() {
         $object['thanhvien'] = users::paginate(10);
+        $object['loai_tvien'] = \App\loaithanhviens::where('status', 1)->get();
         return view('admin.user.list', ['object' => $object]);
     }
 
@@ -33,6 +32,7 @@ class ThanhVienController extends Controller
      */
     public function thanhVienChiTiet($id) {
         $object['tvien'] = users::findOrFail($id);
+        $object['loai_tvien'] = \App\loaithanhviens::where('status', 1)->get();
         return view('admin.user.detail', ['object' => $object]);
     }
 
@@ -152,7 +152,7 @@ class ThanhVienController extends Controller
             $u = users::findOrFail($id);
             //Delete all baiviet cua user
             $list_bv = baiviets::where('username', $u->username)->get();
-            if(!is_null($list_bv)) {
+            if (!is_null($list_bv)) {
                 foreach ($list_bv as $l) {
                     $b = baiviets::findOrFail($l->id);
                     File::delete($b->thumn);
@@ -183,16 +183,17 @@ class ThanhVienController extends Controller
         //block all baiviet cua user
         $count = 0;
         $list = baiviets::where('username', $u->username)->get();
-        if(!is_null($list)) {
+        if (!is_null($list)) {
             foreach ($list as $l) {
                 $b = baiviets::findOrFail($l->id);
-                if($b->status != -1) {
+                if ($b->status != -1) {
                     $b->status = -1;
                     $b->save();
                     $count++;
                 }
             }
         }
-        echo array('status' => 'success', 'ms' => 'Block tài khoản '.$u->email.' thành công. Có '.$count.'/'.count($list).' bài viết đã khóa kèm theo!');
+        echo array('status' => 'success', 'ms' => 'Block tài khoản ' . $u->email . ' thành công. Có ' . $count . '/' . count($list) . ' bài viết đã khóa kèm theo!');
     }
+
 }

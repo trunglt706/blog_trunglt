@@ -73,7 +73,7 @@ Route::prefix('admin')->group(function () {
     Route::get('thanh-vien', 'ThanhVienController@thanhVien')->name('admin.thanhvien');
     Route::get('thanh-vien/{id}', 'ThanhVienController@thanhVienChiTiet')->name('admin.thanhvien.chitiet');
     Route::post('thanh-vien/insert', 'ThanhVienController@thanhVienInsert')->name('admin.thanhvien.insert');
-    Route::post('thanh-vien/update/info', 'ThanhVienController@thanhVienUpdateInfo')->name('admin.thanhvien.update.info');
+    Route::post('thanh-vien/update/info/{id}', 'ThanhVienController@thanhVienUpdateInfo')->name('admin.thanhvien.update.info');
     Route::post('thanh-vien/update/account/{id}', 'ThanhVienController@thanhVienUpdateAccount')->name('admin.thanhvien.update.account');
     Route::get('thanh-vien/delete/{id}', 'ThanhVienController@thanhVienDelete')->name('admin.thanhvien.delete');
     Route::post('thanh-vien/block/{id}', 'ThanhVienController@thanhVienBlock')->name('admin.thanhvien.block');

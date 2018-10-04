@@ -21,5 +21,7 @@
 <link href="{{url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}" rel="stylesheet" type="text/css" />
  <!-- Select2 -->
 <link rel="stylesheet" href="{{url('plugins/select2/dist/css/select2.min.css')}}">
+<!-- iCheck -->
+<link href="{{url('plugin/iCheck/square/blue.css')}}" rel="stylesheet" />
 <!--data table-->
 <script src="{{url('plugins/datatable/css/jquery.dataTables.min.css')}}" type="text/javascript"></script>

@@ -83,7 +83,6 @@
                         {{ $object['listbv']->links() }}
                     </div>
                 </div>
-
                 <!-- /.box -->
             </div>
             <!-- /.col -->
@@ -130,19 +129,21 @@
                         <label>Từ khóa <small class="text-danger">(Mỗi từ khóa ngăn cách nhau bởi dấu phẩy)</small></label>
                         <input type="text" name="keyword" class="form-control" placeholder="Nhập từ khóa ...">
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="important"> Tin quan trọng
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>Trạng thái *</label>
-                        <div class="col-12">
-                            <select name="status" class="form-control select2" required="">
-                                <option value="1" selected="">Duyệt</option>
-                                <option value="0">Không duyệt</option>
-                                <option value="-1">Khóa</option>
-                            </select>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Trạng thái *</label>
+                            <div class="col-12">
+                                <select name="status" class="form-control select2" required="">
+                                    <option value="1" selected="">Duyệt</option>
+                                    <option value="0">Không duyệt</option>
+                                    <option value="-1">Khóa</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="checkbox icheck col-md-6">
+                            <label>
+                                <input type="checkbox" name="important"> Tin quan trọng
+                            </label>
                         </div>
                     </div>
                     <div class="form-group">
