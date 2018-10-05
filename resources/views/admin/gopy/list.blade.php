@@ -21,7 +21,7 @@
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
-                                    <a class="btn btn-default" href="{{route('admin.gopy')}}" style="margin-right: 5px;"><i class="fa fa-refresh"></i> Refresh</a>
+                                    <a class="btn btn-default" href="{{route('admin.gopy')}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
                                     <a class="btn btn-success" data-toggle="modal" data-target="#add-model"><i class="fa fa-plus"></i> Add</a>
                                 </div>
                             </div>

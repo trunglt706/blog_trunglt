@@ -24,7 +24,7 @@
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
-                                    <a class="btn btn-default" href="{{route('admin.baiviet.chitiet', ['id' => $object['bviet']->id])}}" style="margin-right: 5px;"><i class="fa fa-refresh"></i> Refresh</a>
+                                    <a class="btn btn-default" href="{{route('admin.baiviet.chitiet', ['id' => $object['bviet']->id])}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
                                     <a class="btn btn-default" href="{{route('admin.baiviet')}}"><i class="fa fa-arrow-left"></i> Back</a>
                                 </div>
                             </div>

@@ -39,7 +39,10 @@
                             </figure>
                             <h2>{{$data['news']->name}}</h2>
                             <ul class="authar-info">
-                                <li>By {{!is_null(getUser($data['news']->username)) ? getUser($data['news']->username)->name : "No author"}}</li>
+                                @php
+                                $author = !is_null(getUser($data['news']->username)) ? getUser($data['news']->username)->name : "No author";
+                                @endphp
+                                <li>By <a href="{{route('tacgia.index', ['id' => $data['news']->username])}}" target="_blank">{{$author}}</a></li>
                                 <li><i class="ti-timer"></i> {{date('d/m/Y', strtotime($data['news']->created_at))}}</li>
                                 <li><i class="ti-thumb-up"></i>{{$data['news']->like}} likes</a></li>
                                 <li><i class="ti-eye"></i>{{$data['news']->view}} views</a></li>
@@ -83,7 +86,7 @@
                     <div class="post-inner post-inner-2">
                         <!--post header-->
                         <div class="post-head">
-                            <h2 class="title"><strong>Bài viết cùng chủ đề </strong></h2>
+                            <h2 class="title"><strong><i class="fa fa-newspaper-o"></i> Bài viết cùng chủ đề </strong></h2>
                         </div>
                         <!-- post body -->
                         <div class="post-body">
@@ -100,7 +103,7 @@
                                                             <div class="grid-item">
                                                                 <div class="grid-item-img">
                                                                     <a href="{{route('detail.baiviet', ['slug' => $other->slug])}}">
-                                                                        <img src="{{url($other->thumn)}}" class="img-responsive" alt="{{$other->slug}}">
+                                                                        <img src="{{url($other->thumn)}}" class="img-responsive" alt="{{$other->slug}}" style="max-height: 215px;">
                                                                         <div class="link-icon"><i class="fa fa-play"></i></div>
                                                                     </a>
                                                                 </div>

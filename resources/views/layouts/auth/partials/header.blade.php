@@ -96,6 +96,7 @@
                                 </ul>
                             @endif
                         </li>
+                        <li class="{{isActiveRoute('tacgia.list')}}"><a href="{{route('tacgia.list')}}"><i class="fa fa-user-circle-o"></i> Tác giả</a></li>
                         <li class="{{isActiveRoute('contact')}}"><a href="{{route('contact')}}"><i class="fa fa-address-card-o"></i> Liên hệ</a></li>
                         <li class="{{isActiveRoute('hoidap')}}"><a href="{{route('hoidap')}}"><i class="fa fa-question-circle"></i> Hỏi đáp</a></li>
                     </ul>

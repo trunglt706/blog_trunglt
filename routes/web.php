@@ -18,6 +18,8 @@ Route::get('/danh-muc-bai-viet/{slug}', 'HomeController@danhmuc_baiviet')->name(
 Route::get('/bai-viet/{slug}', 'HomeController@baiviet')->name('detail.baiviet');
 Route::get('/gioi-thieu', 'HomeController@introduce')->name('introduce');
 Route::get('/search', 'HomeController@search')->name('search');
+Route::get('/tac-gia/{id}', 'HomeController@getAuthor')->name('tacgia.index');
+Route::get('/tac-gia', 'HomeController@listAuthor')->name('tacgia.list');
 
 Route::post('/login-admin', 'Auth\LoginController@loginAdmin')->name('login-admin');
 Route::post('/phanhoi', 'HomeController@postPhanHoi')->name('phanhoi.post');

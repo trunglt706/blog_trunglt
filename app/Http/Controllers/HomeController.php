@@ -16,8 +16,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class HomeController extends Controller
-{
+class HomeController extends Controller {
 
     /**
      * @function go to home page
@@ -79,7 +78,7 @@ class HomeController extends Controller
      */
     public function baiviet($slug) {
         $bv = baiviets::where('slug', $slug)->where('status', 1)->first();
-        if(!is_null($bv)) {
+        if (!is_null($bv)) {
             $object['image'] = url($bv->thumn);
             $object['title'] = $bv->name;
             $object['intro'] = $bv->intro;
@@ -121,7 +120,7 @@ class HomeController extends Controller
     public function search(Request $request) {
         $key = $request->key;
         //Lay danh sach bai viet cua danh muc
-        $data['list_baiviet'] = baiviets::where("name", "like", "%".$key."%")->orWhere("keyword", "like", "%".$key."%")->orWhere("intro", "like", "%".$key."%")->where('status', 1)->orderBy('created_at')->paginate(6);
+        $data['list_baiviet'] = baiviets::where("name", "like", "%" . $key . "%")->orWhere("keyword", "like", "%" . $key . "%")->orWhere("intro", "like", "%" . $key . "%")->where('status', 1)->orderBy('created_at')->paginate(6);
         //Lay danh sach 5 bai viet co luot view cao nhat
         $data['list_view'] = baiviets::where('status', 1)->orderBy('view', 'desc')->limit(5)->get();
         //Lay danh sach 3 bai viet co luot like cao nhat
@@ -134,8 +133,8 @@ class HomeController extends Controller
      * @param Request $request
      */
     public function searchAjax(Request $request) {
-        $data = baiviets::where("name", "like", "%".$request->key."%")
-                        ->where("keyword", "like", "%".$request->key."%")
+        $data = baiviets::where("name", "like", "%" . $request->key . "%")
+                        ->where("keyword", "like", "%" . $request->key . "%")
                         ->where("status", 1)
                         ->orderBy('created_at')->paginate(10);
         echo $data;
@@ -149,7 +148,7 @@ class HomeController extends Controller
         try {
             //Kiem tra da dang ky truoc do chua
             $dky = nhanbaiviets::where('email', $request->email)->first();
-            if(!is_null($dky)) {
+            if (!is_null($dky)) {
                 echo ['status' => 'error', 'ms' => 'Bạn đã đăng ký trước đó rồi!'];
             } else {
                 $nhan = new nhanbaiviets();
@@ -170,7 +169,7 @@ class HomeController extends Controller
      */
     public function postPhanHoi(PhanHoiRequest $request) {
         $bviet = baiviets::where('id', $request->id_baiviet)->where('status', 1)->first();
-        if(!is_null($bviet)) {
+        if (!is_null($bviet)) {
             try {
                 $phoi = new phanhois();
                 $phoi->email = $request->email;
@@ -198,7 +197,7 @@ class HomeController extends Controller
         try {
             //Kiem tra so lan gui lien he
             $lhe = lienhe::where('email', $request->email)->whereDate('created_at', Carbon::today())->count();
-            if($lhe >= 3) {
+            if ($lhe >= 3) {
                 return redirect()->route('contact')->with('error', 'Lỗi, hôm nay bạn đã gửi thông tin liên hệ quá 3 lần. Vui lòng gửi tiếp cho chúng tôi vào ngày khác!');
             } else {
                 $lhe = new lienhe();
@@ -214,4 +213,31 @@ class HomeController extends Controller
             return redirect()->route('contact')->with('error', 'Lỗi, gửi thông tin liên hệ thất bại!');
         }
     }
+    
+    /**
+     * @function go to author index page
+     * @param string $username
+     * @return view
+     */
+    public function getAuthor($username) {
+        //Get infor author
+        if($username != 'admin') {
+            $object['author'] = \App\users::select(['username', 'email', 'intro', 'name', 'avatar', 'background'])->where('username', $username)->where('status', 1)->first();
+        } else {
+            $object['author'] = \App\admins::select(['username', 'email', 'intro', 'name', 'avatar', 'background'])->where('username', $username)->first();
+        }
+        //Get list baiviet of author
+        $object['list_bviet'] = baiviets::where('username', $object['author']->username)->where('status', 1)->get();
+        return view('author_index', ['object' => $object]);
+    }
+    
+    /**
+     * @function do to list author
+     * @return view
+     */
+    public function listAuthor() {
+        $object['list_author'] = \App\users::where('status', 1)->get();
+        return view('list_author', ['object' => $object]);
+    }
+
 }

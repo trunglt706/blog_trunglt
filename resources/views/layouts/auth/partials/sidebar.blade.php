@@ -31,6 +31,9 @@
                 @endif
             </li>
             <li class="menu-item menu-item-type-custom menu-item-1050">
+                <a href="{{route('tacgia.list')}}"><i class="fa fa-user-circle-o"></i> Tác giả</a>
+            </li>
+            <li class="menu-item menu-item-type-custom menu-item-1050">
                 <a href="{{route('contact')}}"><i class="fa fa-phone-square"></i> Liên hệ</a>
             </li>
             <li class="menu-item menu-item-type-custom menu-item-1050">
