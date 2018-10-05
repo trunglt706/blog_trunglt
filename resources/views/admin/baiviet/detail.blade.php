@@ -20,7 +20,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Thông tin chi tiết</h3>
+                        <h3 class="box-title"><i class="fa fa-newspaper-o"></i> Thông tin chi tiết</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Đường dẫn * <small class="text-danger">(<a href="{{route('detail.baiviet', ['slug' => $object['bviet']->slug])}}" target="_blank">Xem bài viết</a>)</small></label>
-                                    <input type="text" required name="slug" disabled="" value="{{$object['bviet']->slug}}" class="form-control" placeholder="Nhập tên ...">
+                                    <input type="text" required name="slug" disabled="" value="{{$object['bviet']->slug}}" class="form-control">
                                 </div>
                             </div>
                             <div class="row">

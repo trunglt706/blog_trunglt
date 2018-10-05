@@ -17,7 +17,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Danh sách loại thành viên</h3>
+                        <h3 class="box-title"><i class="fa fa-address-card"></i> Danh sách loại thành viên</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
@@ -77,7 +77,6 @@
                         {{ $object['loaitv']->links() }}
                     </div>
                 </div>
-
                 <!-- /.box -->
             </div>
             <!-- /.col -->
@@ -94,7 +93,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Thêm loại thành viên mới</h4>
+                    <h4 class="modal-title"><i class="fa fa-address-card"></i> Thêm loại thành viên mới</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">

@@ -20,7 +20,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Thông tin chi tiết</h3>
+                        <h3 class="box-title"><i class="fa fa-th-large"></i> Thông tin chi tiết</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">

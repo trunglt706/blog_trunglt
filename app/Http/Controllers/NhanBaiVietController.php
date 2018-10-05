@@ -57,7 +57,7 @@ class NhanBaiVietController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function nhanBaiVietUpdate(NhanBaiVietUpdateRequest $request, $id) {
+    public function nhanBaiVietUpdate(NhanBaiVietRequest $request, $id) {
         try {
             $nhanbv = nhanbaiviets::find($id);
             $nhanbv->email = $request->email;

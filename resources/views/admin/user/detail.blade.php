@@ -16,11 +16,11 @@
     <section class="content">
         <div class="row">
             <!-- left column -->
-            <div class="col-md-12">
+            <div class="col-md-9">
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Thông tin chi tiết</h3>
+                        <h3 class="box-title"><i class="fa fa-user-circle"></i> Thông tin thành viên</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
@@ -42,12 +42,6 @@
                                     @csrf
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Username *</label>
-                                    <input type="text" required name="username" disabled="" value="{{$object['tvien']->username}}" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
                                     <label>Loại thành viên *</label>
                                     <div class="col-12">
                                         <select name="id_loaithanhvien" class="form-control select2" required="">
@@ -56,10 +50,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Email *</label>
-                                    <input type="email" name="email" value="{{$object['tvien']->email}}" class="form-control" placeholder="Nhập email ...">
                                 </div>
                             </div>
                             <div class="row">
@@ -97,11 +87,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-5">
-                                    <label>Mật khẩu *</label>
-                                    <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu ...">
-                                </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-6">
                                     <label>Trạng thái *</label>
                                     <div class="col-12">
                                         <select name="status" class="form-control select2" required="">
@@ -111,12 +97,12 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label>
                                         Thời gian tạo: <span class="badge bg-gray">{{date('H:i:s | d/m/Y', strtotime($object['tvien']->created_at))}}</span>
                                     </label>
                                 </div>
-                                <div class="checkbox icheck col-md-2">
+                                <div class="checkbox icheck col-md-3">
                                     <label>
                                         <input type="checkbox" name="important" @if($object['tvien']->online == 1) checked @endif> Online
                                     </label>
@@ -124,6 +110,37 @@
                             </div>
                         </div>
                         <div class="box-footer">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box -->
+            </div>
+            <div class="col-md-3">
+                <!-- general form elements -->
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-user-secret"></i> Thông tin tài khoản</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="col-md-12" style="margin-top: 10px;">@include('admin.notify')</div>
+                    <!-- form start -->
+                    <form role="form" action="{{route('admin.thanhvien.update.account', ['id' => $object['tvien']->id])}}" method="post" enctype="multipart/form-data">
+                        <div class="box-body">
+                            <div class="form-group col-md-12">
+                                <label>Username *</label>
+                                <input type="text" required name="username" disabled="" value="{{$object['tvien']->username}}" class="form-control">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Email *</label>
+                                <input type="email" name="email" value="{{$object['tvien']->email}}" class="form-control" placeholder="Nhập email ...">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Mật khẩu *</label>
+                                <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu ...">
+                            </div>
+                        </div>
+                        <div class="box-footer text-center">
                             <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                         </div>
                     </form>

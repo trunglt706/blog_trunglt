@@ -17,7 +17,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Danh sách bài viết</h3>
+                        <h3 class="box-title"><i class="fa fa-newspaper-o"></i> Danh sách bài viết</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
@@ -99,7 +99,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Thêm bài viết mới</h4>
+                    <h4 class="modal-title"><i class="fa fa-newspaper-o"></i> Thêm bài viết mới</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">

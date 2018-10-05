@@ -13,7 +13,7 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,21 @@ class UserRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'name' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|min:6',
+        ];
+    }
+
+    public function messages() {
+        return [
+            'name.required' => 'Họ tên không được để trống!',
+            'email.required' => 'Email không được để trống!',
+            'email.unique' => 'Email này đã có người đăng ký!',
+            'password.required' => 'Mật khẩu không được để trống!',
+            'password.min' => 'Độ dài mật khẩu không được bé hơn 6 ký tự!'
         ];
     }
 }

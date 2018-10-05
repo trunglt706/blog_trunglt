@@ -13,7 +13,7 @@ class UpdateInforUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,17 @@ class UpdateInforUserRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'name' => 'required',
+            'id_loaithanhvien' => 'required',
+        ];
+    }
+
+    public function messages() {
+        return [
+            'name.required' => 'Họ tên không được để trống!',
+            'id_loaithanhvien.required' => 'Chưa chọn loại thành viên!',
         ];
     }
 }

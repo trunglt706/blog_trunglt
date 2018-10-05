@@ -9,11 +9,9 @@ use File;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class BaiVietController extends Controller
-{
+class BaiVietController extends Controller {
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -58,7 +56,7 @@ class BaiVietController extends Controller
             $bviet->status = $request->status;
             if ($request->hasFile('thumn')) {
                 $thumn = $request->file('thumn');
-                $filename = 'thumn'.time() . '.' . $thumn->getClientOriginalExtension();
+                $filename = 'thumn' . time() . '.' . $thumn->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -69,7 +67,7 @@ class BaiVietController extends Controller
             }
             if ($request->hasFile('background')) {
                 $background = $request->file('background');
-                $filename = 'background'.time() . '.' . $background->getClientOriginalExtension();
+                $filename = 'background' . time() . '.' . $background->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -80,7 +78,7 @@ class BaiVietController extends Controller
             }
             $bviet->save();
             return redirect()->route('admin.baiviet')->with('success', 'Thêm bài viết mới thành công.');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('admin.baiviet')->with('error', 'Lỗi, thêm bài viết mới thất bại!');
         }
@@ -97,6 +95,7 @@ class BaiVietController extends Controller
             $bviet = baiviets::find($id);
             $bviet->id_danhmuc = $request->id_danhmuc;
             $bviet->name = $request->name;
+            $bviet->slug = str_slug($request->name, '-');
             $bviet->intro = $request->intro;
             $bviet->content = $request['content'];
             $bviet->keyword = $request->keyword;
@@ -106,7 +105,7 @@ class BaiVietController extends Controller
             if ($request->hasFile('thumn')) {
                 File::delete($bviet->thumn);
                 $thumn = $request->file('thumn');
-                $filename = 'thumn'.time() . '.' . $thumn->getClientOriginalExtension();
+                $filename = 'thumn' . time() . '.' . $thumn->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -118,7 +117,7 @@ class BaiVietController extends Controller
             if ($request->hasFile('background')) {
                 File::delete($bviet->background);
                 $background = $request->file('background');
-                $filename = 'background'.time() . '.' . $background->getClientOriginalExtension();
+                $filename = 'background' . time() . '.' . $background->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -129,7 +128,7 @@ class BaiVietController extends Controller
             }
             $bviet->save();
             return redirect()->route('admin.baiviet.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin bài viết thành công.');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('admin.baiviet.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin bài viết thất bại!');
         }
@@ -152,4 +151,5 @@ class BaiVietController extends Controller
             return redirect()->route('admin.baiviet')->with('error', 'Lỗi, xóa bài viết thất bại!');
         }
     }
+
 }

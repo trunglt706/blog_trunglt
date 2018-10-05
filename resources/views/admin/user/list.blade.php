@@ -17,7 +17,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Danh sách thành viên</h3>
+                        <h3 class="box-title"><i class="fa fa-user-circle"></i> Danh sách thành viên</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
@@ -29,6 +29,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        @include('admin.notify')
                         @if(isset($object['thanhvien']))
                         <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                             <div class="row">
@@ -106,7 +107,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Thêm thành viên mới</h4>
+                    <h4 class="modal-title"><i class="fa fa-user-circle"></i> Thêm thành viên mới</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">

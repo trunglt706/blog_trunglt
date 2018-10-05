@@ -13,7 +13,7 @@ class HoiDapRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,21 @@ class HoiDapRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'name' => 'required',
+            'intro' => 'required',
+            'order' => 'required',
+            'status' => 'required'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'name.required' => 'Tiêu đề không được để trống',
+            'intro.required' => 'Nội dung không được để trống',
+            'order.required' => 'Chưa chọn thứ tự',
+            'status.required' => 'Chưa chọn trạng thái',
         ];
     }
 }

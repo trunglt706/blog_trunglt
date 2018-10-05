@@ -63,6 +63,7 @@ class DanhMucBaiVietController extends Controller
         try {
             $dmuc = danhmucbaiviets::find($id);
             $dmuc->name = $request->name;
+            $dmuc->slug = str_slug($request->name, '-');
             $dmuc->intro = $request->intro;
             $dmuc->status = $request->status;
             $dmuc->save();

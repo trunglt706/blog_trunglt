@@ -7,10 +7,9 @@ use App\gopys;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class GopYController extends Controller
-{
-    public function __construct()
-    {
+class GopYController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -29,7 +28,7 @@ class GopYController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function gopYChiTiet($id) {
-        $object['goiy'] = gopys::findOrFail($id);
+        $object['gopy'] = gopys::findOrFail($id);
         return view('admin.gopy.detail', ['object' => $object]);
     }
 
@@ -57,16 +56,16 @@ class GopYController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function gopYUpdate(GopYUpdateRequest $request, $id) {
+    public function gopYUpdate(GopYRequest $request, $id) {
         try {
             $gopy = gopys::find($id);
             $gopy->email = $request->email;
             $gopy->content = $request->input('content');
             $gopy->save();
-            return redirect()->route('admin.gopy.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin góp ý thành công!');
+            return redirect()->route('admin.gopy.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin góp ý thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('admin.gopy.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin góp ý thất bại!');
+            return redirect()->route('admin.gopy.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin góp ý thất bại!');
         }
     }
 
@@ -85,4 +84,5 @@ class GopYController extends Controller
             return redirect()->route('admin.gopy')->with('error', 'Lỗi, xóa góp ý thất bại!');
         }
     }
+
 }

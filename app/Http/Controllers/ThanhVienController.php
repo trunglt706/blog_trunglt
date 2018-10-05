@@ -41,7 +41,7 @@ class ThanhVienController extends Controller {
      * @param UpdateInforUserRequest $request
      * @return mixed
      */
-    public function thanhVienUpdateInfo(UpdateInforUserRequest $request, $id) {
+    public function thanhVienUpdateInfo(\App\Http\Requests\UpdateInforUserRequest $request, $id) {
         try {
             $u = users::findOrFail($id);
             $u->name = $request->name;
@@ -50,7 +50,7 @@ class ThanhVienController extends Controller {
             if ($request->hasFile('avatar')) {
                 File::delete($u->avatar);
                 $avatar = $request->file('avatar');
-                $filename = time() . '.' . $avatar->getClientOriginalExtension();
+                $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
                 $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -62,7 +62,7 @@ class ThanhVienController extends Controller {
             if ($request->hasFile('background')) {
                 File::delete($u->background);
                 $bg = $request->file('background');
-                $filename = time() . '.' . $bg->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $bg->getClientOriginalExtension();
                 $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -72,10 +72,10 @@ class ThanhVienController extends Controller {
                 $u->background = $path;
             }
             $u->save();
-            return route('admin.user.detail', ['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công');
+            return route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.user.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin người dùng thất bại!');
+            return route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin người dùng thất bại!');
         }
     }
 
@@ -84,16 +84,16 @@ class ThanhVienController extends Controller {
      * @param UpdateAccountUserRequest $request
      * @return mixed
      */
-    public function thanhVienUpdateAccount(UpdateAccountUserRequest $request, $id) {
+    public function thanhVienUpdateAccount(\App\Http\Requests\UpdateAccountUserRequest $request, $id) {
         try {
             $ad = users::findOrFail($id);
             $ad->email = $request->email;
             $ad->password = bcrypt($request->password);
             $ad->save();
-            return route('admin.user.detail', ['id' => $id])->with('success', 'Cập nhật tài khoản người dùng thành công');
+            return route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật tài khoản người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.user.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật tài khoản người dùng thất bại!');
+            return route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật tài khoản người dùng thất bại!');
         }
     }
 
@@ -114,7 +114,7 @@ class ThanhVienController extends Controller {
             $u->status = $request->status;
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
-                $filename = time() . '.' . $avatar->getClientOriginalExtension();
+                $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
                 $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -125,7 +125,7 @@ class ThanhVienController extends Controller {
             }
             if ($request->hasFile('background')) {
                 $bg = $request->file('background');
-                $filename = time() . '.' . $bg->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $bg->getClientOriginalExtension();
                 $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -135,10 +135,10 @@ class ThanhVienController extends Controller {
                 $u->background = $path;
             }
             $u->save();
-            return route('admin.user.list')->with('success', 'Thêm mới người dùng thành công');
+            return route('admin.thanhvien')->with('success', 'Thêm mới người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.user.list')->with('error', 'Lỗi, thêm mới người dùng thất bại!');
+            return route('admin.thanhvien')->with('error', 'Lỗi, thêm mới người dùng thất bại!');
         }
     }
 
@@ -164,10 +164,10 @@ class ThanhVienController extends Controller {
             File::delete($u->avatar);
             File::delete($u->background);
             $u->delete();
-            return route('admin.user.list')->with('success', 'Xóa người dùng thành công');
+            return route('admin.thanhvien')->with('success', 'Xóa người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.user.list')->with('error', 'Lỗi, xóa người dùng thất bại!');
+            return route('admin.thanhvien')->with('error', 'Lỗi, xóa người dùng thất bại!');
         }
     }
 

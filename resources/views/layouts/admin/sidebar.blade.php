@@ -39,7 +39,7 @@
                     <li class="{{isActiveRoute('admin.quangcao')}}"><a href="{{route('admin.quangcao')}}"><i class="fa fa-circle-o"></i> Quảng cáo</a></li>
                 </ul>
             </li>
-            <li class="treeview {{areActiveRoutes(['admin.gopy', 'admin.hoidap', ''])}}">
+            <li class="treeview {{areActiveRoutes(['admin.gopy', 'admin.hoidap', 'admin.nhanbaiviet'])}}">
                 <a href="#">
                     <i class="fa fa-folder"></i>
                     <span>Khác</span>

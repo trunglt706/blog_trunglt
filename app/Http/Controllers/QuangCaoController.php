@@ -9,10 +9,9 @@ use Exception;
 use File;
 use Image;
 
-class QuangCaoController extends Controller
-{
-    public function __construct()
-    {
+class QuangCaoController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -44,20 +43,20 @@ class QuangCaoController extends Controller
         try {
             $qcao = new quangcaos();
             $qcao->name = $request->name;
-            $qcao->slug = $request->slug;
+            $qcao->slug = str_slug($request->name, '-');
             $qcao->intro = $request->intro;
             $qcao->order = $request->order;
             $qcao->status = $request->status;
-            if ($request->hasFile('logo')) {
-                $loai = $request->file('logo');
-                $filename = time() . '.' . $loai->getClientOriginalExtension();
+            if ($request->hasFile('photo')) {
+                $photo = $request->file('photo');
+                $filename = time() . '.' . $photo->getClientOriginalExtension();
                 $dir = 'uploads/quangcaos/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
-                Image::make($loai)->save(base_path($path));
-                $qcao->logo = $path;
+                Image::make($photo)->save(base_path($path));
+                $qcao->photo = $path;
             }
             $qcao->save();
             return redirect()->route('admin.quangcao')->with('success', 'Thêm mới quảng cáo thành công!');
@@ -77,28 +76,28 @@ class QuangCaoController extends Controller
         try {
             $qcao = quangcaos::find($id);
             $qcao->name = $request->name;
-            $qcao->slug = $request->slug;
+            $qcao->slug = str_slug($request->name, '-');
             $qcao->intro = $request->intro;
             $qcao->link = $request->link;
             $qcao->order = $request->order;
             $qcao->status = $request->status;
             if ($request->hasFile('photo')) {
                 File::delete($qcao->photo);
-                $loai = $request->file('photo');
-                $filename = time() . '.' . $loai->getClientOriginalExtension();
+                $photo = $request->file('photo');
+                $filename = time() . '.' . $photo->getClientOriginalExtension();
                 $dir = 'uploads/quangcaos/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
                 }
                 $path = $dir . $filename;
-                Image::make($loai)->save(base_path($path));
+                Image::make($photo)->save(base_path($path));
                 $qcao->photo = $path;
             }
             $qcao->save();
-            return redirect()->route('admin.quangcao.chitiet', ['id'=>$id])->with('success', 'Cập nhật quảng cáo thành công!');
+            return redirect()->route('admin.quangcao.chitiet', ['id' => $id])->with('success', 'Cập nhật quảng cáo thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('admin.quangcao.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật quảng cáo thất bại!');
+            return redirect()->route('admin.quangcao.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật quảng cáo thất bại!');
         }
     }
 
@@ -118,4 +117,5 @@ class QuangCaoController extends Controller
             return redirect()->route('admin.quangcao')->with('error', 'Lỗi, xóa quảng cáo thất bại!');
         }
     }
+
 }

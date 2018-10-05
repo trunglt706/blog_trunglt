@@ -13,7 +13,7 @@ class QuangCaoRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,20 @@ class QuangCaoRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'name' => 'required',
+            'status' => 'required',
+            'order' => 'required|integer',
+        ];
+    }
+
+    public function messages() {
+        return [
+            'name.required' => 'Tiêu đề không được để trống',
+            'status.required' => 'Chưa chọn trạng thái',
+            'order.required' => 'Chưa chọn vị trí',
+            'order.integer' => 'Giá trị của vị trí là số nguyên',
         ];
     }
 }

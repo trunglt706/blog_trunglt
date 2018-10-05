@@ -7,10 +7,9 @@ use App\hoidap;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class HoiDapController extends Controller
-{
-    public function __construct()
-    {
+class HoiDapController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -38,7 +37,7 @@ class HoiDapController extends Controller
      * @param GopYRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function hoiDapInsert(GopYRequest $request) {
+    public function hoiDapInsert(HoiDapRequest $request) {
         try {
             $hdap = new hoidap();
             $hdap->name = $request->name;
@@ -67,10 +66,10 @@ class HoiDapController extends Controller
             $hdap->order = $request->order;
             $hdap->status = $request->status;
             $hdap->save();
-            return redirect()->route('admin.hoidap.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin hỏi đáp thành công!');
+            return redirect()->route('admin.hoidap.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin hỏi đáp thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('admin.hoidap.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin hỏi đáp thất bại!');
+            return redirect()->route('admin.hoidap.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin hỏi đáp thất bại!');
         }
     }
 
@@ -89,4 +88,5 @@ class HoiDapController extends Controller
             return redirect()->route('admin.hoidap')->with('error', 'Lỗi, xóa hỏi đáp thất bại!');
         }
     }
+
 }
