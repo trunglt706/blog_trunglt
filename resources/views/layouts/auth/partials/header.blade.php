@@ -7,8 +7,8 @@
                     <!-- Start header social -->
                     <div class="header-social">
                         <ul>
-                            <li><a href="https://fb.com/trunglt706"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="https://goo.gl/xP7MdL"><i class="fa fa-youtube-play"></i></a></li>
+                            <li><a target="_blank" href="{{$data['facebook']->value}}"><i class="fa fa-facebook"></i></a></li>
+                            <li><a target="_blank" href="{{$data['youtube']->value}}"><i class="fa fa-youtube-play"></i></a></li>
                             <li class="hidden-lg hidden-md hidden-sm"><a href=""><i class="fa fa-user"></i> Đăng ký thành viên</a></li>
                             <li class="hidden-lg hidden-md hidden-sm"><a href=""><i class="fa fa-sign-in"></i> Đăng nhập</a></li>
                         </ul>
@@ -33,15 +33,14 @@
     <!-- START MIDDLE SECTION -->
     <div class="header-mid hidden-xs">
         <div class="container">
-            <div class="row">Start Top Search
+            <div class="row">
                 <div class="col-sm-4">
                     <div class="logo">
-                        <a href="{{route('home')}}"><img src="/images/logo.png" class="img-responsive" alt=""></a>
-
+                        <a href="{{route('home')}}"><img src="{{url($data['logo']->value)}}" class="img-responsive" alt="{{$data['title']->value}}"></a>
                     </div>
                 </div>
                 <div class="col-sm-8">
-                    <a href="{{route('home')}}"><img src="/images/add728x90-1.jpg" class="img-responsive" alt=""></a>
+                    <a href="{{route('home')}}"><img src="{{url('images/add728x90-1.jpg')}}" class="img-responsive" alt=""></a>
                 </div>
             </div>
         </div>
@@ -75,7 +74,7 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
                         <i class="fa fa-bars"></i>
                     </button>
-                    <a class="navbar-brand hidden-sm hidden-md hidden-lg" href="{{route('home')}}"><img src="/images/logo.png" class="logo" alt=""></a>
+                    <a class="navbar-brand hidden-sm hidden-md hidden-lg" href="{{route('home')}}"><img src="{{url($data['logo']->value)}}" class="logo" alt=""></a>
                 </div>
                 <!-- End Header Navigation -->
                 <!-- Collect the nav links, forms, and other content for toggling -->

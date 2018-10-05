@@ -23,7 +23,7 @@ class CauHinhChungRequest extends FormRequest
      */
     public function rules() {
         return [
-            'slug' => 'required',
+            'type' => 'required',
             'name' => 'required',
             'intro' => 'required'
         ];
@@ -31,7 +31,7 @@ class CauHinhChungRequest extends FormRequest
 
     public function messages() {
         return [
-            'slug.required' => 'Chưa chọn đường link cấu hình',
+            'type.required' => 'Loại cấu hình không được để trống',
             'name.required' => 'Tên cấu hình không được để trống',
             'intro.required' => 'Mô tả cấu hình không được để trống'
         ];

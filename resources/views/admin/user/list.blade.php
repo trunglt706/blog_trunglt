@@ -148,6 +148,11 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="checkbox icheck col-md-6">
+                            <label class="pull-right">
+                                <input type="checkbox" name="online"> Online
+                            </label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="row">

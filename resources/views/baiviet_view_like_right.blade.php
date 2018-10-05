@@ -15,7 +15,7 @@
                 <div class="most-viewed">
                     <ul id="most-today" class="content tabs-content">
                         @foreach($data['list_view'] as $lv)
-                            <li><span class="count">0{{$view}}</span><span class="text"><a href="{{route('detail.baiviet', ['slug' => $lv->slug])}}">{{$lv->name}}</a></span></li>
+                        <li><span class="count">0{{$view}}</span><span class="text"><a href="{{route('detail.baiviet', ['slug' => $lv->slug])}}">{{$lv->name}}</a> <small>({{$lv->view}} view)</small></span></li>
                             @php $view++; @endphp
                         @endforeach
                     </ul>

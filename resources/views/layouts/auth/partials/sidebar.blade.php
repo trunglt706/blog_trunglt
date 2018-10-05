@@ -38,7 +38,6 @@
             </li>
         </ul>
     </div>
-
     <div class="rst-top-search pull-right">
         <a href="javascript:void(0)"><i class="fa fa-search"></i></a>
     </div>

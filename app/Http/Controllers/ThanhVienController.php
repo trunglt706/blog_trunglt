@@ -42,40 +42,49 @@ class ThanhVienController extends Controller {
      * @return mixed
      */
     public function thanhVienUpdateInfo(\App\Http\Requests\UpdateInforUserRequest $request, $id) {
-        try {
-            $u = users::findOrFail($id);
-            $u->name = $request->name;
-            $u->intro = $request->intro;
-            $u->id_loaithanhvien = $request->id_loaithanhvien;
-            if ($request->hasFile('avatar')) {
-                File::delete($u->avatar);
-                $avatar = $request->file('avatar');
-                $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
-                $dir = 'uploads/thanhviens/';
-                if (!File::exists($dir)) {
-                    File::makeDirectory($dir, $mode = 0777, true, true);
+        //Check email exists
+        $email = users::where('email', $request->email)->where('id', '<>', $id)->count();
+        if($email == 0) {
+            try {
+                $u = users::findOrFail($id);
+                $u->name = $request->name;
+                $u->email = $request->email;
+                $u->intro = $request->intro;
+                $u->id_loaithanhvien = $request->id_loaithanhvien;
+                $u->status = $request->status;
+                $u->online = isset($request->online) ? 1 : 0;
+                if ($request->hasFile('avatar')) {
+                    File::delete($u->avatar);
+                    $avatar = $request->file('avatar');
+                    $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
+                    $dir = 'uploads/thanhviens/';
+                    if (!File::exists($dir)) {
+                        File::makeDirectory($dir, $mode = 0777, true, true);
+                    }
+                    $path = $dir . $filename;
+                    Image::make($avatar)->save(base_path($path));
+                    $u->avatar = $path;
                 }
-                $path = $dir . $filename;
-                Image::make($avatar)->save(base_path($path));
-                $u->avatar = $path;
-            }
-            if ($request->hasFile('background')) {
-                File::delete($u->background);
-                $bg = $request->file('background');
-                $filename = 'background'.time() . '.' . $bg->getClientOriginalExtension();
-                $dir = 'uploads/thanhviens/';
-                if (!File::exists($dir)) {
-                    File::makeDirectory($dir, $mode = 0777, true, true);
+                if ($request->hasFile('background')) {
+                    File::delete($u->background);
+                    $bg = $request->file('background');
+                    $filename = 'background'.time() . '.' . $bg->getClientOriginalExtension();
+                    $dir = 'uploads/thanhviens/';
+                    if (!File::exists($dir)) {
+                        File::makeDirectory($dir, $mode = 0777, true, true);
+                    }
+                    $path = $dir . $filename;
+                    Image::make($bg)->save(base_path($path));
+                    $u->background = $path;
                 }
-                $path = $dir . $filename;
-                Image::make($bg)->save(base_path($path));
-                $u->background = $path;
+                $u->save();
+                return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công');
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+                return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin người dùng thất bại!');
             }
-            $u->save();
-            return route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công');
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin người dùng thất bại!');
+        } else {
+            return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, email cập nhật đã tồn tại trong hệ thống!');
         }
     }
 
@@ -87,13 +96,12 @@ class ThanhVienController extends Controller {
     public function thanhVienUpdateAccount(\App\Http\Requests\UpdateAccountUserRequest $request, $id) {
         try {
             $ad = users::findOrFail($id);
-            $ad->email = $request->email;
             $ad->password = bcrypt($request->password);
             $ad->save();
-            return route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật tài khoản người dùng thành công');
+            return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật tài khoản người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật tài khoản người dùng thất bại!');
+            return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật tài khoản người dùng thất bại!');
         }
     }
 
@@ -112,6 +120,7 @@ class ThanhVienController extends Controller {
             $u->email = $request->email;
             $u->password = bcrypt($request->password);
             $u->status = $request->status;
+            $u->online = isset($request->online) ? 1 : 0;
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
                 $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
@@ -135,10 +144,10 @@ class ThanhVienController extends Controller {
                 $u->background = $path;
             }
             $u->save();
-            return route('admin.thanhvien')->with('success', 'Thêm mới người dùng thành công');
+            return redirect()->route('admin.thanhvien')->with('success', 'Thêm mới người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.thanhvien')->with('error', 'Lỗi, thêm mới người dùng thất bại!');
+            return redirect()->route('admin.thanhvien')->with('error', 'Lỗi, thêm mới người dùng thất bại!');
         }
     }
 
@@ -148,26 +157,28 @@ class ThanhVienController extends Controller {
      * @return mixed
      */
     public function thanhVienDelete($id) {
+        $count = 0;
         try {
             $u = users::findOrFail($id);
             //Delete all baiviet cua user
-            $list_bv = baiviets::where('username', $u->username)->get();
+            $list_bv = \App\baiviets::where('username', $u->username)->get();
             if (!is_null($list_bv)) {
                 foreach ($list_bv as $l) {
-                    $b = baiviets::findOrFail($l->id);
+                    $b = \App\baiviets::findOrFail($l->id);
                     File::delete($b->thumn);
                     File::delete($b->background);
                     $b->delete();
+                    $count++;
                 }
             }
             //delete user
             File::delete($u->avatar);
             File::delete($u->background);
             $u->delete();
-            return route('admin.thanhvien')->with('success', 'Xóa người dùng thành công');
+            return redirect()->route('admin.thanhvien')->with('success', 'Xóa người dùng thành công ('.$count.' bài viết cũng được xóa theo)');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.thanhvien')->with('error', 'Lỗi, xóa người dùng thất bại!');
+            return redirect()->route('admin.thanhvien')->with('error', 'Lỗi, xóa người dùng thất bại!');
         }
     }
 
@@ -182,10 +193,10 @@ class ThanhVienController extends Controller {
 
         //block all baiviet cua user
         $count = 0;
-        $list = baiviets::where('username', $u->username)->get();
+        $list = \App\baiviets::where('username', $u->username)->get();
         if (!is_null($list)) {
             foreach ($list as $l) {
-                $b = baiviets::findOrFail($l->id);
+                $b = \App\baiviets::findOrFail($l->id);
                 if ($b->status != -1) {
                     $b->status = -1;
                     $b->save();

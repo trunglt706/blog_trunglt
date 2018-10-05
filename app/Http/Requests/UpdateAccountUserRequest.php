@@ -23,15 +23,12 @@ class UpdateAccountUserRequest extends FormRequest
      */
     public function rules() {
         return [
-            'email' => 'required|unique:users',
             'password' => 'required|min:6',
         ];
     }
 
     public function messages() {
         return [
-            'email.required' => 'Email không được để trống!',
-            'email.unique' => 'Email này đã có người đăng ký!',
             'password.required' => 'Mật khẩu không được để trống!',
             'password.min' => 'Độ dài mật khẩu không được bé hơn 6 ký tự!'
         ];

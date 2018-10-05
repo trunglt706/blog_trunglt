@@ -99,7 +99,7 @@
                                                         <div class="col-xs-6 col-sm-4 col-md-4 col-padding">
                                                             <div class="grid-item">
                                                                 <div class="grid-item-img">
-                                                                    <a href="#">
+                                                                    <a href="{{route('detail.baiviet', ['slug' => $other->slug])}}">
                                                                         <img src="{{url($other->thumn)}}" class="img-responsive" alt="{{$other->slug}}">
                                                                         <div class="link-icon"><i class="fa fa-play"></i></div>
                                                                     </a>
@@ -124,74 +124,6 @@
                     </div>
                     @endif
                     <!-- END OF /. RELATED ARTICLES -->
-                    <!-- START COMMENTS FORMS -->
-                    {{--<form class="comment-form" action="{{route('phanhoi.post')}}" method="post">--}}
-                        {{--<h3><strong>Để lại chút bình luận</strong></h3>--}}
-                        {{--<div class="row">--}}
-                            {{--<div class="col-sm-6">--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<label for="name">Họ tên *</label>--}}
-                                    {{--<input type="text" required class="form-control" id="name" name="name" placeholder="Nhập tên ...">--}}
-                                    {{--<input type="hidden" name="id_baiviet" value="{{$data['news']->id}}">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-sm-6">--}}
-                                {{--<label for="email">Email*</label>--}}
-                                {{--<div class="form-group">--}}
-                                    {{--<input type="email" required class="form-control" id="email" name="email" placeholder="Nhập email ...">--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                        {{--<div class="form-group">--}}
-                            {{--<label for="content">Nội dung</label>--}}
-                            {{--<textarea class="form-control" required id="content" name="content" placeholder="Nội dung bình luận ..." rows="5"></textarea>--}}
-                        {{--</div>--}}
-                        {{--<div class="row">--}}
-                            {{--<div class="col-sm-6 text-left">--}}
-                                {{--<button class="btn btn-danger" type="submit"><i class="fa fa-send-o"></i> Gửi</button>--}}
-                            {{--</div>--}}
-                            {{--<div class="col-sm-6">--}}
-                                {{--<div class="form-group m-form__group">--}}
-                                    {{--{!! NoCaptcha::display() !!}--}}
-                                    {{--@if ($errors->has('g-recaptcha-response'))--}}
-                                        {{--<div class="has-danger">--}}
-                                    {{--<span class="form-control-feedback">--}}
-                                        {{--<strong>{{ $errors->first('g-recaptcha-response') }}</strong>--}}
-                                    {{--</span>--}}
-                                        {{--</div>--}}
-                                    {{--@endif--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</form>--}}
-                    <!-- END OF /. COMMENTS FORMS -->
-                    <!-- START COMMENT -->
-                    {{--@if(!is_null($data['comment']))--}}
-                    {{--<div class="comments-container">--}}
-                        {{--<h3><strong>Bình luận ({{count($data['comment'])}})</strong></h3>--}}
-                        {{--<ul class="comments-list">--}}
-                            {{--@php $cment = 0; @endphp--}}
-                            {{--@foreach($data['comment'] as $comment)--}}
-                                {{--@php $cment++; @endphp--}}
-                            {{--<li>--}}
-                                {{--<div class="comment-main-level">--}}
-                                    {{--<!-- Avatar -->--}}
-                                    {{--<div class="comment-avatar" @if($cment%2 == 0) style="float: right;" @endif><img src="{{url('images/218x150-1.JPG')}}" alt=""></div>--}}
-                                    {{--<div class="comment-box">--}}
-                                        {{--<div class="comment-content">--}}
-                                            {{--<div class="comment-header"> <cite class="comment-author">- {{$comment->name}}</cite>--}}
-                                                {{--<time datetime="2012-10-27" class="comment-datetime">{{date('H:i:s d/m/Y', strtotime($comment->created_at))}}</time>--}}
-                                            {{--</div>--}}
-                                            {{--<p>{{$comment->content}}</p>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                            {{--</li>--}}
-                            {{--@endforeach--}}
-                        {{--</ul>--}}
-                    {{--</div>--}}
-                    {{--@endif--}}
-                    <!-- END OF /. COMMENT -->
                 </div>
             </div>
             <!-- END OF /. MAIN CONTENT -->

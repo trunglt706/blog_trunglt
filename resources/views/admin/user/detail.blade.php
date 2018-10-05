@@ -15,6 +15,9 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
+            <div class="col-md-12" style="margin-top: 10px;">@include('admin.notify')</div>
+        </div>
+        <div class="row">
             <!-- left column -->
             <div class="col-md-9">
                 <!-- general form elements -->
@@ -31,7 +34,6 @@
                         </div>
                     </div>
                     <!-- /.box-header -->
-                    <div class="col-md-12" style="margin-top: 10px;">@include('admin.notify')</div>
                     <!-- form start -->
                     <form role="form" action="{{route('admin.thanhvien.update.info', ['id' => $object['tvien']->id])}}" method="post" enctype="multipart/form-data">
                         <div class="box-body">
@@ -42,20 +44,14 @@
                                     @csrf
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Loại thành viên *</label>
-                                    <div class="col-12">
-                                        <select name="id_loaithanhvien" class="form-control select2" required="">
-                                            @foreach($object['loai_tvien'] as $tvien)
-                                            <option value="{{$tvien->id}}" @if($object['tvien']->id_loaithanhvien == $tvien->id) selected @endif>{{$tvien->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    <label>Email *</label>
+                                    <input type="email" name="email" value="{{$object['tvien']->email}}" class="form-control" placeholder="Nhập email ...">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>Mô tả *</label>
-                                    <textarea name="intro" required="" class="form-control" placeholder="Nhập mô tả ..." rows="3">{{$object['tvien']->intro}}</textarea>
+                                    <textarea name="intro" class="form-control" placeholder="Nhập mô tả ..." rows="3">{{$object['tvien']->intro}}</textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -87,13 +83,23 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-3">
                                     <label>Trạng thái *</label>
                                     <div class="col-12">
                                         <select name="status" class="form-control select2" required="">
                                             <option value="1" @if($object['tvien']->status == 1) selected @endif>Duyệt</option>
                                             <option value="0" @if($object['tvien']->status == 0) selected @endif>Không duyệt</option>
                                             <option value="-1" @if($object['tvien']->status == -1) selected @endif>Khóa</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Loại thành viên *</label>
+                                    <div class="col-12">
+                                        <select name="id_loaithanhvien" class="form-control select2" required="">
+                                            @foreach($object['loai_tvien'] as $tvien)
+                                            <option value="{{$tvien->id}}" @if($object['tvien']->id_loaithanhvien == $tvien->id) selected @endif>{{$tvien->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -104,7 +110,7 @@
                                 </div>
                                 <div class="checkbox icheck col-md-3">
                                     <label>
-                                        <input type="checkbox" name="important" @if($object['tvien']->online == 1) checked @endif> Online
+                                        <input type="checkbox" name="online" @if($object['tvien']->online == 1) checked @endif> Online
                                     </label>
                                 </div>
                             </div>
@@ -123,17 +129,17 @@
                         <h3 class="box-title"><i class="fa fa-user-secret"></i> Thông tin tài khoản</h3>
                     </div>
                     <!-- /.box-header -->
-                    <div class="col-md-12" style="margin-top: 10px;">@include('admin.notify')</div>
                     <!-- form start -->
                     <form role="form" action="{{route('admin.thanhvien.update.account', ['id' => $object['tvien']->id])}}" method="post" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group col-md-12">
                                 <label>Username *</label>
+                                @csrf
                                 <input type="text" required name="username" disabled="" value="{{$object['tvien']->username}}" class="form-control">
                             </div>
                             <div class="form-group col-md-12">
                                 <label>Email *</label>
-                                <input type="email" name="email" value="{{$object['tvien']->email}}" class="form-control" placeholder="Nhập email ...">
+                                <input type="email" name="email" disabled="" value="{{$object['tvien']->email}}" class="form-control" placeholder="Nhập email ...">
                             </div>
                             <div class="form-group col-md-12">
                                 <label>Mật khẩu *</label>

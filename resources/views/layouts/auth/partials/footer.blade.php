@@ -5,12 +5,12 @@
             <!-- START FOOTER BOX (About) -->
             <div class="col-sm-5 footer-box">
                 <div class="about-inner">
-                    <img src="/images/logo-white.png" class="img-responsive" alt="">
-                    <p>Những bài viết của tôi gắn liền với cuộc đời tôi và cuộc sống xung quang tôi</p>
+                    <img src="{{url($data['logo']->value)}}" class="img-responsive" alt="">
+                    <p>{{$data['tagline']->value}}</p>
                     <ul>
                         <li><i class="ti-location-arrow"></i>Hoàng Văn Thụ, Q. Tân Bình, TP. Hồ Chí Minh</li>
                         <li><i class="ti-mobile"></i>(+84)1677 300 950</li>
-                        <li><i class="ti-email"></i>lamthanhtrung706@gmail.com</li>
+                        <li><i class="ti-email"></i>{{$data['email']->value}}</li>
                     </ul>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                 <h4 class="wiget-title">FANPAGE MY BLOG</h4>
                 <div class="footer-news-grid">
                     <div class="news-list-item">
-                        <div class="fb-page" data-href="https://www.facebook.com/clbmekongsp" data-tabs="timeline" data-width="350" data-height="180" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://www.facebook.com/clbmekongsp" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/clbmekongsp">CLB Sản phẩm đặc trưng ĐBSCL</a></blockquote></div>
+                        <div class="fb-page" data-href="{{$data['facebook']->value}}" data-tabs="timeline" data-width="350" data-height="180" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://www.facebook.com/clbmekongsp" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/clbmekongsp">CLB Sản phẩm đặc trưng ĐBSCL</a></blockquote></div>
                     </div>
                 </div>
             </div>

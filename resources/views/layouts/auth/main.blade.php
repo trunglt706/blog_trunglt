@@ -25,21 +25,12 @@
         @include('layouts.auth.partials.script_header')
     </head>
     <body>
-    @include('layouts.auth.partials.sdk_facebook')
-    <div id="wrapper">
-        @include('layouts.auth.partials.header')
-        @yield('content')
-        @include('layouts.auth.partials.footer')
-    </div>
-    @include('layouts.auth.partials.script')
+        @include('layouts.auth.partials.sdk_facebook')
+        <div id="wrapper">
+            @include('layouts.auth.partials.header')
+            @yield('content')
+            @include('layouts.auth.partials.footer')
+        </div>
+        @include('layouts.auth.partials.script')
     </body>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-38058351-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-38058351-2');
-    </script>
 </html>

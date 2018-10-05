@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CauHinhChungRequest;
+use App\Http\Requests\CauHinhChungUpdateRequest;
 use App\cauhinhchungs;
 use File;
 use Image;
@@ -41,12 +42,28 @@ class CauHinhChungController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function cauHinhChungInsert(CauHinhChungRequest $request) {
+        $path = "";
         try {
             $chinh = new cauhinhchungs();
             $chinh->name = $request->name;
-            $chinh->slug = $request->slug;
-            $chinh->intro = $request->intro;
-            $chinh->value = $request->value;
+            $chinh->slug = str_slug($request->name, '-');
+            $chinh->intro = $request->intro;            
+            if($request->type == "img") {
+                if ($request->hasFile('value_img')) {
+                    $value = $request->file('value_img');
+                    $filename = time() . '.' . $value->getClientOriginalExtension();
+                    $dir = 'uploads/cauhinhs/';
+                    if (!File::exists($dir)) {
+                        File::makeDirectory($dir, $mode = 0777, true, true);
+                    }
+                    $path = $dir . $filename;
+                    Image::make($value)->save(base_path($path));                    
+                }
+            } else {
+                $path = $request->value_text;
+            }
+            $chinh->value = $path;
+            $chinh->type = $request->type;
             $chinh->save();
             return redirect()->route('admin.cauhinhchung')->with('success', 'Thêm mới cấu hình chung thành công!');
         } catch (Exception $e) {
@@ -65,9 +82,27 @@ class CauHinhChungController extends Controller
         try {
             $chinh = cauhinhchungs::find($id);
             $chinh->name = $request->name;
-            $chinh->slug = $request->slug;
+            $chinh->slug = str_slug($request->name, '-');
             $chinh->intro = $request->intro;
-            $chinh->value = $request->value;
+            if($chinh->type == "img") {
+                File::delete($chinh->value);
+            }
+            if($request->type == "img") {
+                if ($request->hasFile('value_img')) {
+                    $value = $request->file('value_img');
+                    $filename = time() . '.' . $value->getClientOriginalExtension();
+                    $dir = 'uploads/cauhinhs/';
+                    if (!File::exists($dir)) {
+                        File::makeDirectory($dir, $mode = 0777, true, true);
+                    }
+                    $path = $dir . $filename;
+                    Image::make($value)->save(base_path($path));
+                    $chinh->value = $path;
+                }
+            } else {
+                $chinh->value = $request->value_text;
+            }
+            $chinh->type = $request->type;
             $chinh->save();
             return redirect()->route('admin.cauhinhchung.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin cấu hình chung thành công!');
         } catch (Exception $e) {
@@ -84,7 +119,9 @@ class CauHinhChungController extends Controller
     public function cauHinhChungDelete($id) {
         try {
             $chinh = cauhinhchungs::find($id);
-            File::delete($chinh->value);
+            if($chinh->type == "img") {
+                File::delete($chinh->value);
+            }
             $chinh->delete();
             return redirect()->route('admin.cauhinhchung')->with('success', 'Xóa cấu hình thành công');
         } catch (Exception $e) {

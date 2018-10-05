@@ -23,15 +23,19 @@ class UpdateInforUserRequest extends FormRequest
      */
     public function rules() {
         return [
+            'email' => 'required',
             'name' => 'required',
             'id_loaithanhvien' => 'required',
+            'status' => 'required',
         ];
     }
 
     public function messages() {
         return [
+            'email.required' => 'Email không được để trống!',
             'name.required' => 'Họ tên không được để trống!',
             'id_loaithanhvien.required' => 'Chưa chọn loại thành viên!',
+            'status.required' => 'Chưa chọn trạng thái'
         ];
     }
 }
