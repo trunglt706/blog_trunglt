@@ -2,7 +2,7 @@
 @section('content')
 <div class="login-box">
     <div class="login-logo">
-        <a href="../../index2.html"><b>Admin</b>TrungLT</a>
+        <a href="{{route('admin.index')}}"><b>Admin</b>TrungLT</a>
     </div>
     @include('layouts.auth.partials.notify')
     <!-- /.login-logo -->
@@ -34,7 +34,7 @@
             </div>
         </form>
 
-        <a href="#">I forgot my password</a>
+        <a href="{{route('reset.password.admin')}}">Quên mật khẩu?</a>
 
     </div>
     <!-- /.login-box-body -->

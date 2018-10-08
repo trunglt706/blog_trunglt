@@ -21,6 +21,10 @@ Route::get('/gioi-thieu', 'HomeController@introduce')->name('introduce');
 Route::get('/search', 'HomeController@search')->name('search');
 Route::get('/tac-gia/{id}', 'HomeController@getAuthor')->name('tacgia.index');
 Route::get('/tac-gia', 'HomeController@listAuthor')->name('tacgia.list');
+Route::get('/reset/email/admin', 'HomeController@resetPasswordAdmin')->name('reset.password.admin');
+Route::post('/reset/email/admin', 'HomeController@postResetPassword')->name('password.email.reset');
+Route::get('/reset/email/{token}', 'HomeController@acceptResetPassword')->name('accept.reset.password');
+Route::post('/reset/email/update', 'HomeController@updateResetPassword')->name('password.email.update');
 
 Route::post('/login-admin', 'Auth\LoginController@loginAdmin')->name('login-admin');
 Route::post('/phanhoi', 'HomeController@postPhanHoi')->name('phanhoi.post');

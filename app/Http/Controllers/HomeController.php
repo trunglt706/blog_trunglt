@@ -9,6 +9,7 @@ use App\Http\Requests\LienHeRequest;
 use App\Http\Requests\NhanBaiVietRequest;
 use App\Http\Requests\PhanHoiRequest;
 use App\Http\Requests\LikeBaiVietRequest;
+use App\Http\Requests\ResetUpdatePassword;
 use App\lienhe;
 use App\nhanbaiviets;
 use App\phanhois;
@@ -16,6 +17,9 @@ use App\quangcaos;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Mail\ResetPassword;
+use Mail;
+use Auth;
 
 class HomeController extends Controller {
 
@@ -290,6 +294,75 @@ class HomeController extends Controller {
             return array('status' => 'success', 'msg' => 'Cảm ơn bạn đã like cho bài viết này');
         } else {
             return array('status' => 'error', 'msg' => 'Lỗi, bài viết không tồn tại!');
+        }
+    }
+    
+    /**
+     * @function got to reset password page
+     * @return view
+     */
+    public function resetPasswordAdmin() {
+        return view('auth.passwords.email', ['author' => 'admin']);
+    }
+    
+    /**
+     * @function send link accept reset password
+     * @param Request $request
+     */
+    public function postResetPassword(Request $request) {
+        if($request->author == "admin") {
+            $user = \App\admins::where('email', $request->email)->first();
+        } else {
+            $user = \App\users::where('email', $request->email)->where('status', 1)->first();
+        }
+        $user->email_verified_at = bin2hex(random_bytes(10));
+        $user->save();
+        Mail::to($user->email)->send(new ResetPassword($user, $request->author));
+    }
+    
+    /**
+     * @function accept reset password
+     * @param string $token
+     * @param Request $request
+     * @return view
+     */
+    public function acceptResetPassword($token, Request $request) {
+        if($request->author == "admin") {
+            $user = \App\admins::where('email_verified_at', $token)->first();
+        } else {
+            $user = \App\users::where('email_verified_at', $token)->where('status', 1)->first();
+        }
+        if(!is_null($user)) {
+            return view('auth.passwords.reset', ['token' => $token, 'author' => $request->author, 'email' => $user->email]);
+        } else {
+            return redirect()->route('reset.password.admin')->with('error', 'Người dùng này không tồn tại!');
+        }
+    }
+    
+    /**
+     * @function update password reset
+     * @param ResetUpdatePassword $request
+     * @return view
+     */
+    public function updateResetPassword(ResetUpdatePassword $request) {
+        if($request->author == "admin") {
+            $user = \App\admins::where('email_verified_at', $request->token)->where('email', $request->email)->first();
+        } else {
+            $user = \App\users::where('email_verified_at', $request->token)->where('email', $request->email)->where('status', 1)->first();
+        }
+        if(!is_null($user)) {
+            $user->password = bcrypt($request->password);
+            $user->email_verified_at = "";
+            $user->save();
+            if($request->author == "admin") {
+                Auth::guard('admin')->login($user);
+                return redirect()->route('admin.index')->with('success', 'Khôi phục mật khẩu thành công');
+            } else {
+                Auth::guard('web')->login($user);
+                return redirect()->route('user.index')->with('success', 'Khôi phục mật khẩu thành công');
+            }
+        } else {
+            return redirect()->route('reset.password.admin')->with('error', 'Người dùng này không tồn tại!');
         }
     }
 
