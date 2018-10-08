@@ -51,7 +51,7 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label>Mô tả *</label>
-                                    <textarea name="intro" class="form-control" placeholder="Nhập mô tả ..." rows="3">{{$object['tvien']->intro}}</textarea>
+                                    <textarea name="intro" required="" class="form-control" placeholder="Nhập mô tả ..." rows="3">{{$object['tvien']->intro}}</textarea>
                                 </div>
                             </div>
                             <div class="row">

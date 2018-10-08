@@ -1,4 +1,7 @@
 <!-- *** START FOOTER *** -->
+<div id='loading'>
+    <img src="{{url('images/ajax-loader.gif')}}" style="width: 50px;"/>
+</div>
 <footer>
     <div class="container">
         <div class="row">

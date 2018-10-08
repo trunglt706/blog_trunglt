@@ -12,7 +12,6 @@ use App\users;
 use Image;
 use File;
 use Auth;
-use Hash;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -61,7 +60,7 @@ class AdminController extends Controller
      */
     public function profile() {
         //Lay ds bai viet cua admin
-        $list_bviet = baiviets::where('username', auth()->user()->username)->where('status', 1)->get();
+        $list_bviet = baiviets::where('username', auth()->user()->username)->where('status', 1)->paginate(5);
         return view('admin.profile', ['list_bviet' => $list_bviet]);
     }
 
@@ -74,11 +73,12 @@ class AdminController extends Controller
         try {
             $ad = admins::find(auth()->user()->id);
             $ad->name = $request->name;
+            $ad->email = $request->email;
             $ad->intro = $request->intro;
             if ($request->hasFile('avatar')) {
                 File::delete($ad->avtar);
                 $avatar = $request->file('avatar');
-                $filename = time() . '.' . $avatar->getClientOriginalExtension();
+                $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
                 $dir = 'uploads/admins/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -90,7 +90,7 @@ class AdminController extends Controller
             if ($request->hasFile('background')) {
                 File::delete($ad->background);
                 $bg = $request->file('background');
-                $filename = time() . '.' . $bg->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $bg->getClientOriginalExtension();
                 $dir = 'uploads/admins/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -100,10 +100,10 @@ class AdminController extends Controller
                 $ad->background = $path;
             }
             $ad->save();
-            return route('admin.info')->with('success', 'Cập nhật thông tin admin thành công!');
+            return redirect()->route('admin.profile')->with('success', 'Cập nhật thông tin admin thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.info')->with('error', 'Lỗi, cập nhật thông tin admin thất bại!');
+            return redirect()->route('admin.profile')->with('error', 'Lỗi, cập nhật thông tin admin thất bại!');
         }
     }
 
@@ -115,13 +115,13 @@ class AdminController extends Controller
     public function accountUpdate(UpdateAccountAdminRequest $request) {
         try {
             $ad = admins::find(auth()->user()->id);
-            $ad->email = $request->email;
             $ad->password = bcrypt($request->password);
             $ad->save();
-            return route('admin.info')->with('success', 'Cập nhật tài khoản admin thành công!');
+            Auth::guard('admin')->logout();
+            return redirect()->route('login')->with('success', 'Cập nhật tài khoản thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.info')->with('error', 'Lỗi, cập nhật tài khoản admin thất bại!');
+            return redirect()->route('admin.profile')->with('error', 'Lỗi, cập nhật tài khoản admin thất bại!');
         }
     }
 

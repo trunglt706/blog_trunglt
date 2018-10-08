@@ -13,7 +13,7 @@ class UpdateInfoAdminRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,19 @@ class UpdateInfoAdminRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'email' => 'required',
+            'name' => 'required',
+            'intro' => 'required',
+        ];
+    }
+
+    public function messages() {
+        return [
+            'email.required' => 'Email không được để trống!',
+            'name.required' => 'Họ tên không được để trống!',
+            'intro.required' => 'Chưa nhập thông tin mô tả!',
         ];
     }
 }

@@ -26,15 +26,16 @@
                     <div class="post_details_inner">
                         <div class="post_details_block">
                             <figure class="social-icon">
-                                <img src="{{url($data['news']->thumn)}}" class="img-responsive" alt="">
+                                <img src="{{url($data['news']->thumn)}}" class="img-responsive" alt="{{$data['news']->slug}}">
                                 <div>
                                     <a href="javascript:;">
                                         <div class="fb-share-button" data-href="{{route('detail.baiviet', ['slug' => $data['news']->slug])}}" data-layout="button" data-size="small" data-mobile-iframe="true">
-                                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{route('detail.baiviet', ['slug' => $data['news']->slug])}}" class="fb-xfbml-parse-ignore">
+                                            <a title="Share" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{route('detail.baiviet', ['slug' => $data['news']->slug])}}" class="fb-xfbml-parse-ignore">
                                                 <i class="fa fa-facebook"></i>
                                             </a>
                                         </div>
                                     </a>
+                                    <a href="javascript:;" title="Like" onclick="likeBaiViet('{{$data['news']->slug}}');"><i class="fa fa-thumbs-o-up"></i></a>
                                 </div>
                             </figure>
                             <h2>{{$data['news']->name}}</h2>
@@ -145,4 +146,27 @@
         </div>
     </div>
 </main>
+<script type="text/javascript">
+    //Like bai viet
+    function likeBaiViet(slug) {
+        $('#loading').css("visibility", "visible");
+        $.ajax({
+            url: "{{route('baiviet.like')}}",
+            data: {slug: slug, _token: '{{ csrf_token() }}'},
+            type: "POST",
+            success: function (data) {
+                $('#loading').css("visibility", "hidden");
+                if(data.status == 'success') {
+                    toastr.success(data.msg);
+                    setTimeout('location.reload();',1000);
+                } else {
+                    toastr.warning(data.msg);
+                }
+            },
+            error: function () {
+                toastr.error('Lỗi, không kết nối được server!');
+            }
+        });
+    }
+</script>
 @endsection

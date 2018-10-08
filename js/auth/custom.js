@@ -170,13 +170,10 @@ $(document).ready(function () {
     );
     //progresber
     var el=document.getElementsByClassName('progressber'), l=el.length;
-    for (var i=0;
-    i < l;
-    i++) {
+    for (var i=0; i < l; i++) {
         var options= {
             percent: el[i].getAttribute('data-percent'), size: el[i].getAttribute('data-size') || 60, lineWidth: el[i].getAttribute('data-line') || 4
-        }
-        ;
+        } ;
         var canvas=document.createElement('canvas');
         var span=document.createElement('span');
         span.textContent=options.percent + '%';

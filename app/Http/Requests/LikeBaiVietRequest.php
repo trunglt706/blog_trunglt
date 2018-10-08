@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAccountAdminRequest extends FormRequest
+class LikeBaiVietRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,13 @@ class UpdateAccountAdminRequest extends FormRequest
      */
     public function rules() {
         return [
-            'password' => 'required|min:6',
+            'slug' => 'required',
         ];
     }
 
     public function messages() {
         return [
-            'password.required' => 'Mật khẩu không được để trống!',
-            'password.min' => 'Độ dài mật khẩu không được bé hơn 6 ký tự!'
+            'slug.required' => 'Lỗi, không xác định được bài viết',
         ];
     }
 }

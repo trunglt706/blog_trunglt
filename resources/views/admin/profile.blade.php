@@ -13,6 +13,7 @@
     </section>
     <!-- Main content -->
     <section class="content">
+        @include('admin.notify')
         <div class="row">
             <div class="col-md-3">
                 <!-- Profile Image -->
@@ -78,7 +79,7 @@
                                         @foreach($list_bviet as $bviet)
                                         <tbody>
                                             <tr>
-                                                <td>{{$bviet->name}}</td>
+                                                <td><a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}" target="_blank">{{$bviet->name}}</a></td>
                                                 <td class="hidden-xs">{{$bviet->username}}</td>
                                                 <td class="hidden-xs text-center">
                                                     <a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}" target="_blank"><img src="{{url($bviet->thumn)}}" alt="{{$bviet->slug}}" width="100px"/></a>
@@ -110,76 +111,81 @@
                         </div>
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="thongtins">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="name" class="col-sm-2 control-label">Họ tên</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" required="" name="name" placeholder="Nhập họ tên ...">
-                                    </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form role="form" method="post" action="{{route('admin.info.update')}}"enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="name">Họ tên *</label>
+                                                <input type="text" class="form-control" required="" value="{{auth()->user()->name}}" name="name" placeholder="Nhập họ tên ...">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="email">Email *</label>
+                                                <input type="email" name="email" required="" class="form-control" value="{{auth()->user()->email}}" placeholder="Nhập email ...">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mô tả *</label>
+                                            <textarea name="intro" required="" class="form-control" placeholder="Nhập mô tả ..." rows="3">{{auth()->user()->intro}}</textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="avatar">Avatar</label>
+                                                <input type="file" id="AvatarPerson" name="avatar">
+                                                <p class="help-block" style="color: red;">Nên sử dụng hình ảnh PNG, JPG kích thước 600 x 337px</p>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <div id="image-holder" style="max-height: 160px;">
+                                                    @if(auth()->user()->avatar != "")
+                                                    <img class="img-responsive" src="{{url(auth()->user()->avatar)}}" alt="{{auth()->user()->username}}"/>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="background">Ảnh bìa</label>
+                                                <input type="file" id="Background" name="background">
+                                                <p class="help-block" style="color: red;">Nên sử dụng hình ảnh PNG, JPG kích thước 600 x 337px</p>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <div id="image-holder-background" style="max-height: 160px;">
+                                                    @if(auth()->user()->background != "")
+                                                    <img class="img-responsive" src="{{url(auth()->user()->background)}}" alt="{{auth()->user()->username}}"/>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> Save</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="form-group">
-                                    <label for="email" class="col-sm-2 control-label">Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" name="email" required="" class="form-control" placeholder="Nhập email ...">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <button type="submit" class="btn btn-danger">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="taikhoans">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputName" placeholder="Name">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputName" placeholder="Name">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                                            </label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form role="form" method="post" action="{{route('admin.account.update')}}"enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="username">Tài khoản *</label>
+                                                <input type="text" class="form-control" required="" disabled="" value="{{auth()->user()->username}}" name="username" placeholder="Chưa có tài khoản ...">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="password">Mật khẩu *</label>
+                                                <input type="password" name="password" required="" class="form-control" placeholder="Nhập mật khẩu ...">
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-save"></i> Save</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <button type="submit" class="btn btn-danger">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                         <!-- /.tab-pane -->
                     </div>
@@ -193,4 +199,12 @@
     </section>
     <!-- /.content -->
 </div>
+<script>
+    function deleteData(id) {
+        if(confirm('Bạn có muốn xóa bài viết này?')) {
+            var url = "{{route('admin.baiviet.delete', ':id')}}";
+            location.href = url.replace(":id", id);
+        }
+    }
+</script>
 @endsection

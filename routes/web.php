@@ -16,6 +16,7 @@ Route::get('/lien-he', 'HomeController@contact')->name('contact');
 Route::get('/hoi-dap', 'HomeController@hoidap')->name('hoidap');
 Route::get('/danh-muc-bai-viet/{slug}', 'HomeController@danhmuc_baiviet')->name('danhmuc.baiviet');
 Route::get('/bai-viet/{slug}', 'HomeController@baiviet')->name('detail.baiviet');
+Route::post('/bai-viet/like', 'HomeController@baivietLike')->name('baiviet.like');
 Route::get('/gioi-thieu', 'HomeController@introduce')->name('introduce');
 Route::get('/search', 'HomeController@search')->name('search');
 Route::get('/tac-gia/{id}', 'HomeController@getAuthor')->name('tacgia.index');

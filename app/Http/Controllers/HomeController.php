@@ -8,6 +8,7 @@ use App\hoidap;
 use App\Http\Requests\LienHeRequest;
 use App\Http\Requests\NhanBaiVietRequest;
 use App\Http\Requests\PhanHoiRequest;
+use App\Http\Requests\LikeBaiVietRequest;
 use App\lienhe;
 use App\nhanbaiviets;
 use App\phanhois;
@@ -274,6 +275,22 @@ class HomeController extends Controller {
             $users = $b;
         }
         return view('list_author', ['list_author_user' => $list_author, 'list_author_admin' => $list_admin, 'key_author' => $key]);
+    }
+    
+    /**
+     * @function author like baiviet
+     * @param \App\Http\Controllers\LiekBaiVietRequest $request
+     * @return array
+     */
+    public function baivietLike(LikeBaiVietRequest $request) {
+        $bviet = baiviets::where('slug', $request->slug)->where('status', 1)->first();
+        if(!is_null($bviet)) {
+            $bviet->like += 1;
+            $bviet->save();
+            return array('status' => 'success', 'msg' => 'Cảm ơn bạn đã like cho bài viết này');
+        } else {
+            return array('status' => 'error', 'msg' => 'Lỗi, bài viết không tồn tại!');
+        }
     }
 
 }
