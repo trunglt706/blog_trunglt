@@ -34,7 +34,7 @@
             </div>
         </form>
 
-        <a href="{{route('reset.password.admin')}}">Quên mật khẩu?</a>
+        <a href="{{route('reset.password.admin')}}"><i class="fa fa-question-circle-o"></i> Quên mật khẩu?</a>
 
     </div>
     <!-- /.login-box-body -->

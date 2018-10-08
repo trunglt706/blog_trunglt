@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BaiViet::class);
         $this->call(QuangCao::class);
         $this->call(HoiDap::class);
+        $this->call(EventsSeeder::class);
     }
 }

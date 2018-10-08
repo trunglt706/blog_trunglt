@@ -123,4 +123,8 @@ Route::prefix('admin')->group(function () {
 
     Route::get('phan-tich-du-lieu', 'AdminController@phanTichDuLieu')->name('admin.phantich.dulieu');
 });
+Route::get('/events/{event}', 'EventsController@show')
+    ->name('events.show');
+
+Route::feeds();
 Auth::routes();

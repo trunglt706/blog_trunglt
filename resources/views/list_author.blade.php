@@ -50,7 +50,7 @@
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <a href="{{route('tacgia.index', ['id' => $ad['username']])}}">
                                 <figure class="member">
-                                    <img src="{{url($ad['avatar'])}}" class="img-responsive img-circle img-news" alt="{{$ad['name']}}">
+                                    <img src="{{(!is_null($ad['avatar']) && ($ad['avatar'] != "")) ? url($ad['avatar']) : url('images/no-image.jpg')}}" class="img-responsive img-circle img-news" alt="{{$ad['name']}}">
                                     <figcaption>
                                         <h4 class="text-uppercase text-admin">[Admin] {{$ad['name']}}</h4>
                                         <small>Số bài viết: <span class="badge"><?= App\baiviets::countBaiVietUser($ad['username']) ?></span></small>
@@ -67,7 +67,7 @@
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <a href="{{route('tacgia.index', ['id' => $us['username']])}}">
                                 <figure class="member">
-                                    <img src="{{url($us['avatar'])}}" class="img-responsive img-circle img-news" alt="{{$us['name']}}">
+                                    <img src="{{(!is_null($us['avatar']) && ($us['avatar'] != "")) ? url($us['avatar']) : url('images/no-image.jpg')}}" class="img-responsive img-circle img-news" alt="{{$us['name']}}">
                                     <figcaption>
                                         <h4 class="text-uppercase">{{$us['name']}}</h4>
                                         <small>Số bài viết: <span class="badge"><?= App\baiviets::countBaiVietUser($us['username']) ?></span></small>

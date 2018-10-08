@@ -26,7 +26,7 @@
                     <div class="post_details_inner">
                         <div class="post_details_block">
                             <figure class="social-icon">
-                                <img src="{{url($data['news']->thumn)}}" class="img-responsive" alt="{{$data['news']->slug}}">
+                                <img src="{{(!is_null($data['news']->thumn) && ($data['news']->thumn != "")) ? url($data['news']->thumn) : url('images/no-image.jpg')}}" class="img-responsive" alt="{{$data['news']->slug}}">
                                 <div>
                                     <a href="javascript:;">
                                         <div class="fb-share-button" data-href="{{route('detail.baiviet', ['slug' => $data['news']->slug])}}" data-layout="button" data-size="small" data-mobile-iframe="true">

@@ -52,7 +52,7 @@
                                                 <td class="hidden-xs">{{substr($chinh->intro, 0, 200)}}</td>
                                                 <td class="hidden-xs">
                                                     @if($chinh->type != 'text')
-                                                    <img src="{{url($chinh->value)}}" alt="{{$chinh->name}}"/>
+                                                    <img src="{{(!is_null($chinh->value) && ($chinh->value != "")) ? url($chinh->value) : url('images/no-image.jpg')}}" alt="{{$chinh->name}}" class="img-news"/>
                                                     @else
                                                     {{$chinh->value}}
                                                     @endif

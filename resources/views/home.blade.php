@@ -14,7 +14,7 @@
                         <div class="item">
                             <div class="slider-post post-height-1">
                                 <a href="{{route('detail.baiviet', ['slug' => $data['important']->slug])}}" class="news-image">
-                                    <img src="{{url($data['important']->thumn)}}" alt="{{$data['important']->name}}" class="img-responsive">
+                                    <img src="{{(!is_null($data['important']->thumn) && ($data['important']->thumn != "")) ? url($data['important']->thumn) : url('images/no-image.jpg')}}" alt="{{$data['important']->name}}" class="img-responsive">
                                 </a>
                                 <div class="post-text">
                                     <span class="post-category">Hot news</span>
@@ -43,7 +43,7 @@
                         <div class="col-xs-6 col-sm-12 col-md-12 thm-padding">
                             <div class="slider-post post-height-2">
                                 <a href="{{$adv->link}}" class="news-image">
-                                    <img src="{{url($adv->photo)}}" alt="{{$adv->name}}" class="img-responsive">
+                                    <img src="{{(!is_null($adv->photo) && ($adv->photo != "")) ? url($adv->photo) : url('images/no-image.jpg')}}" alt="{{$adv->name}}" class="img-responsive">
                                 </a>
                                 <div class="post-text">
                                     <span class="post-category">Advs</span>
@@ -79,7 +79,7 @@
                                 <div class="news-list-item articles-list post-grid-item">
                                     <div class="img-wrapper posts-thumb">
                                         <a href="{{route('detail.baiviet', ['slug' => $news->slug])}}" class="thumb">
-                                            <img src="{{url($news->thumn)}}" alt="{{$news->name}}" class="img-responsive">
+                                            <img src="{{(!is_null($news->thumn) && ($news->thumn != "")) ? url($news->thumn) : url('images/no-image.jpg')}}" alt="{{$news->name}}" class="img-responsive">
                                         </a>
                                     </div>
                                     <div class="post-info-2">

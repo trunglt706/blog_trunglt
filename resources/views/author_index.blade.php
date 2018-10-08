@@ -42,8 +42,8 @@
                             <h4><strong><i class="fa fa-address-card-o"></i> Thông tin liên hệ</strong></h4>
                         </div>
                         <div class="panel_body text-center">
-                            <address>
-                                <img class="img-circle" src="{{url($object['author']->avatar)}}" alt="{{$object['author']->name}}" style="max-width: 100px;"/>
+                            <address>                                
+                                <img class="img-circle" src="{{(!is_null($object['author']->avatar) && ($object['author']->avatar != "")) ? url($object['author']->avatar) : url('images/no-image.jpg')}}" alt="{{$object['author']->name}}" style="max-width: 100px;"/>
                             </address>
                             <address> {{$object['author']->name}}</address>
                             <address> {{$object['author']->email}}</address>
@@ -77,7 +77,7 @@
                                                 <div class="grid-item post-grid-item">
                                                     <div class="grid-item-img posts-thumb">
                                                         <a href="{{route('detail.baiviet', ['slug' => $other->slug])}}">
-                                                            <img src="{{url($other->thumn)}}" class="img-responsive img-news" alt="{{$other->slug}}">
+                                                            <img src="{{(!is_null($other->thumn) && ($other->thumn != "")) ? url($other->thumn) : url('images/no-image.jpg')}}" class="img-responsive img-news" alt="{{$other->slug}}">
                                                             <div class="link-icon"><i class="fa fa-play"></i></div>
                                                         </a>
                                                     </div>

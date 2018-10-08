@@ -52,7 +52,9 @@
                                                 <td>{{$bviet->name}}</td>
                                                 <td class="hidden-xs">{{$bviet->username}}</td>
                                                 <td class="hidden-xs text-center">
-                                                    <a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}" target="_blank"><img src="{{url($bviet->thumn)}}" alt="{{$bviet->slug}}" width="100px"/></a>
+                                                    <a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}" target="_blank">
+                                                        <img src="{{(!is_null($bviet->thumn) && ($bviet->thumn != "")) ? url($bviet->thumn) : url('images/no-image.jpg')}}" alt="{{$bviet->slug}}" width="100px"/>
+                                                    </a>
                                                 </td>
                                                 <td class="text-center">{{$bviet->view}}</td>
                                                 <td class="text-center hidden-xs">{{$bviet->like}}</td>

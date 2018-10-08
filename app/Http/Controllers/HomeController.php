@@ -315,9 +315,13 @@ class HomeController extends Controller {
         } else {
             $user = \App\users::where('email', $request->email)->where('status', 1)->first();
         }
-        $user->email_verified_at = bin2hex(random_bytes(10));
-        $user->save();
-        Mail::to($user->email)->send(new ResetPassword($user, $request->author));
+        if(!is_null($user)) {
+            $user->email_verified_at = substr(md5(mt_rand()), 0, 7);
+            $user->save();
+            Mail::to($user->email)->send(new ResetPassword($user, $request->author));
+        } else {
+            return redirect()->route('reset.password.admin')->with('error', 'Người dùng này không tồn tại!');
+        }
     }
     
     /**

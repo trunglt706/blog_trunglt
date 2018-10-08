@@ -53,7 +53,7 @@
                                                 <td class="hidden-xs">{{\App\loaithanhviens::find($tvien->id_loaithanhvien)->name}}</td>
                                                 <td class="hidden-xs">
                                                     <a href="{{route('admin.thanhvien.chitiet', ['id' => $tvien->id])}}">
-                                                        <img src="{{url($tvien->avatar)}}" alt="{{$tvien->username}}" style="width: 100px;"/>
+                                                        <img src="{{(!is_null($tvien->avatar) && ($tvien->avatar != "")) ? url($tvien->avatar) : url('images/no-image.jpg')}}" alt="{{$tvien->username}}" style="width: 100px;"/>
                                                     </a>
                                                 </td>
                                                 <td class="hidden-xs">{{$tvien->email}}</td>

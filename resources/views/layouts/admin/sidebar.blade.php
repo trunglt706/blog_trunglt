@@ -4,7 +4,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{url(auth()->user()->avatar)}}" class="img-circle" alt="{{auth()->user()->name}}">
+                <img src="{{(!is_null(auth()->user()->avatar) && (auth()->user()->avatar != "")) ? url(auth()->user()->avatar) : url('images/no-image.jpg')}}" class="img-circle" alt="{{auth()->user()->name}}">
             </div>
             <div class="pull-left info">
                 <p style="text-transform: capitalize">{{auth()->user()->name}}</p>

@@ -17,6 +17,9 @@
         <link href="{{url('css/admin/AdminLTE.min.css')}}" rel="stylesheet" />
         <!-- iCheck -->
         <link href="{{url('plugin/iCheck/square/blue.css')}}" rel="stylesheet" />
+        <style>
+            body { background-image: url("{{url('images/error/error-bg.PNG')}}") !important;}
+        </style>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

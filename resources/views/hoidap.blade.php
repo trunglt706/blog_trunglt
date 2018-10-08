@@ -32,12 +32,12 @@
                         <div class="panel">
                             <div class="panel-heading active" role="tab" id="heading-{{$i}}">
                                 <h4 class="panel-title">
-                                    <a @if($i > 0) class="collapsed" @endif role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{$i}}" aria-controls="collapse-{{$i}}">
+                                    <a <?php if($i > 0){ echo 'class="collapsed"'; } ?> role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{$i}}" aria-controls="collapse-{{$i}}">
                                         {{$hoi->name}}
                                 </a>
                             </h4>
                         </div>
-                        <div id="collapse-{{$i}}" class="panel-collapse collapse @if($i==0) in @endif" role="tabpanel" aria-labelledby="heading-{{$i}}">
+                        <div id="collapse-{{$i}}" class="panel-collapse collapse <?php if($i==0){ echo 'in'; } ?>" role="tabpanel" aria-labelledby="heading-{{$i}}">
                             <div class="panel-body">
                                 <h4>{{$hoi->name}}</h4>
                                 <p>{{$hoi->intro}}</p>

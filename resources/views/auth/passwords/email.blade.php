@@ -29,6 +29,9 @@
                 <button type="submit" class="btn btn-primary">
                     {{ __('Send Password Reset Link') }}
                 </button>
+            </div><br/>
+            <div class="form-group text-center">
+                <i class="fa fa-sign-in"></i> Trở về trang <a href="{{route('login')}}">đăng nhập</a>
             </div>
         </form>
     </div>

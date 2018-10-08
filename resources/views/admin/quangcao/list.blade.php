@@ -50,7 +50,7 @@
                                                 <td>{{$qcao->name}}</td>
                                                 <td class="hidden-xs text-center">
                                                     <a href="{{$qcao->link}}" target="_blank">
-                                                        <img src="{{url($qcao->photo)}}" alt="{{$qcao->name}}" width="150px"/>
+                                                        <img src="{{(!is_null($qcao->photo) && ($qcao->photo != "")) ? url($qcao->photo) : url('images/no-image.jpg')}}" alt="{{$qcao->name}}" width="150px"/>
                                                     </a>
                                                 </td>
                                                 <td class="text-center hidden-xs">{{$qcao->order}}</td>

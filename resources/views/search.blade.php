@@ -31,7 +31,7 @@
                                     <article>
                                         <figure>
                                             <a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}">
-                                                <img src="{{url($bviet->thumn)}}" height="242" width="345" alt="{{$bviet->slug}}" class="img-responsive">
+                                                <img src="{{(!is_null($bviet->thumn) && ($bviet->thumn != "")) ? url($bviet->thumn) : url('images/no-image.jpg')}}" height="242" width="345" alt="{{$bviet->slug}}" class="img-responsive">
                                             </a>
                                             <span class="post-category">News</span>
                                         </figure>

@@ -10,6 +10,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="content-language" content="vi,jp,en"/>
         <title>{{isset($object['title']) ? $object['title'] : $data['title']->value}}</title>
+        @include('feed::links')
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
         <link rel="apple-touch-icon" sizes="180x180" href="{{url('images/ico/favicon.png')}}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{url('images/ico/favicon.png')}}">

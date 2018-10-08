@@ -31,7 +31,7 @@
                                     <article class="post-grid-item">
                                         <figure class="posts-thumb">
                                             <a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}">
-                                                <img src="{{url($bviet->thumn)}}" alt="{{$bviet->slug}}" class="img-responsive img-news">
+                                                <img src="{{(!is_null($bviet->thumn) && ($bviet->thumn != "")) ? url($bviet->thumn) : url('images/no-image.jpg')}}" alt="{{$bviet->slug}}" class="img-responsive img-news">
                                             </a>
                                             <span class="post-category">News</span>
                                         </figure>
