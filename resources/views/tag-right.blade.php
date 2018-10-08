@@ -4,16 +4,16 @@
     </div>
     <div class="panel_body">
         <div class="tags-inner">
-            <a class="ui tag">Tâm sự</a>
-            <a class="ui tag">Âm nhạc</a>
-            <a class="ui tag">Ẩm thực</a>
-            <a class="ui tag">Du lịch</a>
-            <a class="ui tag">Tình yêu</a>
-            <a class="ui tag">Học vấn</a>
-            <a class="ui tag">Chia sẽ</a>
-            <a class="ui tag">Kinh nghiệm sống</a>
-            <a class="ui tag">Vượt qua khó khăn</a>
-            <a class="ui tag">Nụ cười ấm áp</a>
+            <a class="ui tag" href="{{route('search')}}?key=tâm sự">Tâm sự</a>
+            <a class="ui tag" href="{{route('search')}}?key=âm nhạc">Âm nhạc</a>
+            <a class="ui tag" href="{{route('search')}}?key=ẩm thực">Ẩm thực</a>
+            <a class="ui tag" href="{{route('search')}}?key=du lịch">Du lịch</a>
+            <a class="ui tag" href="{{route('search')}}?key=tình yêu">Tình yêu</a>
+            <a class="ui tag" href="{{route('search')}}?key=học vấn">Học vấn</a>
+            <a class="ui tag" href="{{route('search')}}?key=chia sẽ">Chia sẽ</a>
+            <a class="ui tag" href="{{route('search')}}?key=kinh nghiệm sống">Kinh nghiệm sống</a>
+            <a class="ui tag" href="{{route('search')}}?key=vượt qua khó khăn">Vượt qua khó khăn</a>
+            <a class="ui tag" href="{{route('search')}}?key=thiện nguyện">Thiện nguyện</a>
         </div>
     </div>
 </div>

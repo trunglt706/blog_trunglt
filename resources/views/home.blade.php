@@ -76,8 +76,8 @@
                             <!-- post body -->
                             <div class="post-body">
                                 @foreach($data['news'] as $news)
-                                <div class="news-list-item articles-list">
-                                    <div class="img-wrapper">
+                                <div class="news-list-item articles-list post-grid-item">
+                                    <div class="img-wrapper posts-thumb">
                                         <a href="{{route('detail.baiviet', ['slug' => $news->slug])}}" class="thumb">
                                             <img src="{{url($news->thumn)}}" alt="{{$news->name}}" class="img-responsive">
                                         </a>

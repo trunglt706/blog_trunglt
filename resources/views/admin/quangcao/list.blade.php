@@ -39,7 +39,7 @@
                                             <tr class="bg-info">
                                                 <th class="text-center">Tên quảng cáo</th>
                                                 <th class="text-center hidden-xs" style="width: 160px;">Hình ảnh</th>
-                                                <th class="text-center" style="width: 100px;">Thứ tự</th>
+                                                <th class="text-center hidden-xs" style="width: 100px;">Thứ tự</th>
                                                 <th class="text-center" style="width: 100px;">Trạng thái</th>
                                                 <th class="text-center" style="width: 120px;">Action</th>
                                             </tr>
@@ -53,7 +53,7 @@
                                                         <img src="{{url($qcao->photo)}}" alt="{{$qcao->name}}" width="150px"/>
                                                     </a>
                                                 </td>
-                                                <td class="text-center">{{$qcao->order}}</td>
+                                                <td class="text-center hidden-xs">{{$qcao->order}}</td>
                                                 <td class="text-center">
                                                     @if($qcao->status == 0)
                                                     <div class="label bg-gray">Chưa duyệt</div>

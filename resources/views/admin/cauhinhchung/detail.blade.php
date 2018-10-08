@@ -40,12 +40,16 @@
                                 <label for="name">Tên cấu hình *</label>
                                 <input required="" class="form-control" name="name" value="{{$object['chinh']->name}}">
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-3">
                                 <label>Loại cấu hình *</label>
                                 <select required="" class="form-control type-cauhinh select2" name="type" onchange="changeTypeCauHinh(this);">
                                     <option value="text" @if($object['chinh']->type == "text") selected @endif>Text</option>
                                     <option value="img" @if($object['chinh']->type == "img") selected @endif>Hình ảnh</option>
                                 </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="slug">Mã cấu hình *</label>
+                                <input class="form-control" name="slug" disabled="" value="{{$object['chinh']->slug}}">
                             </div>
                             <div class="form-group col-md-12 value-text @if($object['chinh']->type == 'img') hidden @endif">
                                 <label>Giá trị*</label>
@@ -90,7 +94,7 @@
     </section>
     <!-- /.content -->
 </div>
-<script>
+<script type="text/javascript">
 //    Event change selete type cauhinh
     function changeTypeCauHinh(value) {
         var type = $(value).val();

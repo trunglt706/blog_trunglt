@@ -17,11 +17,11 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title"><i class="fa fa-envelope-open"></i> Danh sách đăng ký nhận bài viết</h3>
+                        <h3 class="box-title"><i class="fa fa-envelope-open"></i> Danh sách đăng ký nhận bài</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
-                                    <a class="btn btn-default" href="{{route('admin.nhanbaiviet')}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
+                                    <a class="btn btn-default hidden-xs" href="{{route('admin.nhanbaiviet')}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
                                     <a class="btn btn-success" data-toggle="modal" data-target="#add-model"><i class="fa fa-plus"></i> Add</a>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                         <thead>
                                             <tr class="bg-info">
                                                 <th>Email</th>
-                                                <th class="text-center" style="width: 120px;">Trạng thái</th>
+                                                <th class="text-center hidden-xs" style="width: 120px;">Trạng thái</th>
                                                 <th class="text-center" style="width: 120px;">Action</th>
                                             </tr>
                                         </thead>
@@ -46,7 +46,7 @@
                                         <tbody>
                                             <tr>
                                                 <td>{{$nhanbv->email}}</td>
-                                                <td class="text-center">
+                                                <td class="text-center hidden-xs">
                                                     @if($nhanbv->status == 0)
                                                     <div class="label bg-gray">Chưa duyệt</div>
                                                     @else

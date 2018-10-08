@@ -17,11 +17,11 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title"><i class="fa fa-cogs"></i> Danh sách cấu hình chung</h3>
+                        <h3 class="box-title"><i class="fa fa-cogs"></i> Danh sách cấu hình</h3>
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
-                                    <a class="btn btn-default" href="{{route('admin.cauhinhchung')}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
+                                    <a class="btn btn-default hidden-xs" href="{{route('admin.cauhinhchung')}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
                                     <a class="btn btn-success" data-toggle="modal" data-target="#add-model"><i class="fa fa-plus"></i> Add</a>
                                 </div>
                             </div>
@@ -38,8 +38,9 @@
                                         <thead>
                                             <tr class="bg-info">
                                                 <th class="text-center">Tên</th>
-                                                <th class="text-center">Mô tả</th>
-                                                <th class="text-center">Giá trị</th>
+                                                <th class="text-center">Mã</th>
+                                                <th class="text-center hidden-xs">Mô tả</th>
+                                                <th class="text-center hidden-xs">Giá trị</th>
                                                 <th class="text-center" style="width: 120px;">Action</th>
                                             </tr>
                                         </thead>
@@ -47,8 +48,9 @@
                                         <tbody>
                                             <tr>
                                                 <td>{{$chinh->name}}</td>
-                                                <td>{{substr($chinh->intro, 0, 200)}}</td>
-                                                <td>
+                                                <td>{{$chinh->slug}}</td>
+                                                <td class="hidden-xs">{{substr($chinh->intro, 0, 200)}}</td>
+                                                <td class="hidden-xs">
                                                     @if($chinh->type != 'text')
                                                     <img src="{{url($chinh->value)}}" alt="{{$chinh->name}}"/>
                                                     @else

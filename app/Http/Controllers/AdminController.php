@@ -60,7 +60,9 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function profile() {
-        return view('admin.profile');
+        //Lay ds bai viet cua admin
+        $list_bviet = baiviets::where('username', auth()->user()->username)->where('status', 1)->get();
+        return view('admin.profile', ['list_bviet' => $list_bviet]);
     }
 
     /**

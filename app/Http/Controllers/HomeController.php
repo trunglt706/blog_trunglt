@@ -227,7 +227,7 @@ class HomeController extends Controller {
             $object['author'] = \App\admins::select(['username', 'email', 'intro', 'name', 'avatar', 'background'])->where('username', $username)->first();
         }
         //Get list baiviet of author
-        $object['list_bviet'] = baiviets::where('username', $object['author']->username)->where('status', 1)->get();
+        $object['list_bviet'] = baiviets::where('username', $object['author']->username)->where('status', 1)->orderBy('view', 'desc')->get();
         return view('author_index', ['object' => $object]);
     }
     
@@ -235,9 +235,45 @@ class HomeController extends Controller {
      * @function do to list author
      * @return view
      */
-    public function listAuthor() {
-        $object['list_author'] = \App\users::where('status', 1)->get();
-        return view('list_author', ['object' => $object]);
+    public function listAuthor(Request $request) {
+        $admins = array();
+        $users = array();
+        $a = NULL;
+        $b = NULL;
+        $key = NULL;
+        if(isset($request->key) && ($request->key != '')) {
+            $key = $request->key;
+            $list_author = \App\users::where('status', 1)->where('username', 'like', '%'.$request->key.'%')->orWhere('name', 'like', '%'.$request->key.'%')->orWhere('email', 'like', '%'.$request->key.'%')->get();
+            $list_admin = \App\admins::where('username', 'like', '%'.$request->key.'%')->orWhere('name', 'like', '%'.$request->key.'%')->orWhere('email', 'like', '%'.$request->key.'%')->get();
+        } else {
+            $list_author = \App\users::where('status', 1)->get();        
+            $list_admin = \App\admins::all();
+        }
+//        Add value into array admin
+        if(!is_null($list_admin)) {
+            foreach ($list_admin as $ad) {
+                $a[] = array(
+                    'username' => $ad->username,
+                    'email' => $ad->email,
+                    'name' => $ad->name,
+                    'avatar' => $ad->avatar
+                );
+            }
+            $admins = $a;
+        }
+//        Add value into array user
+        if(!is_null($list_author)) {
+            foreach ($list_author as $au) {
+                $b[] = array(
+                    'username' => $au->username,
+                    'email' => $au->email,
+                    'name' => $au->name,
+                    'avatar' => $au->avatar
+                );
+            }
+            $users = $b;
+        }
+        return view('list_author', ['list_author_user' => $list_author, 'list_author_admin' => $list_admin, 'key_author' => $key]);
     }
 
 }

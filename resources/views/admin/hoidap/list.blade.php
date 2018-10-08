@@ -39,7 +39,7 @@
                                             <tr class="bg-info">
                                                 <th style="width: 200px;">Tiêu đề</th>
                                                 <th class="text-center hidden-xs">Nội dung</th>
-                                                <th class="text-center" style="width: 100px;">Thứ tự</th>
+                                                <th class="text-center hidden-xs" style="width: 100px;">Thứ tự</th>
                                                 <th class="text-center" style="width: 120px;">Trạng thái</th>
                                                 <th class="text-center" style="width: 120px;">Action</th>
                                             </tr>
@@ -49,7 +49,7 @@
                                             <tr>
                                                 <td>{{$hdap->name}}</td>
                                                 <td class="hidden-xs">{{substr($hdap->intro, 0, 300)}} ...</td>
-                                                <td class="text-center">
+                                                <td class="text-center hidden-xs">
                                                     {{$hdap->order}}
                                                 </td>
                                                 <td class="text-center">

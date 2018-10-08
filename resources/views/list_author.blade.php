@@ -1,103 +1,87 @@
 @extends('layouts.auth.main')
 @section('content')
-    <div class="page-title">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <h1><strong>DANH SÁCH TÁC GIẢ</strong></h1>
+<div class="page-title">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <h1><strong>DANH SÁCH TÁC GIẢ</strong></h1>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <ol class="breadcrumb">
+                    <li><a href="{{route('home')}}">Trang chủ</a></li>
+                    <li class="active">Danh sách tác giả</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<main class="page_main_wrapper" style="transform: none;">
+    <div class="container" style="transform: none;">
+        <div class="row row-m" style="transform: none;">
+            <div class="portlet">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-search"></i>
+                        @php
+                        $count_admin = !is_null($list_author_admin) ? count($list_author_admin) : 0;
+                        $count_user = !is_null($list_author_user) ? count($list_author_user) : 0;
+                        $count_tong = $count_admin + $count_user;
+                        @endphp
+                        <span class="caption-subject"> Tìm thấy <span class="badge bg-aqua">{{$count_tong}}</span> tác giả</span>
+                    </div>
+                    <div class="inputs">
+                        <div class="portlet-input input-inline input-medium">
+                            <form method="get" action="{{route('tacgia.list')}}">
+                                <div class="input-group">
+                                    <input type="text" name="key" value="{{(isset($key_author) &&($key_author != '')) ? $key_author : ''}}" class="form-control input-circle-left" placeholder="Tìm tác giả...">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-circle-right btn-default" type="submit">Tìm</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <ol class="breadcrumb">
-                        <li><a href="{{route('home')}}">Trang chủ</a></li>
-                        <li class="active">Tác giả</li>
-                    </ol>
+                <div class="portlet-body">
+                    <div class="row team about-content">
+                        <!--Hien thi ds tac gia la admin-->
+                        @if(!is_null($list_author_admin))
+                        @foreach($list_author_admin as $ad)
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <a href="{{route('tacgia.index', ['id' => $ad['username']])}}">
+                                <figure class="member">
+                                    <img src="{{url($ad['avatar'])}}" class="img-responsive img-circle img-news" alt="{{$ad['name']}}">
+                                    <figcaption>
+                                        <h4 class="text-uppercase text-admin">[Admin] {{$ad['name']}}</h4>
+                                        <small>Số bài viết: <span class="badge"><?= App\baiviets::countBaiVietUser($ad['username']) ?></span></small>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </div>
+                        @endforeach
+                        @endif
+                        <!--End hien thi danh sach tac gia la admin-->
+                        <!--Hien thi ds tac gia la user-->
+                        @if(!is_null($list_author_user))
+                        @foreach($list_author_user as $us)
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <a href="{{route('tacgia.index', ['id' => $us['username']])}}">
+                                <figure class="member">
+                                    <img src="{{url($us['avatar'])}}" class="img-responsive img-circle img-news" alt="{{$us['name']}}">
+                                    <figcaption>
+                                        <h4 class="text-uppercase">{{$us['name']}}</h4>
+                                        <small>Số bài viết: <span class="badge"><?= App\baiviets::countBaiVietUser($us['username']) ?></span></small>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </div>
+                        @endforeach
+                        @endif
+                        <!--End hien thi danh sach tac gia la user-->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <main class="page_main_wrapper" style="transform: none;">
-        <div class="container" style="transform: none;">
-            <div class="row row-m" style="transform: none;">
-                <div class="col-sm-8 main-content col-p" style="position: relative; overflow: visible; box-sizing: border-box; min-height: 1px;">
-                    <div class="theiaStickySidebar" style="padding-top: 0px; padding-bottom: 1px; position: static; transform: none; left: 271.5px; top: 0px;">
-                        <!-- START CONTACT FORM AREA -->
-                        <div class="contact_form_inner">
-                            <div class="panel_inner">
-                                <div class="panel_header">
-                                    <h4><strong>Hãy gửi liên hệ cho chúng tôi</strong></h4>
-                                </div>
-                                <div class="panel_body">
-                                    @include('layouts.auth.partials.notify')
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
-                                        text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                        survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
-                                    <form class="comment-form" action="{{route('lienhe.post')}}" method="post">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="name">Họ và tên *</label>
-                                                    @csrf
-                                                    <input type="text" required class="form-control" id="name" name="name" placeholder="Nhập tên ...">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label for="email">Email *</label>
-                                                <div class="form-group">
-                                                    <input type="email" required class="form-control" id="email" name="email" placeholder="Nhập email ...">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="content">Nôi dung *</label>
-                                            <textarea class="form-control" required id="content" name="content" placeholder="Nhập nội dung ..." rows="5"></textarea>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6 text-left">
-                                                <button class="btn btn-danger" type="submit"><i class="fa fa-send-o"></i> Gửi</button>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group m-form__group">
-                                                    {!! NoCaptcha::display() !!}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END OF CONTACT FORM AREA -->
-                    </div>
-                </div>
-                <div class="col-sm-4 rightSidebar col-p" style="position: relative; overflow: visible; box-sizing: border-box; min-height: 1px;">
-                    <div class="theiaStickySidebar" style="padding-top: 0px; padding-bottom: 1px; position: static; transform: none;">
-                        <!-- START CONTACT INFO -->
-                        <div class="panel_inner">
-                            <div class="panel_header">
-                                <h4><strong>Thông tin liên hệ</strong></h4>
-                            </div>
-                            <div class="panel_body">
-                                <address> <strong><i class="ti-location-arrow"></i> Địa chỉ.</strong><br> Hoàng Văn Thụ, Q. Tân Bình, TP. Hồ Chí Minh</address>
-                                <address> <strong><i class="ti-mobile"></i> Điện thoại.</strong><br> (+84)1677 300 950</address>
-                                <address> <strong><i class="ti-email"></i> Email.</strong><br> lamthanhtrung706@gmail.com</address>
-                            </div>
-                        </div>
-                        <!-- END OF /. CONTACT INFO -->
-                        <!-- START SOCIAL ICON -->
-                        @include('social-right');
-                        <!-- END OF /. SOCIAL ICON -->
-                    </div>
-                </div>
-            </div>
-            <div class="panel_inner">
-                <div class="panel_body">
-                    <!-- The element that will contain Google Map. This is used in both the Javascript and CSS above. -->
-                    <div id="map" style="position: relative; overflow: hidden;">
-                        <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1385.6443181040222!2d106.69090096156509!3d10.796450649006621!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528cef2c0d839%3A0x98f202f9a5a797d0!2zNiBIb2EgSOG7k25nLCBQaMaw4budbmcgNywgUGjDuiBOaHXhuq1uLCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1537548467396" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+</main>
 @endsection

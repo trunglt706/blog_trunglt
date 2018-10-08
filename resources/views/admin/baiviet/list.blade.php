@@ -41,8 +41,8 @@
                                                 <th class="text-center hidden-xs">Username</th>
                                                 <th class="text-center hidden-xs">Hình ảnh</th>
                                                 <th class="text-center" style="width: 100px;">Lượt xem</th>
-                                                <th class="text-center" style="width: 100px;">Lượt like</th>
-                                                <th class="text-center" style="width: 100px;">Trạng thái</th>
+                                                <th class="text-center hidden-xs" style="width: 100px;">Lượt like</th>
+                                                <th class="text-center hidden-xs" style="width: 100px;">Trạng thái</th>
                                                 <th class="text-center" style="width: 120px;">Action</th>
                                             </tr>
                                         </thead>
@@ -55,8 +55,8 @@
                                                     <a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}" target="_blank"><img src="{{url($bviet->thumn)}}" alt="{{$bviet->slug}}" width="100px"/></a>
                                                 </td>
                                                 <td class="text-center">{{$bviet->view}}</td>
-                                                <td class="text-center">{{$bviet->like}}</td>
-                                                <td class="text-center">
+                                                <td class="text-center hidden-xs">{{$bviet->like}}</td>
+                                                <td class="text-center hidden-xs">
                                                     @if($bviet->status == 0)
                                                     <div class="label bg-gray">Chưa duyệt</div>
                                                     @elseif($bviet->status == 1)

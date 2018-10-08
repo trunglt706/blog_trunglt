@@ -39,7 +39,7 @@
                                             <tr class="bg-info">
                                                 <th style="width: 200px;">Email</th>
                                                 <th class="text-center hidden-xs">Nội dung</th>
-                                                <th class="text-center" style="width: 200px;">Thời gian</th>
+                                                <th class="text-center hidden-xs" style="width: 200px;">Thời gian</th>
                                                 <th class="text-center" style="width: 120px;">Action</th>
                                             </tr>
                                         </thead>
@@ -48,7 +48,7 @@
                                             <tr>
                                                 <td>{{$gopy->email}}</td>
                                                 <td class="hidden-xs">{{$gopy->content}}</td>
-                                                <td class="text-center">
+                                                <td class="text-center hidden-xs">
                                                     {{date('H:i:s d/m/Y', strtotime($gopy->created_at))}}
                                                 </td>
                                                 <td class="text-center">

@@ -100,14 +100,14 @@
                                                     <div class="row row-margin">
                                                         @foreach($data['new_other'] as $other)
                                                         <div class="col-xs-6 col-sm-4 col-md-4 col-padding">
-                                                            <div class="grid-item">
-                                                                <div class="grid-item-img">
+                                                            <div class="grid-item post-grid-item">
+                                                                <div class="grid-item-img posts-thumb">
                                                                     <a href="{{route('detail.baiviet', ['slug' => $other->slug])}}">
-                                                                        <img src="{{url($other->thumn)}}" class="img-responsive" alt="{{$other->slug}}" style="max-height: 215px;">
+                                                                        <img src="{{url($other->thumn)}}" class="img-responsive img-news" alt="{{$other->slug}}">
                                                                         <div class="link-icon"><i class="fa fa-play"></i></div>
                                                                     </a>
                                                                 </div>
-                                                                <h5><a href="{{route('detail.baiviet', ['slug' => $other->slug])}}" class="title">{{$other->name}}</a></h5>
+                                                                <h5 class="title-news"><a href="{{route('detail.baiviet', ['slug' => $other->slug])}}" class="title">{{$other->name}}</a></h5>
                                                                 <ul class="authar-info">
                                                                     <li><i class="ti-timer"></i> {{date('d/m/Y', strtotime($other->created_at))}}</li>
                                                                     <li><i class="ti-eye"></i>{{$other->view}} views</a></li>

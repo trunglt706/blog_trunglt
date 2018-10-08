@@ -21,7 +21,7 @@
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
-                                    <a class="btn btn-default" href="{{route('admin.thanhvien')}}" style="margin-right: 5px;"><i class="fa fa-refresh"></i> Refresh</a>
+                                    <a class="btn btn-default hidden-xs" href="{{route('admin.thanhvien')}}" style="margin-right: 5px;"><i class="fa fa-refresh"></i> Refresh</a>
                                     <a class="btn btn-success" data-toggle="modal" data-target="#add-model"><i class="fa fa-plus"></i> Add</a>
                                 </div>
                             </div>
@@ -41,7 +41,7 @@
                                                 <th class="text-center hidden-xs">Loại thành viên</th>
                                                 <th class="text-center hidden-xs">Avatar</th>
                                                 <th class="text-center hidden-xs">Email</th>
-                                                <th class="text-center" style="width: 100px;">Online</th>
+                                                <th class="text-center hidden-xs" style="width: 100px;">Online</th>
                                                 <th class="text-center" style="width: 100px;">Trạng thái</th>
                                                 <th class="text-center" style="width: 120px;">Action</th>
                                             </tr>
@@ -57,7 +57,7 @@
                                                     </a>
                                                 </td>
                                                 <td class="hidden-xs">{{$tvien->email}}</td>
-                                                <td class="text-center">
+                                                <td class="text-center hidden-xs">
                                                     @if($tvien->online == 0)
                                                     <div class="label bg-gray">Offline</div>
                                                     @else

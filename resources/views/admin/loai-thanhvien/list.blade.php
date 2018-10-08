@@ -21,7 +21,7 @@
                         <div class="box-tools">
                             <div class="input-group input-group-sm" style="width: 60px;">
                                 <div class="input-group-btn">
-                                    <a class="btn btn-default" href="{{route('admin.loaithanhvien')}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
+                                    <a class="btn btn-default hidden-xs" href="{{route('admin.loaithanhvien')}}" style="margin-right: 5px;"><i class="fa fa-refresh fa-spin"></i> Refresh</a>
                                     <a class="btn btn-success" data-toggle="modal" data-target="#add-model"><i class="fa fa-plus"></i> Add</a>
                                 </div>
                             </div>
@@ -41,7 +41,7 @@
                                             <th class="text-center hidden-xs">Đường dẫn</th>
                                             <th class="text-center hidden-xs">Mô tả</th>
                                             <th class="text-center" style="width: 100px;">Số điểm</th>
-                                            <th class="text-center" style="width: 100px;">Trạng thái</th>
+                                            <th class="text-center hidden-xs" style="width: 100px;">Trạng thái</th>
                                             <th class="text-center" style="width: 120px;">Action</th>
                                         </tr>
                                         </thead>
@@ -52,7 +52,7 @@
                                                 <td class="hidden-xs">{{$loaitv->slug}}</td>
                                                 <td class="hidden-xs">{{substr($loaitv->intro, 0, 200)}} ...</td>
                                                 <td class="text-center">{{$loaitv->mark}}</td>
-                                                <td class="text-center">
+                                                <td class="text-center hidden-xs">
                                                     @if($loaitv->status == 0)
                                                         <div class="label bg-gray">Chưa duyệt</div>
                                                     @else

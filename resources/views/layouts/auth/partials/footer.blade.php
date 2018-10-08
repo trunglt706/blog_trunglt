@@ -32,7 +32,7 @@
                 <h4 class="wiget-title">FANPAGE MY BLOG</h4>
                 <div class="footer-news-grid">
                     <div class="news-list-item">
-                        <div class="fb-page" data-href="{{$data['facebook']->value}}" data-tabs="timeline" data-width="350" data-height="180" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://www.facebook.com/clbmekongsp" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/clbmekongsp">CLB Sản phẩm đặc trưng ĐBSCL</a></blockquote></div>
+                        <div class="fb-page" data-href="{{$data['facebook']->value}}" data-tabs="timeline" data-width="350" data-height="200" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://www.facebook.com/clbmekongsp" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/clbmekongsp">CLB Sản phẩm đặc trưng ĐBSCL</a></blockquote></div>
                     </div>
                 </div>
             </div>
