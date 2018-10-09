@@ -1,14 +1,13 @@
 @extends('layouts.app')
 @section('content')
 <div class="login-box">
-    <div class="login-logo">
-        <a href="{{route('home')}}"><i class="fa fa-home"></i> Trang chủ</a>
-    </div>
     @include('layouts.auth.partials.notify')
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">Đăng nhập để quản lý dữu liệu</p>
-        <form action="{{route('login')}}" method="post">
+        <p class="login-box-msg text-center">
+            <span class="fa fa-4x fa-user-secret"></span>
+        </p>
+        <form action="{{route('login.admin.post')}}" method="post">
             <div class="form-group has-feedback">
                 @csrf
                 <input type="email" class="form-control email" name="email" required placeholder="Nhập Email ...">
@@ -22,7 +21,9 @@
                 <button type="submit" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
             </div>
         </form>
-        <a href="{{route('password.request')}}"><i class="fa fa-question-circle-o"></i> Quên mật khẩu?</a>
+
+        <a href="{{route('reset.password.admin')}}"><i class="fa fa-question-circle-o"></i> Quên mật khẩu?</a>
+
     </div>
     <!-- /.login-box-body -->
 </div>

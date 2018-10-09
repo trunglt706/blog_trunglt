@@ -9,8 +9,8 @@
                         <ul>
                             <li><a target="_blank" href="{{$data['facebook']->value}}"><i class="fa fa-facebook"></i></a></li>
                             <li><a target="_blank" href="{{$data['youtube']->value}}"><i class="fa fa-youtube-play"></i></a></li>
-                            <li class="hidden-lg hidden-md hidden-sm"><a href=""><i class="fa fa-user"></i> Đăng ký thành viên</a></li>
-                            <li class="hidden-lg hidden-md hidden-sm"><a href=""><i class="fa fa-sign-in"></i> Đăng nhập</a></li>
+                            <li class="hidden-lg hidden-md hidden-sm"><a href="{{route('register')}}"><i class="fa fa-user"></i> Đăng ký thành viên</a></li>
+                            <li class="hidden-lg hidden-md hidden-sm"><a href="{{route('login')}}"><i class="fa fa-sign-in"></i> Đăng nhập</a></li>
                         </ul>
                     </div>
                     <!-- End of /. header social -->
@@ -20,8 +20,8 @@
                     <!-- Start header social -->
                     <div class="header-right-menu">
                         <ul>
-                            <li><a href=""><i class="fa fa-user"></i> Đăng ký thành viên</a></li>
-                            <li><a href=""><i class="fa fa-sign-in"></i> Đăng nhập</a></li>
+                            <li><a href="{{route('register')}}"><i class="fa fa-user"></i> Đăng ký thành viên</a></li>
+                            <li><a href="{{route('login')}}"><i class="fa fa-sign-in"></i> Đăng nhập</a></li>
                         </ul>
                     </div>
                     <!-- End of /. header social -->

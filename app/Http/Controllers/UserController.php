@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\baiviets;
 use App\Http\Requests\BaiVietRequest;
 use App\Http\Requests\UpdateAccountUserRequest;
-use App\Http\Requests\UpdateInforUserRequest;
+use App\Http\Requests\UserUpdateInfoRequest;
 use App\users;
 use Image;
 use File;
@@ -13,11 +13,27 @@ use Auth;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class UserController extends Controller
-{
-    public function __construct()
-    {
-        $this->middleware('auth:user');
+class UserController extends Controller {
+
+    public function __construct() {
+        $this->middleware('auth:web');
+        $this->middleware(['activated'], ['except' => ['logout', 'index']]);
+    }
+    
+    /**
+     * @function go to home page of user
+     * @return view
+     */
+    public function index() {
+        //Get sum baiviet
+        $object['tong'] = baiviets::where('username', auth()->user()->username)->count();
+        //Get sum baiviet da duyet
+        $object['da_duyet'] = baiviets::where('username', auth()->user()->username)->where('status', 1)->count();
+        //Get sum baiviet chua duyet
+        $object['cho_duyet'] = baiviets::where('username', auth()->user()->username)->where('status', 0)->count();
+        //Get sum baiviet dang khoa
+        $object['block'] = baiviets::where('username', auth()->user()->username)->where('status', -1)->count();
+        return view('user.home', ['object' => $object]);
     }
 
     /**
@@ -25,25 +41,33 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function logout() {
-        Auth::guard('admin')->logout();
-        return redirect()->route('home');
+        Auth::guard('web')->logout();
+        return redirect()->route('login')->with('success', 'Đăng xuất thành công');
     }
 
+    //================================== INFOR USER ==================================//
+    /**
+     * @function go to account page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function profile() {
+        return view('user.profile');
+    }
+    
     /**
      * @function update info user
      * @param UpdateInforUserRequest $request
      * @return mixed
      */
-    public function update_info_user(UpdateInforUserRequest $request, $id) {
+    public function inforUpdate(UserUpdateInfoRequest $request) {
         try {
-            $u = users::findOrFail($id);
+            $u = users::findOrFail(auth()->user()->id);
             $u->name = $request->name;
             $u->intro = $request->intro;
-            $u->id_loaithanhvien = $request->id_loaithanhvien;
-            if ($request->hasFile('avatar')) {                
+            if ($request->hasFile('avatar')) {
                 File::delete($u->avatar);
                 $avatar = $request->file('avatar');
-                $filename = time() . '.' . $avatar->getClientOriginalExtension();
+                $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
                 $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -55,7 +79,7 @@ class UserController extends Controller
             if ($request->hasFile('background')) {
                 File::delete($u->background);
                 $bg = $request->file('background');
-                $filename = time() . '.' . $bg->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $bg->getClientOriginalExtension();
                 $dir = 'uploads/thanhviens/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -65,10 +89,10 @@ class UserController extends Controller
                 $u->background = $path;
             }
             $u->save();
-            return route('admin.user.detail', ['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công');
+            return redirect()->route('user.profile')->with('success', 'Cập nhật thông tin người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.user.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin người dùng thất bại!');
+            return redirect()->route('user.profile')->with('error', 'Lỗi, cập nhật thông tin người dùng thất bại!');
         }
     }
 
@@ -77,16 +101,15 @@ class UserController extends Controller
      * @param UpdateAccountUserRequest $request
      * @return mixed
      */
-    public function update_account_user(UpdateAccountUserRequest $request, $id) {
+    public function accountUpdate(UpdateAccountUserRequest $request) {
         try {
-            $ad = users::findOrFail($id);
-            $ad->email = $request->email;
+            $ad = users::findOrFail(auth()->user()->id);
             $ad->password = bcrypt($request->password);
             $ad->save();
-            return route('admin.user.detail', ['id' => $id])->with('success', 'Cập nhật tài khoản người dùng thành công');
+            return redirect()->route('user.profile')->with('success', 'Cập nhật tài khoản người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return route('admin.user.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật tài khoản người dùng thất bại!');
+            return redirect()->route('user.profile')->with('error', 'Lỗi, cập nhật tài khoản người dùng thất bại!');
         }
     }
 
@@ -102,26 +125,29 @@ class UserController extends Controller
         //block all baiviet cua user
         $count = 0;
         $list = baiviets::where('username', auth()->user()->username)->get();
-        if(!is_null($list)) {
+        if (!is_null($list)) {
             foreach ($list as $l) {
                 $b = baiviets::findOrFail($l->id);
-                if($b->status != -1) {
+                if ($b->status != -1) {
                     $b->status = -1;
                     $b->save();
                     $count++;
                 }
             }
         }
-        echo array('status' => 'success', 'ms' => 'Block tài khoản thành công. Có '.$count.'/'.count($list).' bài viết đã khóa kèm theo!');
+        echo array('status' => 'success', 'ms' => 'Block tài khoản thành công. Có ' . $count . '/' . count($list) . ' bài viết đã khóa kèm theo!');
     }
+    //================================== END INFOR USER ==================================//
 
+    //================================== BAI VIET ==================================//
     /**
      * @function go to detail baiviet
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function baiviet($id) {
-        $object['bviet'] = baiviets::where('id', $id)->where('username', auth()->user()->username)->first();
+    public function baiVietChiTiet($id) {
+        $object['bviet'] = baiviets::where('id', $id)->where('username', auth()->user()->username)->where('status', 1)->first();
+        $object['list_danhmuc'] = \App\danhmucbaiviets::where('status', 1)->get();
         return view('user.baiviet.detail', ['object' => $object]);
     }
 
@@ -129,11 +155,12 @@ class UserController extends Controller
      * @function go to list baiviet
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list_baiviet() {
-        $object['list_bviet'] = baiviets::where('username', auth()->user()->username)->get();
+    public function baiViet() {
+        $object['listbv'] = baiviets::where('username', auth()->user()->username)->where('status', 1)->paginate(10);
+        $object['list_danhmuc'] = \App\danhmucbaiviets::where('status', 1)->get();
         return view('user.baiviet.list', ['object' => $object]);
     }
-    
+
     /**
      * @function delete bai viet
      * @param BaiVietRequest $request
@@ -149,12 +176,10 @@ class UserController extends Controller
             $bviet->intro = $request->intro;
             $bviet->content = $request['content'];
             $bviet->keyword = $request->keyword;
-            $bviet->important = isset($request->important) ? 1 : 0;
-            $bviet->rating = $request->rating;
-            $bviet->status = $request->status;
+            $bviet->status = 0;
             if ($request->hasFile('thumn')) {
                 $thumn = $request->file('thumn');
-                $filename = time() . '.' . $thumn->getClientOriginalExtension();
+                $filename = 'thum'.time() . '.' . $thumn->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -165,7 +190,7 @@ class UserController extends Controller
             }
             if ($request->hasFile('background')) {
                 $background = $request->file('background');
-                $filename = time() . '.' . $background->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $background->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -175,10 +200,10 @@ class UserController extends Controller
                 $bviet->background = $path;
             }
             $bviet->save();
-            return redirect()->route('user.baiviet.list')->with('success', 'Thêm bài viết mới thành công.');
-        } catch(Exception $e) {
+            return redirect()->route('user.baiviet')->with('success', 'Thêm bài viết mới thành công.');
+        } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('user.baiviet.list')->with('error', 'Lỗi, thêm bài viết mới thất bại!');
+            return redirect()->route('user.baiviet')->with('error', 'Lỗi, thêm bài viết mới thất bại!');
         }
     }
 
@@ -188,21 +213,18 @@ class UserController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function baiVietUpdate(BaiVietUpdateRequest $request, $id) {
+    public function baiVietUpdate(BaiVietRequest $request, $id) {
         try {
-            $bviet = baiviets::find($id);
+            $bviet = baiviets::where('id', $id)->where('username', auth()->user()->username)->first();
             $bviet->id_danhmuc = $request->id_danhmuc;
             $bviet->name = $request->name;
             $bviet->intro = $request->intro;
             $bviet->content = $request['content'];
             $bviet->keyword = $request->keyword;
-            $bviet->important = isset($request->important) ? 1 : 0;
-            $bviet->rating = $request->rating;
-            $bviet->status = $request->status;
             if ($request->hasFile('thumn')) {
                 File::delete($bviet->thumn);
                 $thumn = $request->file('thumn');
-                $filename = time() . '.' . $thumn->getClientOriginalExtension();
+                $filename = 'thumn'.time() . '.' . $thumn->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -214,7 +236,7 @@ class UserController extends Controller
             if ($request->hasFile('background')) {
                 File::delete($bviet->background);
                 $background = $request->file('background');
-                $filename = time() . '.' . $background->getClientOriginalExtension();
+                $filename = 'background'.time() . '.' . $background->getClientOriginalExtension();
                 $dir = 'uploads/baiviets/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -224,27 +246,39 @@ class UserController extends Controller
                 $bviet->background = $path;
             }
             $bviet->save();
-            return redirect()->route('user.baiviet.detail', ['id' => $id])->with('success', 'Cập nhật thông tin bài viết thành công.');
-        } catch(Exception $e) {
+            return redirect()->route('user.baiviet.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin bài viết thành công.');
+        } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('user.baiviet.detail', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin bài viết thất bại!');
+            return redirect()->route('user.baiviet.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin bài viết thất bại!');
         }
     }
 
     /**
-     * @function suppend bai viet
+     * @function xoa bai viet
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function baiVietSuppend($id) {
+    public function baiVietDelete($id) {
         try {
-            $bviet = baiviets::find($id);
-            $bviet->status = -1;
-            $bviet->save();
-            return redirect()->route('user.baiviet.list')->with('success', 'Khóa bài viết thành công');
+            $bviet = baiviets::where('id', $id)->where('username', auth()->user()->username)->first();
+            File::delete($bviet->thumn);
+            File::delete($bviet->background);
+            $bviet->delete();
+            return redirect()->route('user.baiviet')->with('success', 'Xóa bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('user.baiviet.list')->with('error', 'Lỗi, khóa bài viết thất bại!');
+            return redirect()->route('user.baiviet')->with('error', 'Lỗi, xóa bài viết thất bại!');
         }
     }
+    //================================== END BAI VIET ==================================//
+
+    //================================== PHAN TICH DU LIEU ==================================//
+    /**
+     * @function go to annalytics page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function phanTichDuLieu() {
+        return view('user.phantich.index');
+    }
+    //================================== END PHAN TICH DU LIEU ==================================//
 }

@@ -7,8 +7,8 @@
         <div class="container">
             @include('layouts.auth.partials.notify')
             <div class="row thm-margin">
-                {{--Start important news--}}
-                @if(isset($data['news']))
+                <!--Start important news-->
+                @if(!is_null($data['news']))
                 <div class="col-xs-12 col-sm-8 col-md-8 thm-padding">
                     <div class="slider-wrapper">
                         <div class="item">
@@ -34,9 +34,9 @@
                     </div>
                 </div>
                 @endif
-                {{--End important news--}}
-                {{--Start advs--}}
-                @if(isset($data['advs']))
+                <!--End important news-->
+                <!--Start advs-->
+                @if(!is_null($data['advs']))
                 <div class="col-xs-12 col-sm-4 col-md-4 thm-padding">
                     <div class="row slider-right-post thm-margin">
                         @foreach($data['advs'] as $adv)
@@ -55,16 +55,16 @@
                     </div>
                 </div>
                 @endif
-                {{--End advs--}}
+                <!--End advs-->
             </div>
         </div>
     </section>
     <!-- END OF /. POST BLOCK SECTION -->
-    {{--START LIST NEWS LATSTED--}}
+    <!--START LIST NEWS LATSTED-->
     <section class="articles-wrapper" style="transform: none;">
         <div class="container" style="transform: none;">
             <div class="row row-m" style="transform: none;">
-                @if(isset($data['news']))
+                @if(!is_null($data['news']))
                 <div class="col-sm-8 main-content col-p" style="position: relative; overflow: visible; box-sizing: border-box; min-height: 1px;">
                     <div class="theiaStickySidebar" style="padding-top: 0px; padding-bottom: 1px; position: static; transform: none;">
                         <!-- START POST CATEGORY STYLE FOUR (Latest articles ) -->
@@ -116,7 +116,7 @@
             </div>
         </div>
     </section>
-    {{--END LIST NEWS LASTED--}}
+    <!--END LIST NEWS LASTED-->
 </main>
 <!-- *** END OF /. PAGE MAIN CONTENT *** -->
 @endsection

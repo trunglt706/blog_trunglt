@@ -369,5 +369,31 @@ class HomeController extends Controller {
             return redirect()->route('reset.password.admin')->with('error', 'Người dùng này không tồn tại!');
         }
     }
+    
+    /**
+     * @function active new user
+     * @param string $token
+     * @return view
+     */
+    public function activeUser($token) {
+        $user = \App\users::where('active_code', $token)->first();
+        if(!is_null($user)) {
+            $user->active_code = "";
+            $user->status = 0;
+            $user->save();
+            Auth::guard()->login($user);
+            return redirect()->route('user.index')->with('success', 'Kích hoạt tài khoản thành công. Bạn phải đợi người quản trị duyệt tài khoản mới có thể sử dụng các chức năng.');
+        } else {
+            return redirect()->route('login')->with('error', 'Không tồn tại tài khoản này. VUi lòng kiểm tra lại hoặc liên hệ admin!');
+        }
+    }
+    
+    /**
+     * @function go to not active page
+     * @return view
+     */
+    public function getNotActive() {
+        return view('errors.active');
+    }
 
 }

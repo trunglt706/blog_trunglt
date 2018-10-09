@@ -7,22 +7,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ResetPassword extends Mailable implements ShouldQueue {
+class ActiveUser extends Mailable implements ShouldQueue {
 
     use Queueable,
         SerializesModels;
 
-    protected $user;
-    protected $author;
+    protected $name;
+    protected $active_code;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $author) {
-        $this->user = $user;
-        $this->author = $author;
+    public function __construct($name, $active_code) {
+        $this->name = $name;
+        $this->active_code = $active_code;
     }
 
     /**
@@ -31,8 +31,7 @@ class ResetPassword extends Mailable implements ShouldQueue {
      * @return $this
      */
     public function build() {
-        return $this->markdown('emails.reset_password')->subject("[Blog TrungLT] Khôi phục mật khẩu")
-                ->with( [ 'user' => $this->user, 'author' => $this->author ] );
+        return $this->markdown('emails.active')->subject('Blog Trung - Kích hoạt tài khoản')->with(['name' => $this->name, 'active_code' => $this->active_code]);
     }
 
 }

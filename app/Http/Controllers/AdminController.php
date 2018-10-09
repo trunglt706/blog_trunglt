@@ -15,8 +15,8 @@ use Auth;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class AdminController extends Controller
-{
+class AdminController extends Controller {
+
     public function __construct() {
         $this->middleware('auth:admin');
     }
@@ -46,7 +46,7 @@ class AdminController extends Controller
         try {
             admins::updateStatus(auth()->user()->id);
             Auth::guard('admin')->logout();
-            return redirect()->route('login')->with('success', 'Đăng xuất hệ thống thành công');
+            return redirect()->route('login.admin')->with('success', 'Đăng xuất hệ thống thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return redirect()->route('admin.index')->with('error', 'Lỗi, hệ thống không lấy được dữ liệu! Vui lòng thử lại.');
@@ -78,7 +78,7 @@ class AdminController extends Controller
             if ($request->hasFile('avatar')) {
                 File::delete($ad->avtar);
                 $avatar = $request->file('avatar');
-                $filename = 'avatar'.time() . '.' . $avatar->getClientOriginalExtension();
+                $filename = 'avatar' . time() . '.' . $avatar->getClientOriginalExtension();
                 $dir = 'uploads/admins/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -90,7 +90,7 @@ class AdminController extends Controller
             if ($request->hasFile('background')) {
                 File::delete($ad->background);
                 $bg = $request->file('background');
-                $filename = 'background'.time() . '.' . $bg->getClientOriginalExtension();
+                $filename = 'background' . time() . '.' . $bg->getClientOriginalExtension();
                 $dir = 'uploads/admins/';
                 if (!File::exists($dir)) {
                     File::makeDirectory($dir, $mode = 0777, true, true);
@@ -132,4 +132,5 @@ class AdminController extends Controller
     public function phanTichDuLieu() {
         return view('admin.phantich.index');
     }
+
 }

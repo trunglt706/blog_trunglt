@@ -15,12 +15,10 @@
         <link href="{{url('css/admin/ionicons.min.css')}}" rel="stylesheet" />
         <!-- Theme style -->
         <link href="{{url('css/admin/AdminLTE.min.css')}}" rel="stylesheet" />
-        <!-- iCheck -->
-        <link href="{{url('plugin/iCheck/square/blue.css')}}" rel="stylesheet" />
         <style>
             body { background-image: url("{{url('images/error/error-bg.PNG')}}") !important;}
         </style>
-
+        {!! NoCaptcha::renderJs() !!}
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -37,16 +35,5 @@
         <script src="{{url('js/admin/jquery.min.js'.'?v='.env("APP_VERSION"))}}"></script>
         <!-- Bootstrap 3.3.7 -->
         <script src="{{url('js/admin/bootstrap.min.js'.'?v='.env("APP_VERSION"))}}"></script>
-        <!-- iCheck -->
-        <script src="{{url('plugin/iCheck/icheck.min.js'.'?v='.env("APP_VERSION"))}}"></script>
-        <script>
-            $(function () {
-                $('input').iCheck({
-                    checkboxClass: 'icheckbox_square-blue',
-                    radioClass: 'iradio_square-blue',
-                    increaseArea: '20%' /* optional */
-                });
-            });
-        </script>
     </body>
 </html>

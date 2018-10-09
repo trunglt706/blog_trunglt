@@ -1,4 +1,4 @@
-@extends('layouts.admin.main')
+@extends('layouts.user.main')
 @section('content')
 <div class="content-wrapper" style="min-height: 1126px;">
     <!-- Content Header (Page header) -->
@@ -7,19 +7,19 @@
             Profile cá nhân
         </h1>
         <ol class="breadcrumb">
-            <li><a href="{{route('admin.index')}}"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+            <li><a href="{{route('user.index')}}"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
             <li class="active">Profile</li>
         </ol>
     </section>
     <!-- Main content -->
     <section class="content">
-        @include('admin.notify')
+        @include('user.notify')
         <div class="row">
             <div class="col-md-3">
                 <!-- Profile Image -->
                 <div class="box box-primary">
                     <div class="box-body box-profile">
-                        <img class="profile-user-img img-responsive img-circle" src="{{url(auth()->user()->avatar)}}" alt="{{auth()->user()->name}}">
+                        <img class="profile-user-img img-responsive img-circle" src="{{(!is_null(auth()->user()->avatar) && (auth()->user()->avatar != "")) ? url(auth()->user()->avatar) : url('images/no-image.jgp')}}" alt="{{auth()->user()->name}}">
                         <h3 class="profile-username text-center">{{auth()->user()->name}}</h3>
                         <p class="text-muted text-center">Join at: {{date('d/m/Y', strtotime(auth()->user()->created_at))}}</p>
                         <ul class="list-group list-group-unbordered">
@@ -56,64 +56,14 @@
             <div class="col-md-9">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#baiviets" data-toggle="tab" aria-expanded="true"><i class="fa fa-newspaper-o"></i> Bài viết</a></li>
-                        <li class=""><a href="#thongtins" data-toggle="tab" aria-expanded="false"><i class="fa fa-user-circle-o"></i> Thông tin</a></li>
+                        <li class="active"><a href="#thongtins" data-toggle="tab" aria-expanded="true"><i class="fa fa-user-circle-o"></i> Thông tin</a></li>
                         <li class=""><a href="#taikhoans" data-toggle="tab" aria-expanded="false"><i class="fa fa-key"></i> Tài khoản</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="baiviets">
+                        <div class="tab-pane active" id="thongtins">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table class="table table-bordered table-hover">
-                                        <thead>
-                                            <tr class="bg-info">
-                                                <th class="text-center" style="max-width: 300px;">Tên bài viết</th>
-                                                <th class="text-center hidden-xs">Username</th>
-                                                <th class="text-center hidden-xs">Hình ảnh</th>
-                                                <th class="text-center" style="width: 100px;">Lượt xem</th>
-                                                <th class="text-center hidden-xs" style="width: 100px;">Lượt like</th>
-                                                <th class="text-center hidden-xs" style="width: 100px;">Trạng thái</th>
-                                                <th class="text-center" style="width: 120px;">Action</th>
-                                            </tr>
-                                        </thead>
-                                        @foreach($list_bviet as $bviet)
-                                        <tbody>
-                                            <tr>
-                                                <td><a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}" target="_blank">{{$bviet->name}}</a></td>
-                                                <td class="hidden-xs">{{$bviet->username}}</td>
-                                                <td class="hidden-xs text-center">
-                                                    <a href="{{route('detail.baiviet', ['slug' => $bviet->slug])}}" target="_blank"><img src="{{url($bviet->thumn)}}" alt="{{$bviet->slug}}" width="100px"/></a>
-                                                </td>
-                                                <td class="text-center">{{$bviet->view}}</td>
-                                                <td class="text-center hidden-xs">{{$bviet->like}}</td>
-                                                <td class="text-center hidden-xs">
-                                                    @if($bviet->status == 0)
-                                                    <div class="label bg-gray">Chưa duyệt</div>
-                                                    @elseif($bviet->status == 1)
-                                                    <div class="label bg-green">Đã duyệt</div>
-                                                    @else
-                                                    <div class="label bg-red">Bị khóa</div>
-                                                    @endif
-                                                </td>
-                                                <td class="text-center">
-                                                    <a class="btn btn-danger btn-delete" onclick="deleteData('{{$bviet->id}}');" title="Xóa dữ liệu" data-toggle="tooltip" data-placement="top" href="javascript:;"><i class="fa fa-remove"></i></a>&nbsp;
-                                                    <a class="btn btn-info" title="Cập nhật dữ liệu" data-toggle="tooltip" data-placement="bottom" href="{{route('admin.baiviet.chitiet', ['id' => $bviet->id])}}"><i class="fa fa-edit"></i></a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        @endforeach
-                                    </table>
-                                </div>
-                                <div class="col-md-12">
-                                    {{ $list_bviet->links() }}
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.tab-pane -->
-                        <div class="tab-pane" id="thongtins">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <form role="form" method="post" action="{{route('admin.info.update')}}"enctype="multipart/form-data">
+                                    <form role="form" method="post" action="{{route('user.info.update')}}"enctype="multipart/form-data">
                                         @csrf
                                         <div class="row">
                                             <div class="form-group col-md-6">
@@ -168,7 +118,7 @@
                         <div class="tab-pane" id="taikhoans">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <form role="form" method="post" action="{{route('admin.account.update')}}"enctype="multipart/form-data">
+                                    <form role="form" method="post" action="{{route('user.account.update')}}"enctype="multipart/form-data">
                                         @csrf
                                         <div class="row">
                                             <div class="form-group col-md-6">
@@ -199,12 +149,4 @@
     </section>
     <!-- /.content -->
 </div>
-<script>
-    function deleteData(id) {
-        if(confirm('Bạn có muốn xóa bài viết này?')) {
-            var url = "{{route('admin.baiviet.delete', ':id')}}";
-            location.href = url.replace(":id", id);
-        }
-    }
-</script>
 @endsection

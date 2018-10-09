@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\admins;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Auth;
@@ -28,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/user';
 
     /**
      * Create a new controller instance.
@@ -52,5 +51,13 @@ class LoginController extends Controller
         } else {
             return redirect()->route('login')->with('error', 'Lỗi, tên tài khoản hoặc mật khẩu không chính xác!');
         }
+    }
+    
+    /**
+     * @function go to login admin page
+     * @return view
+     */
+    public function getLoginAdmin() {
+        return view('auth.login-admin');
     }
 }

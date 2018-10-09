@@ -26,9 +26,13 @@ Route::post('/reset/email/admin', 'HomeController@postResetPassword')->name('pas
 Route::get('/reset/email/{token}', 'HomeController@acceptResetPassword')->name('accept.reset.password');
 Route::post('/reset/email/update', 'HomeController@updateResetPassword')->name('password.email.update');
 
-Route::post('/login-admin', 'Auth\LoginController@loginAdmin')->name('login-admin');
+Route::get('/login-admin', 'Auth\LoginController@getLoginAdmin')->name('login.admin');
+Route::post('/login-admin', 'Auth\LoginController@loginAdmin')->name('login.admin.post');
 Route::post('/phanhoi', 'HomeController@postPhanHoi')->name('phanhoi.post');
 Route::post('/lienhe', 'HomeController@postLienHe')->name('lienhe.post');
+
+Route::get('/user/active/{token}', 'HomeController@activeUser')->name('user.active');
+Route::get('/user/active/not', 'HomeController@getNotActive')->name('notactive');
 
 Route::prefix('ajax')->group(function () {
     Route::get('/search', 'HomeController@searchAjax')->name('ajax.search');
@@ -37,9 +41,19 @@ Route::prefix('ajax')->group(function () {
 //============================== Router for user
 Route::prefix('user')->group(function () {
     Route::get('/', 'UserController@index')->name('user.index');
+    
+    Route::get('profile', 'UserController@profile')->name('user.profile');
+    Route::post('profile/info', 'UserController@inforUpdate')->name('user.info.update');
+    Route::post('profile/account', 'UserController@accountUpdate')->name('user.account.update');
 
     Route::get('bai-viet', 'UserController@baiViet')->name('user.baiviet');
     Route::get('bai-viet/{id}', 'UserController@baiVietChiTiet')->name('user.baiviet.chitiet');
+    Route::post('bai-viet/insert', 'UserController@baiVietInsert')->name('user.baiviet.insert');
+    Route::post('bai-viet/update/{id}', 'UserController@baiVietUpdate')->name('user.baiviet.update');
+    Route::get('bai-viet/delete/{id}', 'UserController@baiVietDelete')->name('user.baiviet.delete');
+    
+    Route::post('blog/account', 'UserController@block_account')->name('user.blog.account');
+    Route::get('phan-tich-du-lieu', 'UserController@phanTichDuLieu')->name('user.phantich.dulieu');
 
     Route::get('logout', 'UserController@logout')->name('user.logout');
 });

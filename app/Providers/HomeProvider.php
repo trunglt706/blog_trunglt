@@ -19,9 +19,6 @@ class HomeProvider extends ServiceProvider
         view()->composer(
                 ['admin.*', 'layouts.admin.*'], 'App\Http\ViewComposers\AdminComposer'
         );
-        view()->composer(
-            ['user.*', 'layouts.user.*'], 'App\Http\ViewComposers\UserComposer'
-        );
     }
 
     /**
