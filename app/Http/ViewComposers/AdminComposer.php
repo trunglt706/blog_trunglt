@@ -3,6 +3,7 @@
 namespace App\Http\ViewComposers;
 
 use Illuminate\View\View;
+use App\admins;
 
 class AdminComposer {
     
@@ -24,7 +25,7 @@ class AdminComposer {
     }
     
     public function compose(View $view) {
-        $data['admin'] = \App\admins::findOrFail(auth()->user()->id);
+        $data['admin'] = admins::findOrFail(auth()->user()->id);
         $view->with('data', $data);
     }
     

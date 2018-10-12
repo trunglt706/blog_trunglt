@@ -10,10 +10,9 @@ use Image;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class CauHinhChungController extends Controller
-{
-    public function __construct()
-    {
+class CauHinhChungController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -47,8 +46,8 @@ class CauHinhChungController extends Controller
             $chinh = new cauhinhchungs();
             $chinh->name = $request->name;
             $chinh->slug = str_slug($request->name, '-');
-            $chinh->intro = $request->intro;            
-            if($request->type == "img") {
+            $chinh->intro = $request->intro;
+            if ($request->type == "img") {
                 if ($request->hasFile('value_img')) {
                     $value = $request->file('value_img');
                     $filename = time() . '.' . $value->getClientOriginalExtension();
@@ -57,7 +56,7 @@ class CauHinhChungController extends Controller
                         File::makeDirectory($dir, $mode = 0777, true, true);
                     }
                     $path = $dir . $filename;
-                    Image::make($value)->save(base_path($path));                    
+                    Image::make($value)->save(base_path($path));
                 }
             } else {
                 $path = $request->value_text;
@@ -65,9 +64,11 @@ class CauHinhChungController extends Controller
             $chinh->value = $path;
             $chinh->type = $request->type;
             $chinh->save();
+            \Slack::send('[Config Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.cauhinhchung')->with('success', 'Thêm mới cấu hình chung thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Config Insert] - '.$e->getMessage());
             return redirect()->route('admin.cauhinhchung')->with('error', 'Lỗi, thêm mới cấu hình chung thất bại!');
         }
     }
@@ -84,10 +85,10 @@ class CauHinhChungController extends Controller
             $chinh->name = $request->name;
             $chinh->slug = str_slug($request->name, '-');
             $chinh->intro = $request->intro;
-            if($chinh->type == "img") {
+            if ($chinh->type == "img") {
                 File::delete($chinh->value);
             }
-            if($request->type == "img") {
+            if ($request->type == "img") {
                 if ($request->hasFile('value_img')) {
                     $value = $request->file('value_img');
                     $filename = time() . '.' . $value->getClientOriginalExtension();
@@ -104,9 +105,11 @@ class CauHinhChungController extends Controller
             }
             $chinh->type = $request->type;
             $chinh->save();
+            \Slack::send('[Config Update] - Success: '.auth()->user()->email);
             return redirect()->route('admin.cauhinhchung.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin cấu hình chung thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Config Update] - '.$e->getMessage());
             return redirect()->route('admin.cauhinhchung.chitiet', ['id' => $id])->with('error', 'Lỗi, câp nhật thôn tin cấu hình chung thất bại!');
         }
     }
@@ -119,14 +122,17 @@ class CauHinhChungController extends Controller
     public function cauHinhChungDelete($id) {
         try {
             $chinh = cauhinhchungs::find($id);
-            if($chinh->type == "img") {
+            if ($chinh->type == "img") {
                 File::delete($chinh->value);
             }
             $chinh->delete();
+            \Slack::send('[Config Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.cauhinhchung')->with('success', 'Xóa cấu hình thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Config Delete] - '.$e->getMessage());
             return redirect()->route('admin.cauhinhchung')->with('error', 'Lỗi, xóa cấu hình thất bại!');
         }
     }
+
 }

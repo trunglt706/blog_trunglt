@@ -5,8 +5,7 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
 
-class users extends Authenticatable
-{
+class users extends Authenticatable {
 
     protected $table = 'users';
 
@@ -27,7 +26,7 @@ class users extends Authenticatable
     protected $hidden = [
         'password', 'remember_token'
     ];
-    
+
     /**
      * @function insert new user
      * @param array $data
@@ -36,5 +35,5 @@ class users extends Authenticatable
     public static function insertUser($data = array()) {
         return DB::table('users')->insert($data);
     }
-    
+
 }

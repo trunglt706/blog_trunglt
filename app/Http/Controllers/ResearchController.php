@@ -7,10 +7,9 @@ use App\researchs;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class ResearchController extends Controller
-{
-    public function __construct()
-    {
+class ResearchController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -45,9 +44,11 @@ class ResearchController extends Controller
             $rs->keyword = $request->keyword;
             $rs->count = $request->count;
             $rs->save();
+            \Slack::send('[Research Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.research')->with('success', 'Thêm mới thông tin tìm kiếm thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Research Insert] - '.$e->getMessage());
             return redirect()->route('admin.research')->with('error', 'Lỗi, thêm mới thông tin tìm kiếm thất bại!');
         }
     }
@@ -65,10 +66,12 @@ class ResearchController extends Controller
             $rs->keyword = $request->keyword;
             $rs->count = $request->count;
             $rs->save();
-            return redirect()->route('admin.research.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin tìm kiếm thành công!');
+            \Slack::send('[Research Update] - Success: '.auth()->user()->email);
+            return redirect()->route('admin.research.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin tìm kiếm thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('admin.research.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin tìm kiếm thất bại!');
+            \Slack::send('[Research Update] - '.$e->getMessage());
+            return redirect()->route('admin.research.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin tìm kiếm thất bại!');
         }
     }
 
@@ -81,10 +84,13 @@ class ResearchController extends Controller
         try {
             $rs = researchs::find($id);
             $rs->delete();
+            \Slack::send('[Research Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.research')->with('success', 'xóa thông tin tìm kiếm thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Research Delete] - '.$e->getMessage());
             return redirect()->route('admin.research')->with('error', 'Lỗi, xóa thông tin tìm kiếm thất bại!');
         }
     }
+
 }

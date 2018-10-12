@@ -59,9 +59,11 @@ class QuangCaoController extends Controller {
                 $qcao->photo = $path;
             }
             $qcao->save();
+            \Slack::send('[Adv Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.quangcao')->with('success', 'Thêm mới quảng cáo thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Adv Insert] - '.$e->getMessage());
             return redirect()->route('admin.quangcao')->with('error', 'Lỗi, thêm mới quảng cáo thất bại!');
         }
     }
@@ -94,9 +96,11 @@ class QuangCaoController extends Controller {
                 $qcao->photo = $path;
             }
             $qcao->save();
+            \Slack::send('[Adv Update] - Success: '.auth()->user()->email);
             return redirect()->route('admin.quangcao.chitiet', ['id' => $id])->with('success', 'Cập nhật quảng cáo thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Adv Update] - '.$e->getMessage());
             return redirect()->route('admin.quangcao.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật quảng cáo thất bại!');
         }
     }
@@ -111,9 +115,11 @@ class QuangCaoController extends Controller {
             $qcao = quangcaos::find($id);
             File::delete($qcao->photo);
             $qcao->delete();
+            \Slack::send('[Adv Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.quangcao')->with('success', 'xóa quảng cáo thành công.');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Adv Delete] - '.$e->getMessage());
             return redirect()->route('admin.quangcao')->with('error', 'Lỗi, xóa quảng cáo thất bại!');
         }
     }

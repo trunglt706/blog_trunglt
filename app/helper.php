@@ -1,4 +1,8 @@
 <?php
+
+use App\admins;
+use App\users;
+
 /**
  * @function active menu haven't sup item
  * @param Route $route
@@ -32,12 +36,12 @@ function areActiveRoutes(Array $routes, $output = "active") {
  */
 function getUser($username) {
     $rs = null;
-    $admin = \App\admins::where('username', $username)->first();
-    if(!is_null($admin)) {
+    $admin = admins::where('username', $username)->first();
+    if (!is_null($admin)) {
         $rs = $admin;
     }
-    $user = \App\users::where('username', $username)->where('status', 1)->first();
-    if(!is_null($user)) {
+    $user = users::where('username', $username)->where('status', 1)->first();
+    if (!is_null($user)) {
         $rs = $user;
     }
     return $rs;

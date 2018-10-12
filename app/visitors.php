@@ -5,8 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class visitors extends Model
-{
+class visitors extends Model {
+
     protected $table = "visitors";
     private $id;
     private $ip;
@@ -108,8 +108,9 @@ class visitors extends Model
         $digit = strval($hits);
         $str = "";
         for ($i = 0; $i < strlen($hits); $i++) {
-            $str .= "<img src='" . url($imagefolder . $imagetype . $digit[$i].".gif") . "'>";
+            $str .= "<img src='" . url($imagefolder . $imagetype . $digit[$i] . ".gif") . "'>";
         }
         return $str;
     }
+
 }

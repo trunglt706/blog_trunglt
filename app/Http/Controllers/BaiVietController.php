@@ -77,9 +77,11 @@ class BaiVietController extends Controller {
                 $bviet->background = $path;
             }
             $bviet->save();
+            \Slack::send('[Bài Viết Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.baiviet')->with('success', 'Thêm bài viết mới thành công.');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Bài Viết Insert] - '.$e->getMessage());
             return redirect()->route('admin.baiviet')->with('error', 'Lỗi, thêm bài viết mới thất bại!');
         }
     }
@@ -127,9 +129,11 @@ class BaiVietController extends Controller {
                 $bviet->background = $path;
             }
             $bviet->save();
+            \Slack::send('[Bài Viết Update] - Success: '.auth()->user()->email);
             return redirect()->route('admin.baiviet.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin bài viết thành công.');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Bài Viết Update] - '.$e->getMessage());
             return redirect()->route('admin.baiviet.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin bài viết thất bại!');
         }
     }
@@ -145,9 +149,11 @@ class BaiVietController extends Controller {
             File::delete($bviet->thumn);
             File::delete($bviet->background);
             $bviet->delete();
+            \Slack::send('[Bài Viết Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.baiviet')->with('success', 'Xóa bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Bài Viết Delete] - '.$e->getMessage());
             return redirect()->route('admin.baiviet')->with('error', 'Lỗi, xóa bài viết thất bại!');
         }
     }

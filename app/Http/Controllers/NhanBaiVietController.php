@@ -7,15 +7,14 @@ use App\nhanbaiviets;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class NhanBaiVietController extends Controller
-{
-    public function __construct()
-    {
+class NhanBaiVietController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
     /**
-     * @function go to list nhan baiviet
+     * @function go to list get newletter
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function nhanBaiViet() {
@@ -24,7 +23,7 @@ class NhanBaiVietController extends Controller
     }
 
     /**
-     * @function go to detail nhan baiviet
+     * @function go to detail get newletter
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -34,7 +33,7 @@ class NhanBaiVietController extends Controller
     }
 
     /**
-     * @functio insert nhan bai viet
+     * @functio insert get newletter
      * @param NhanBaiVietRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -44,15 +43,17 @@ class NhanBaiVietController extends Controller
             $nhanbv->email = $request->email;
             $nhanbv->status = $request->status;
             $nhanbv->save();
+            \Slack::send('[Get Newletter Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.nhanbaiviet')->with('success', 'Thêm mới thông tin nhận bài viết thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Get Newletter Insert] - '.$e->getMessage());
             return redirect()->route('admin.nhanbaiviet')->with('error', 'Lỗi, thêm mới thông tin nhận bài viết thất bại!');
         }
     }
 
     /**
-     * @function update nhan bai viet
+     * @function update get newletter
      * @param NhanBaiVietUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -63,15 +64,17 @@ class NhanBaiVietController extends Controller
             $nhanbv->email = $request->email;
             $nhanbv->status = $request->status;
             $nhanbv->save();
-            return redirect()->route('admin.nhanbaiviet.chitiet', ['id'=>$id])->with('success', 'Cập nhật thông tin nhận bài viết thành công!');
+            \Slack::send('[Get Newletter Update] - Success: '.auth()->user()->email);
+            return redirect()->route('admin.nhanbaiviet.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin nhận bài viết thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('admin.nhanbaiviet.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật thông tin nhận bài viết thất bại!');
+            \Slack::send('[Get Newletter Update] - '.$e->getMessage());
+            return redirect()->route('admin.nhanbaiviet.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin nhận bài viết thất bại!');
         }
     }
 
     /**
-     * @function delete nhan bai viet
+     * @function delete get newletter
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -79,10 +82,13 @@ class NhanBaiVietController extends Controller
         try {
             $nhanbv = nhanbaiviets::find($id);
             $nhanbv->delete();
+            \Slack::send('[Get Newletter Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.nhanbaiviet')->with('success', 'xóa nhận bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Get Newletter Delete] - '.$e->getMessage());
             return redirect()->route('admin.nhanbaiviet')->with('error', 'Lỗi, xóa nhận bài viết thất bại!');
         }
     }
+
 }

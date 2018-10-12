@@ -45,10 +45,13 @@ class AdminController extends Controller {
     public function logout() {
         try {
             admins::updateStatus(auth()->user()->id);
+            $email = auth()->user()->email;
             Auth::guard('admin')->logout();
+            \Slack::send('[Admin Logout] - Success: '.$email);
             return redirect()->route('login.admin')->with('success', 'Đăng xuất hệ thống thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Admin Logout] - '.$e->getMessage());
             return redirect()->route('admin.index')->with('error', 'Lỗi, hệ thống không lấy được dữ liệu! Vui lòng thử lại.');
         }
     }
@@ -100,9 +103,11 @@ class AdminController extends Controller {
                 $ad->background = $path;
             }
             $ad->save();
+            \Slack::send('[Admin Update Info] - Success: '.$ad->email);
             return redirect()->route('admin.profile')->with('success', 'Cập nhật thông tin admin thành công!');
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage());            
+            \Slack::send('[Admin Update Info] - '.$e->getMessage());
             return redirect()->route('admin.profile')->with('error', 'Lỗi, cập nhật thông tin admin thất bại!');
         }
     }
@@ -117,10 +122,12 @@ class AdminController extends Controller {
             $ad = admins::find(auth()->user()->id);
             $ad->password = bcrypt($request->password);
             $ad->save();
+            \Slack::send('[Admin Update Account] - Success: '.$ad->email);
             Auth::guard('admin')->logout();
             return redirect()->route('login')->with('success', 'Cập nhật tài khoản thành công');
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage());            
+            \Slack::send('[Admin Update Account] - '.$e->getMessage());
             return redirect()->route('admin.profile')->with('error', 'Lỗi, cập nhật tài khoản admin thất bại!');
         }
     }

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use App\Mail\ResetPassword;
 use Mail;
 use Auth;
+use Exception;
 
 class HomeController extends Controller {
 
@@ -163,6 +164,7 @@ class HomeController extends Controller {
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Newletter Register] - '.$e->getMessage());
             echo ['status' => 'success', 'ms' => 'Lỗi, đăng ký nhận bài viết thất bại!'];
         }
     }
@@ -184,8 +186,9 @@ class HomeController extends Controller {
                 $phoi->status = 0;
                 $phoi->save();
                 return redirect()->route('detail.baiviet', ['slug' => $bviet->slug])->with('success', 'Gửi bình luận thành công, bình luận của bạn sẽ được hiển thị sau khi admin kiểm duyệt hoàn tất.');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error($e->getMessage());
+                \Slack::send('[Phản Hồi Insert] - '.$e->getMessage());
                 return redirect()->route('detail.baiviet', ['slug' => $bviet->slug])->with('error', 'Lỗi, gửi bình luận cho bài viết thất bại!');
             }
         } else {
@@ -213,8 +216,9 @@ class HomeController extends Controller {
                 $lhe->save();
                 return redirect()->route('contact')->with('success', 'Gửi thông tin thành công, cảm ơn bạn đã gửi thông tin liên hệ đến chúng tôi.');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Contact Insert] - '.$e->getMessage());
             return redirect()->route('contact')->with('error', 'Lỗi, gửi thông tin liên hệ thất bại!');
         }
     }
@@ -315,11 +319,12 @@ class HomeController extends Controller {
         } else {
             $user = \App\users::where('email', $request->email)->where('status', 1)->first();
         }
-        if(!is_null($user)) {
+        try {
             $user->email_verified_at = substr(md5(mt_rand()), 0, 7);
             $user->save();
             Mail::to($user->email)->send(new ResetPassword($user, $request->author));
-        } else {
+        } catch (Exception $ex) {
+            \Slack::send('[User Get Link Reset Password] - '.$ex->getMessage());
             return redirect()->route('reset.password.admin')->with('error', 'Người dùng này không tồn tại!');
         }
     }
@@ -336,9 +341,10 @@ class HomeController extends Controller {
         } else {
             $user = \App\users::where('email_verified_at', $token)->where('status', 1)->first();
         }
-        if(!is_null($user)) {
+        try {
             return view('auth.passwords.reset', ['token' => $token, 'author' => $request->author, 'email' => $user->email]);
-        } else {
+        } catch (Exception $ex) {
+            \Slack::send('[User Accept Link Reset Password] - '.$ex->getMessage());
             return redirect()->route('reset.password.admin')->with('error', 'Người dùng này không tồn tại!');
         }
     }
@@ -354,7 +360,7 @@ class HomeController extends Controller {
         } else {
             $user = \App\users::where('email_verified_at', $request->token)->where('email', $request->email)->where('status', 1)->first();
         }
-        if(!is_null($user)) {
+        try {
             $user->password = bcrypt($request->password);
             $user->email_verified_at = "";
             $user->save();
@@ -365,7 +371,8 @@ class HomeController extends Controller {
                 Auth::guard('web')->login($user);
                 return redirect()->route('user.index')->with('success', 'Khôi phục mật khẩu thành công');
             }
-        } else {
+        } catch (Exception $ex) {
+            \Slack::send('[User Update Reset Password] - '.$ex->getMessage());
             return redirect()->route('reset.password.admin')->with('error', 'Người dùng này không tồn tại!');
         }
     }
@@ -377,13 +384,14 @@ class HomeController extends Controller {
      */
     public function activeUser($token) {
         $user = \App\users::where('active_code', $token)->first();
-        if(!is_null($user)) {
+        try {
             $user->active_code = "";
             $user->status = 0;
             $user->save();
             Auth::guard()->login($user);
             return redirect()->route('user.index')->with('success', 'Kích hoạt tài khoản thành công. Bạn phải đợi người quản trị duyệt tài khoản mới có thể sử dụng các chức năng.');
-        } else {
+        } catch (Exception $ex) {
+            \Slack::send('[User Active] - '.$ex->getMessage());
             return redirect()->route('login')->with('error', 'Không tồn tại tài khoản này. VUi lòng kiểm tra lại hoặc liên hệ admin!');
         }
     }

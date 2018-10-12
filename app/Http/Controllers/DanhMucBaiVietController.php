@@ -7,10 +7,9 @@ use App\danhmucbaiviets;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class DanhMucBaiVietController extends Controller
-{
-    public function __construct()
-    {
+class DanhMucBaiVietController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
@@ -46,9 +45,11 @@ class DanhMucBaiVietController extends Controller
             $dmuc->intro = $request->intro;
             $dmuc->status = $request->status;
             $dmuc->save();
+            \Slack::send('[Category Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.danhmuc')->with('success', 'Thêm mới danh mục bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Category Insert] - '.$e->getMessage());
             return redirect()->route('admin.danhmuc')->with('error', 'Lỗi, thêm mới danh mục bài viết thất bại!');
         }
     }
@@ -67,9 +68,11 @@ class DanhMucBaiVietController extends Controller
             $dmuc->intro = $request->intro;
             $dmuc->status = $request->status;
             $dmuc->save();
+            \Slack::send('[Category Update] - Success: '.auth()->user()->email);
             return redirect()->route('admin.danhmuc.chitiet', ['id' => $id])->with('success', 'cập nhật thông tin danh mục bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Category Update] - '.$e->getMessage());
             return redirect()->route('admin.danhmuc.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin danh mục bài viết thất bại!');
         }
     }
@@ -83,10 +86,13 @@ class DanhMucBaiVietController extends Controller
         try {
             $dmuc = danhmucbaiviets::find($id);
             $dmuc->delete();
+            \Slack::send('[Category Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.danhmuc')->with('success', 'xóa danh mục bài viết thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Category Delete] - '.$e->getMessage());
             return redirect()->route('admin.danhmuc')->with('error', 'Lỗi, xóa danh mục bài viết thất bại!');
         }
     }
+
 }

@@ -45,9 +45,11 @@ class HoiDapController extends Controller {
             $hdap->order = $request->order;
             $hdap->status = $request->status;
             $hdap->save();
+            \Slack::send('[A&Q Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.hoidap')->with('success', 'Thêm mới hỏi đáp thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[A&Q Insert] - '.$e->getMessage());
             return redirect()->route('admin.hoidap')->with('error', 'Lỗi, thêm mới hỏi đáp thất bại!');
         }
     }
@@ -66,9 +68,11 @@ class HoiDapController extends Controller {
             $hdap->order = $request->order;
             $hdap->status = $request->status;
             $hdap->save();
+            \Slack::send('[A&Q Update] - Success: '.auth()->user()->email);
             return redirect()->route('admin.hoidap.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin hỏi đáp thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[A&Q Update] - '.$e->getMessage());
             return redirect()->route('admin.hoidap.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin hỏi đáp thất bại!');
         }
     }
@@ -82,9 +86,11 @@ class HoiDapController extends Controller {
         try {
             $hdap = hoidap::find($id);
             $hdap->delete();
+            \Slack::send('[A&Q Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.hoidap')->with('success', 'xóa hỏi đáp thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[A&Q Delete] - '.$e->getMessage());
             return redirect()->route('admin.hoidap')->with('error', 'Lỗi, xóa hỏi đáp thất bại!');
         }
     }

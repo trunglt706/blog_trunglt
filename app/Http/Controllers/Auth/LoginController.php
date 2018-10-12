@@ -47,8 +47,10 @@ class LoginController extends Controller
     public function loginAdmin(LoginRequest $request) {
         $credentials = $request->only('email', 'password');
         if (Auth::guard('admin')->attempt($credentials)) {
+            \Slack::send('[Admin Login] - Success: '.$credentials['email']);
             return redirect()->route('admin.index')->with('success', 'Đăng nhập hệ thống thành công');
         } else {
+            \Slack::send('[Admin Login] - Fail: '.$credentials['email']);
             return redirect()->route('login')->with('error', 'Lỗi, tên tài khoản hoặc mật khẩu không chính xác!');
         }
     }

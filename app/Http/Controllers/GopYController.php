@@ -43,9 +43,11 @@ class GopYController extends Controller {
             $gopy->email = $request->email;
             $gopy->content = $request->input('content');
             $gopy->save();
+            \Slack::send('[Feedback Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.gopy')->with('success', 'Thêm mới góp ý thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Feedback Insert] - '.$e->getMessage());
             return redirect()->route('admin.gopy')->with('error', 'Lỗi, thêm mới góp ý thất bại!');
         }
     }
@@ -62,9 +64,11 @@ class GopYController extends Controller {
             $gopy->email = $request->email;
             $gopy->content = $request->input('content');
             $gopy->save();
+            \Slack::send('[Feedback Update] - Success: '.auth()->user()->email);
             return redirect()->route('admin.gopy.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin góp ý thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Feedback Update] - '.$e->getMessage());
             return redirect()->route('admin.gopy.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin góp ý thất bại!');
         }
     }
@@ -78,9 +82,11 @@ class GopYController extends Controller {
         try {
             $gopy = gopys::find($id);
             $gopy->delete();
+            \Slack::send('[Feedback Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.gopy')->with('success', 'xóa góp ý thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Feedback Delete] - '.$e->getMessage());
             return redirect()->route('admin.gopy')->with('error', 'Lỗi, xóa góp ý thất bại!');
         }
     }

@@ -89,9 +89,11 @@ use RegistersUsers;
             $this->create($input);
             $data = users::where('email', $input['email'])->first();
             Mail::to($input['email'])->send(new ActiveUser($data->name, $data->active_code));
+            \Slack::send('[User Register] - Success: '.$input['email']);
             return redirect()->route("login")->with("status", "Đăng ký thành công");
         } catch (\Exception $ex) {
             Log::error($ex->getMessage());
+            \Slack::send('[User Register] - '.$ex->getMessage());
             return redirect()->route('register')->with("error", "Lỗi, đăng ký thất bại!");
         }
     }

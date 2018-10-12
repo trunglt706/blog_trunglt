@@ -9,15 +9,14 @@ use Exception;
 use File;
 use Image;
 
-class LoaiThanhVienController extends Controller
-{
-    public function __construct()
-    {
+class LoaiThanhVienController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth:admin');
     }
 
     /**
-     * @function go to list loai thanhvien
+     * @function go to list type account
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function loaiThanhVien() {
@@ -26,7 +25,7 @@ class LoaiThanhVienController extends Controller
     }
 
     /**
-     * @function go to detail loai thanhvien
+     * @function go to detail type account
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -36,7 +35,7 @@ class LoaiThanhVienController extends Controller
     }
 
     /**
-     * @function insert loai thanh vien
+     * @function insert type account
      * @param LoaiThanhVienRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -60,15 +59,17 @@ class LoaiThanhVienController extends Controller
                 $loaitv->logo = $path;
             }
             $loaitv->save();
+            \Slack::send('[Type Account Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.loaithanhvien')->with('success', 'Thêm mới loại thành viên thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Type Acocunt Insert] - '.$e->getMessage());
             return redirect()->route('admin.loaithanhvien')->with('error', 'Lỗi, thêm mới loại thành viên thất bại!');
         }
     }
 
     /**
-     * @function update loai thah vien
+     * @function update type account
      * @param LoaiThanhVienUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -93,15 +94,17 @@ class LoaiThanhVienController extends Controller
                 $loaitv->logo = $path;
             }
             $loaitv->save();
-            return redirect()->route('admin.loaithanhvien.chitiet', ['id'=>$id])->with('success', 'Cập nhật loại thành viên thành công!');
+            \Slack::send('[Type Account Update] - Success: '.auth()->user()->email);
+            return redirect()->route('admin.loaithanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật loại thành viên thành công!');
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('admin.loaithanhvien.chitiet', ['id'=>$id])->with('error', 'Lỗi, cập nhật loại thành viên thất bại!');
+            \Slack::send('[Type Account Update] - '.$e->getMessage());
+            return redirect()->route('admin.loaithanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật loại thành viên thất bại!');
         }
     }
 
     /**
-     * @function delete loai thanh vien
+     * @function delete type account
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -110,10 +113,13 @@ class LoaiThanhVienController extends Controller
             $loaitv = loaithanhviens::find($id);
             File::delete($loaitv->logo);
             $loaitv->delete();
+            \Slack::send('[Type Account Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.loaithanhvien')->with('success', 'xóa loại thành viên thành công.');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Type Account Delete] - '.$e->getMessage());
             return redirect()->route('admin.loaithanhvien')->with('error', 'Lỗi, xóa loại thành viên thất bại!');
         }
     }
+
 }

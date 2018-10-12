@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+usse \App\Http\Requests\UpdateInforUserRequest;
+use App\Http\Requests\UpdateAccountUserRequest;
 use App\users;
+use App\baiviets;
+use App\loaithanhviens;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use File;
@@ -21,7 +25,7 @@ class ThanhVienController extends Controller {
      */
     public function thanhVien() {
         $object['thanhvien'] = users::paginate(10);
-        $object['loai_tvien'] = \App\loaithanhviens::where('status', 1)->get();
+        $object['loai_tvien'] = loaithanhviens::where('status', 1)->get();
         return view('admin.user.list', ['object' => $object]);
     }
 
@@ -32,7 +36,7 @@ class ThanhVienController extends Controller {
      */
     public function thanhVienChiTiet($id) {
         $object['tvien'] = users::findOrFail($id);
-        $object['loai_tvien'] = \App\loaithanhviens::where('status', 1)->get();
+        $object['loai_tvien'] = loaithanhviens::where('status', 1)->get();
         return view('admin.user.detail', ['object' => $object]);
     }
 
@@ -41,7 +45,7 @@ class ThanhVienController extends Controller {
      * @param UpdateInforUserRequest $request
      * @return mixed
      */
-    public function thanhVienUpdateInfo(\App\Http\Requests\UpdateInforUserRequest $request, $id) {
+    public function thanhVienUpdateInfo(UpdateInforUserRequest $request, $id) {
         //Check email exists
         $email = users::where('email', $request->email)->where('id', '<>', $id)->count();
         if($email == 0) {
@@ -78,9 +82,11 @@ class ThanhVienController extends Controller {
                     $u->background = $path;
                 }
                 $u->save();
+                \Slack::send('[Member Update Info] - Success: '.auth()->user()->email);
                 return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công');
             } catch (Exception $e) {
                 Log::error($e->getMessage());
+                \Slack::send('[Member Update Info] - '.$e->getMessage());
                 return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật thông tin người dùng thất bại!');
             }
         } else {
@@ -93,14 +99,16 @@ class ThanhVienController extends Controller {
      * @param UpdateAccountUserRequest $request
      * @return mixed
      */
-    public function thanhVienUpdateAccount(\App\Http\Requests\UpdateAccountUserRequest $request, $id) {
+    public function thanhVienUpdateAccount(UpdateAccountUserRequest $request, $id) {
         try {
             $ad = users::findOrFail($id);
             $ad->password = bcrypt($request->password);
             $ad->save();
+            \Slack::send('[Member Update Account] - Success: '.auth()->user()->email);
             return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('success', 'Cập nhật tài khoản người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Member Update Account] - '.$e->getMessage());
             return redirect()->route('admin.thanhvien.chitiet', ['id' => $id])->with('error', 'Lỗi, cập nhật tài khoản người dùng thất bại!');
         }
     }
@@ -144,9 +152,11 @@ class ThanhVienController extends Controller {
                 $u->background = $path;
             }
             $u->save();
+            \Slack::send('[Member Insert] - Success: '.auth()->user()->email);
             return redirect()->route('admin.thanhvien')->with('success', 'Thêm mới người dùng thành công');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Member Insert] - '.$e->getMessage());
             return redirect()->route('admin.thanhvien')->with('error', 'Lỗi, thêm mới người dùng thất bại!');
         }
     }
@@ -161,10 +171,10 @@ class ThanhVienController extends Controller {
         try {
             $u = users::findOrFail($id);
             //Delete all baiviet cua user
-            $list_bv = \App\baiviets::where('username', $u->username)->get();
+            $list_bv = baiviets::where('username', $u->username)->get();
             if (!is_null($list_bv)) {
                 foreach ($list_bv as $l) {
-                    $b = \App\baiviets::findOrFail($l->id);
+                    $b = baiviets::findOrFail($l->id);
                     File::delete($b->thumn);
                     File::delete($b->background);
                     $b->delete();
@@ -175,9 +185,11 @@ class ThanhVienController extends Controller {
             File::delete($u->avatar);
             File::delete($u->background);
             $u->delete();
+            \Slack::send('[Member Delete] - Success: '.auth()->user()->email);
             return redirect()->route('admin.thanhvien')->with('success', 'Xóa người dùng thành công ('.$count.' bài viết cũng được xóa theo)');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            \Slack::send('[Member Delete] - '.$e->getMessage());
             return redirect()->route('admin.thanhvien')->with('error', 'Lỗi, xóa người dùng thất bại!');
         }
     }
@@ -186,25 +198,31 @@ class ThanhVienController extends Controller {
      * @function block account user
      */
     public function thanhVienBlock($id) {
-        //block account user
-        $u = users::findOrFail($id);
-        $u->status = -1;
-        $u->save();
+        try {
+            //block account user
+            $u = users::findOrFail($id);
+            $u->status = -1;
+            $u->save();
 
-        //block all baiviet cua user
-        $count = 0;
-        $list = \App\baiviets::where('username', $u->username)->get();
-        if (!is_null($list)) {
-            foreach ($list as $l) {
-                $b = \App\baiviets::findOrFail($l->id);
-                if ($b->status != -1) {
-                    $b->status = -1;
-                    $b->save();
-                    $count++;
+            //block all baiviet cua user
+            $count = 0;
+            $list = baiviets::where('username', $u->username)->get();
+            if (!is_null($list)) {
+                foreach ($list as $l) {
+                    $b = baiviets::findOrFail($l->id);
+                    if ($b->status != -1) {
+                        $b->status = -1;
+                        $b->save();
+                        $count++;
+                    }
                 }
             }
+            \Slack::send('[Member Block Account] - Success '.auth()->user()->email);
+            echo array('status' => 'success', 'ms' => 'Block tài khoản ' . $u->email . ' thành công. Có ' . $count . '/' . count($list) . ' bài viết đã khóa kèm theo!');
+        } catch (Exception $ex) {
+            \Slack::send('[Member Delete] - '.$ex->getMessage());
+            return [];
         }
-        echo array('status' => 'success', 'ms' => 'Block tài khoản ' . $u->email . ' thành công. Có ' . $count . '/' . count($list) . ' bài viết đã khóa kèm theo!');
     }
 
 }

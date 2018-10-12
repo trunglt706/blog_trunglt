@@ -6,11 +6,9 @@ use App\cauhinhchungs;
 use App\danhmucbaiviets;
 use App\visitors;
 use Illuminate\View\View;
-
 use Jenssegers\Agent\Agent;
 
-class HomeComposer
-{
+class HomeComposer {
 
     /**
      * The system repository implementation.
@@ -25,13 +23,11 @@ class HomeComposer
      * @param  SystemRepository $home
      * @return void
      */
-    public function _construct(SystemRepository $home)
-    {
+    public function _construct(SystemRepository $home) {
         $this->home = $home;
     }
 
-    public function compose(View $view)
-    {
+    public function compose(View $view) {
         $data['intro'] = cauhinhchungs::getHeThong("slug", "intro-website");
         $data['keyword'] = cauhinhchungs::getHeThong("slug", "keyword-website");
         $data['title'] = cauhinhchungs::getHeThong("slug", "ten-website");
@@ -48,7 +44,7 @@ class HomeComposer
 
         $agent = new Agent();
         $data['agent'] = $agent;
-        
+
         $view->with('data', $data);
     }
 
