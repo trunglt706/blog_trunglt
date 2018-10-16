@@ -38,6 +38,33 @@ Route::prefix('ajax')->group(function () {
     Route::get('/search', 'HomeController@searchAjax')->name('ajax.search');
 });
 
+Route::prefix('payment')->group(function () {
+    Route::get('/', 'PaymentController@index')->name('payment.index');
+//    Thanh toan qua cong onepay
+    Route::get('onepay', 'PaymentController@onepay')->name('payment.onepay');
+    Route::post('onepay/noidia', 'PaymentController@recharge_noidia')->name('payment.recharge.noidia');
+    Route::post('onepay/quocte', 'PaymentController@recharge_quocte')->name('payment.recharge.quocte');
+    Route::get('onepay/return/noidia', 'PaymentController@payReturnNoidia')->name('payment.pay.return.noidia');
+    Route::get('onepay/return/quocte', 'PaymentController@payReturnQuocte')->name('payment.pay.return.quocte');
+    Route::get('onepay/error/{developer_trans_id}', 'UserController@payError')->name('payment.pay.error');
+//    Thanh toan qua cong bao kim
+    Route::get('baokim', 'PaymentController@baokim')->name('payment.baokim');
+    Route::post('baokim', 'PaymentController@rechargeBaoKim')->name('payment.recharge.baokim');
+    Route::get('baokim/return/baokim', 'PaymentController@payReturnBaoKim')->name('payment.pay.return.baokim');
+//    Thanh toans qua cong paypal
+    Route::get('paypal', 'PaymentController@paypal')->name('payment.paypal');
+    Route::post('paypal', 'PaymentController@recharge_paypal')->name('payment.recharge.paypal');
+    Route::get('paypal/return/paypal', 'PaymentController@payReturnPayPal')->name('payment.pay.return.paypal');
+//    Thanh toan qua cong ngan luong
+    Route::get('nganluong', 'PaymentController@nganluong')->name('payment.nganluong');
+    Route::post('nganluong', 'PaymentController@recharge_nganluong')->name('payment.recharge.nganluong');
+    Route::get('nganluong/return/nganluong', 'PaymentController@payReturnNganluong')->name('payment.pay.return.nganluong');
+//    Thanh toan qua cong vnpay
+    Route::get('vnpay', 'PaymentController@vnpay')->name('payment.vnpay');
+    Route::post('vnpay', 'PaymentController@recharge_vnpay')->name('payment.recharge.vnpay');
+    Route::get('vnpay/return/paypal', 'PaymentController@payReturnvnpay')->name('payment.pay.return.vnpay');
+});
+
 //============================== Router for user
 Route::prefix('user')->group(function () {
     Route::get('/', 'UserController@index')->name('user.index');
