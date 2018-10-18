@@ -13,7 +13,7 @@ class RechargePayPalRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,20 @@ class RechargePayPalRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'amount' => 'required|numeric|min:4.35|max:1000',
+            'phone' => 'required',
+        ];
+    }
+
+    public function messages() {
+        return [
+            'amount.required' => 'Vui lòng nhập số tiền bạn muốn nạp',
+            'amount.numeric' => 'Giá trị nhập vào không phải là số',
+            'amount.min' => 'Bạn cần nhập số tiền lớn hơn hoặc bằng 4.35 USD',
+            'amount.max' => 'Bạn cần nhập số tiền nhỏ hơn hoặc bằng 1.000 USD',
+            'phone' => 'Vui lòng nhập số điện thoại',
         ];
     }
 }

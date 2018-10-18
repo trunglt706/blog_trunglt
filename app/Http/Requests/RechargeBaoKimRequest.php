@@ -13,7 +13,7 @@ class RechargeBaoKimRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,22 @@ class RechargeBaoKimRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            //
+            'amount' => 'required|integer|min:100000|max:20000000',
+            'method' => 'required',
+            'phone' => 'required'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'amount.required' => 'Vui lòng nhập số tiền bạn muốn nạp',
+            'amount.integer' => 'Số tiền phải là một số nguyên',
+            'amount.min' => 'Bạn cần nhập số tiền lớn hơn hoặc bằng 100.000 VNĐ',
+            'amount.max' => 'Bạn cần nhập số tiền nhỏ hơn hoặc bằng 20.000.000 VNĐ',
+            'method:required' => 'Vui lòng chọn phương thức thanh',
+            'phone:required' => 'Vui lòng nhập số điện thoại'
         ];
     }
 }

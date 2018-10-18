@@ -199,6 +199,58 @@ $(document).ready(function () {
         drawCircle('transparent', options.lineWidth, 100 / 100);
         drawCircle('#eb0254', options.lineWidth, options.percent / 100);
     }
+    //===================== Script for payment =======================//
+//=================== script for baokim
+    function selectbank(id) {
+        $('#method').val(id);
+        //Remove all radio and recheck
+        $(".radio").removeAttr("checked");
+        $(".radio-" + id).attr("checked", "checked");
+    }
+    $(function () {
+        $(".bank_list img").click(function () {
+            $(".bank_list").find('img').removeClass('selected');
+            $(this).addClass('selected');
+            var id = $(this).attr('id');
+            $('#bank_payment_method_id').val(id);
+        });
+
+        $('input[name=method]').click(function () {
+            $(".bank_list").find('img').removeClass('selected');
+            var method = $(this).val();
+            $('#method').val(method);
+        });
+    });
+
+//=========== Csript for nganluong
+    $('input[name="option_payment"]').bind('click', function () {
+        if ($(this).val() == "ATM_ONLINE") {
+            $(".bidv_input").attr("checked", "");
+            $(".visa_input").removeAttr("checked");
+        }
+        if ($(this).val() == "VISA") {
+            $(".visa_input").attr("checked", "");
+            $(".bidv_input").removeAttr("checked");
+        }
+        $('.list-content li').removeClass('active');
+        $(this).parent().parent('li').addClass('active');
+    });
+
+//============ Script for onepay
+    $("input[name=type_payment]").on('change', function () {
+        var url = "/payment/" + $(this).val();
+        if ($(this).val() == "quocte") {
+            $(".payment-noidia").css("display", "none");
+            $(".payment-quocte").css("display", "block");
+        } else {
+            $("#amount-noidia").css("display", "block");
+            $(".payment-noidia").css("display", "block");
+            $(".payment-quocte").css("display", "none");
+        }
+        $(".frm-payment").attr("action", url);
+    });
+//===================== End Script for payment =======================//
+    
 }
 
 );

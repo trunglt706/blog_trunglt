@@ -11,6 +11,7 @@ use App\Http\Requests\RechargePayPalRequest;
 use App\Http\Requests\RechargeRequest;
 use App\Http\Requests\RechargeVNPayRequest;
 use App\Http\Requests\RechargeBaoKimRequest;
+use App\payment;
 
 class PaymentController extends Controller {
     
@@ -24,7 +25,7 @@ class PaymentController extends Controller {
     }
 
     /**
-     * @function user recharge - onepya.vn local
+     * @function user recharge - onepay.vn local
      * @param RechargeRequest $request
      * @return url
      */
@@ -34,13 +35,12 @@ class PaymentController extends Controller {
             unset($_POST['_token']);
             unset($_POST['type_payment']);
 
-            $note = 'User (' . Auth::user()->name . ') nạp ' . $_POST['vpc_Amount'] . ' VND vào tài khoản';
-            $user_nap = "user";
-            $id_nap = Auth::user()->id;
-            $transaction_history = Transaction_history::add((float) $_POST['vpc_Amount'], 'Add', $note, Auth::id(), 0, NULL, $user_nap, $id_nap, Auth::user()->phone);
+            $note = 'Người dùng ' . $request->$_POST['phone'] . ' thanh toán ' . $_POST['amount'] . ' VND';
+            $id_nap = isset(Auth::user()->id) ? Auth::user()->id : null;
+            $transaction_history = payment::add($_POST['amount'], $note, $id, $status, $tran_id, $id_nap, $phone, $auth);
 
             $vpcURL = env('virtualPaymentClientURL_ND') . "?";
-            $_POST['vpc_MerchTxnRef'] = Transaction_history::gen_dev_trans_id(NULL);
+            $_POST['vpc_MerchTxnRef'] = payment::gen_dev_trans_id(NULL);
             $_POST['vpc_Merchant'] = env('vpc_Merchant');
             $_POST['vpc_AccessCode'] = env('vpc_AccessCode');
             $_POST['vpc_OrderInfo'] = $transaction_history->developer_trans_id;
@@ -48,9 +48,9 @@ class PaymentController extends Controller {
             $_POST['vpc_Command'] = "pay";
             $_POST['vpc_Version'] = env('vpc_Version');
             $_POST['vpc_TicketNo'] = $_SERVER ['REMOTE_ADDR'];
-            $_POST['vpc_ReturnURL'] = route('user.pay.return.noidia');
-            $_POST['vpc_Amount'] = (float) ($_POST['vpc_Amount'] * 100);
-            $_POST['title'] = "Kdata Storage - " . $note;
+            $_POST['vpc_ReturnURL'] = route('payment.pay.return.noidia');
+            $_POST['amount'] = (float) ($_POST['amount'] * 100);
+            $_POST['title'] = "Blog TrungLT - " . $note;
 
             $stringHashData = "";
             ksort($_POST);
@@ -89,7 +89,6 @@ class PaymentController extends Controller {
         $flag = "success";
         $transStatus = "";
         try {
-            $user = User::find(Auth::user()->id);
             $SECURE_SECRET = env('SECURE_SECRET_ND');
 
             $vpc_Txn_Secure_Hash = $_GET ["vpc_SecureHash"];
@@ -116,49 +115,12 @@ class PaymentController extends Controller {
             if ($hashValidated == "CORRECT" && $txnResponseCode == "0") {
                 $request['developer_trans_id'] = $vpc_OrderInfo;
                 $request['status'] = 1;
-                $datauser['updated_at'] = date("Y-m-d H:i:s");
                 //update balance of user
-                if (Transaction_history::getTransactionBydeveloper_trans_id($vpc_OrderInfo)->status != 1) {
+                $pment = payment::where('developer_trans_id', $vpc_OrderInfo)->first();
+                if ($pment->status != 1) {
                     $transStatus = "Giao dịch thành công. Bạn vừa nạp thêm vào tài khoản Storage: " . number_format(($amount / 100), 0) . " VNĐ";
-                    $datauser['balance'] = (float) ($user->balance + ($amount / 100));
-                    if ($user->balance < 0) {
-                        $this->tien_tru = abs($user->balance);
-                        $this->noidung = "Trừ " . number_format(abs($user->balance), 0, '.', ',') . " đ tiền thiếu nợ ngày: " . date("H:i:s d/m/Y");
-                        //Insert lich su tru tien
-                        LichSuTruTien::insertLichSuTruTien(
-                                [
-                                    "user_id" => $user->id,
-                                    "name" => $user->name,
-                                    "phone" => $user->phone,
-                                    "sotien" => $this->tien_tru,
-                                    "noidung" => $this->noidung
-                                ]
-                        );
-                    }
-                    //Check balance now of user
-                    if (($user->active == 2) && ($datauser['balance'] >= 0)) {
-                        //active user agian
-                        $response = Api::updateApiUser(['uid' => $user->userid, 'suspended' => False]);
-                        $datauser['access_key'] = $response->keys[0]->access_key;
-                        $datauser['secret_key'] = $response->keys[0]->secret_key;
-                        $datauser['active'] = 1;
-                    }
-                    //update user
-                    User::updateUser($user->id, $datauser);
-                    //Check user VIP
-                    if (($user->vip != 1) && ($user->hinhthuc_thanhtoan == 1)) {
-                        $package = Package_User::getPackages_Users($user->id);
-                        //if not payment for package service
-                        if (isset($package) && ($package->status == 0)) {
-                            if ((($amount / 100) + $package->payment) >= 0) {
-                                Package_User::updatePackages_Users($user->id, ["payment" => 0, "status" => 1]);
-                            } else {
-                                Package_User::updatePackages_Users($user->id, ["payment" => (float) (($amount / 100) + $package->payment)]);
-                            }
-                        }
-                    }
                     //update transaction
-                    Transaction_history::edit($request, $transStatus);
+                    payment::edit($request, $transStatus);
                 } else {
                     $transStatus = "Lỗi, lệnh giao dịch này đã được thực hiện rồi. Vui lòng thực hiện lệnh giao dịch khác!";
                     $flag = "error";
@@ -185,14 +147,14 @@ class PaymentController extends Controller {
             unset($_POST['type_payment']);
             unset($_POST['vpc_Currency']);
 
-            $note = 'User (' . Auth::user()->name . ') have just paymented ' . $_POST['vpc_Amount'] . ' VND in to your account';
+            $note = 'User (' . Auth::user()->name . ') have just paymented ' . $_POST['amount'] . ' VND in to your account';
             $user_nap = "user";
             $id_nap = Auth::user()->id;
-            $transaction_history = Transaction_history::add((float) $_POST['vpc_Amount'], 'Add', $note, Auth::id(), 0, NULL, $user_nap, $id_nap, Auth::user()->phone);
+            $transaction_history = payment::add((float) $_POST['amount'], 'Add', $note, Auth::id(), 0, NULL, $user_nap, $id_nap, Auth::user()->phone);
 
             $vpcURL = env('virtualPaymentClientURL_QT') . "?";
             $_POST['AgainLink'] = urlencode($_SERVER['HTTP_REFERER']);
-            $_POST['vpc_MerchTxnRef'] = Transaction_history::gen_dev_trans_id(NULL);
+            $_POST['vpc_MerchTxnRef'] = payment::gen_dev_trans_id(NULL);
             $_POST['vpc_Merchant'] = env('vpc_Merchant_QT');
             $_POST['vpc_AccessCode'] = env('vpc_AccessCode_QT');
             $_POST['vpc_OrderInfo'] = $transaction_history->developer_trans_id;
@@ -200,9 +162,9 @@ class PaymentController extends Controller {
             $_POST['vpc_Command'] = "pay";
             $_POST['vpc_Version'] = env('vpc_Version');
             $_POST['vpc_TicketNo'] = $_SERVER ['REMOTE_ADDR'];
-            $_POST['vpc_ReturnURL'] = route('user.pay.return.quocte');
+            $_POST['vpc_ReturnURL'] = route('payment.pay.return.quocte');
             $_POST['Title'] = "Kdata Storage - " . $note;
-            $_POST['vpc_Amount'] = (float) ($_POST['vpc_Amount'] * 100);
+            $_POST['amount'] = (float) ($_POST['amount'] * 100);
 
             $md5HashData = "";
             ksort($_POST);
@@ -241,7 +203,6 @@ class PaymentController extends Controller {
         $flag = "success";
         $transStatus = "";
         try {
-            $user = User::find(Auth::user()->id);
             $SECURE_SECRET = env('SECURE_SECRET_QT');
 
             $vpc_Txn_Secure_Hash = $_GET["vpc_SecureHash"];
@@ -268,49 +229,14 @@ class PaymentController extends Controller {
             if ($hashValidated == "CORRECT" && $txnResponseCode == "0") {
                 $req['status'] = 1;
                 $req['developer_trans_id'] = $vpc_OrderInfo;
-                $datauser['updated_at'] = date("Y-m-d H:i:s");
 
                 //update balance of user
-                if (Transaction_history::getTransactionBydeveloper_trans_id($vpc_OrderInfo)->status != 1) {
+                $pment = payment::where('developer_trans_id', $vpc_OrderInfo)->first();
+                if ($pment->status != 1) {
                     $transStatus = "Giao dịch thành công. Bạn vừa nạp thêm vào tài khoản Storage: " . number_format(($amount / 100), 0) . " VNĐ";
-                    $datauser['balance'] = (float) ($user->balance + $amount / 100);
-                    if ($user->balance < 0) {
-                        $this->tien_tru = abs($user->balance);
-                        $this->noidung = "Trừ " . number_format(abs($user->balance), 0, '.', ',') . " đ tiền thiếu nợ ngày: " . date("H:i:s d/m/Y");
-                        //Insert lich su tru tien
-                        LichSuTruTien::insertLichSuTruTien(
-                                [
-                                    "user_id" => $user->id,
-                                    "name" => $user->name,
-                                    "phone" => $user->phone,
-                                    "sotien" => $this->tien_tru,
-                                    "noidung" => $this->noidung
-                                ]
-                        );
-                    }
-                    //Check balance now of user
-                    if (($user->active == "2") && ($datauser['balance'] >= 0)) {
-                        //active user agian
-                        $response = Api::updateApiUser(['uid' => $user->userid, 'suspended' => False]);
-                        $datauser['access_key'] = $response->keys[0]->access_key;
-                        $datauser['secret_key'] = $response->keys[0]->secret_key;
-                        $datauser['active'] = 1;
-                    }
-                    //update user
-                    User::updateUser($user->id, $datauser);
-                    if (($user->vip != 1) && ($user->hinhthuc_thanhtoan == 1)) {
-                        $package = Package_User::getPackages_Users($user->id);
-                        //if not payment for package service
-                        if (isset($package) && ($package->status == 0)) {
-                            if ((($amount / 100) + $package->payment) >= 0) {
-                                Package_User::updatePackages_Users($user->id, ["payment" => 0, "status" => 1]);
-                            } else {
-                                Package_User::updatePackages_Users($user->id, ["payment" => (float) (($amount / 100) + $package->payment)]);
-                            }
-                        }
-                    }
+                    
                     //update transaction
-                    Transaction_history::edit($req, $transStatus);
+                    payment::edit($req, $transStatus);
                 } else {
                     $transStatus = "Lỗi, lệnh giao dịch này đã được thực hiện rồi. Vui lòng thực hiện lệnh giao dịch khác!";
                     $flag = "error";
@@ -341,12 +267,12 @@ class PaymentController extends Controller {
     public function recharge_nganluong(RechargeRequest $request) {
         try {
             $nlcheckout = new NL_CheckOutV3(env('NL_merchant_id'), env('NL_merchant_password'), env('NL_email_receiver'), env('NL_url_api'));
-            $total_amount = $_POST['vpc_Amount'];
+            $total_amount = $_POST['amount'];
 
-            $note = 'User (' . Auth::user()->name . ') have just paymented ' . $_POST['vpc_Amount'] . ' VND in to your account';
+            $note = 'User (' . Auth::user()->name . ') have just paymented ' . $_POST['amount'] . ' VND in to your account';
             $user_nap = "user";
             $id_nap = Auth::user()->id;
-            $transaction_history = Transaction_history::add((float) $_POST['vpc_Amount'], 'Add', $note, Auth::id(), 0, NULL, $user_nap, $id_nap, Auth::user()->phone);
+            $transaction_history = payment::add((float) $_POST['amount'], 'Add', $note, Auth::id(), 0, NULL, $user_nap, $id_nap, Auth::user()->phone);
 
             $array_items[0] = array(
                 'item_name1' => 'Nạp tiền vào Kdata Storage qua nganluong.vn',
@@ -364,8 +290,8 @@ class PaymentController extends Controller {
             $order_description = $note;
             $tax_amount = 0;
             $fee_shipping = 0;
-            $return_url = route('user.pay.return.nganluong');
-            $cancel_url = route('user.recharge.nganluong') . "?key=cancel";
+            $return_url = route('payment.pay.return.nganluong');
+            $cancel_url = route('payment.recharge.nganluong') . "?key=cancel";
 
             $buyer_fullname = Auth::user()->name;
             $buyer_email = Auth::user()->email;
@@ -414,7 +340,6 @@ class PaymentController extends Controller {
         $flag = "success";
         $transStatus = "";
         try {
-            $user = User::find(Auth::user()->id);
             $nlcheckout = new NL_CheckOutV3(env('NL_merchant_id'), env('NL_merchant_password'), env('NL_email_receiver'), env('NL_url_api'));
             $nl_result = $nlcheckout->GetTransactionDetail($_GET['token']);
             $order_code = $nl_result->order_code;
@@ -430,46 +355,12 @@ class PaymentController extends Controller {
                         $datauser['updated_at'] = date("Y-m-d H:i:s");
 
                         //update balance of user
-                        if (Transaction_history::getTransactionBydeveloper_trans_id($order_code)->status != 1) {
+                        $pment = payment::where('developer_trans_id', $order_code)->first();
+                        if ($pment->status != 1) {
                             $transStatus = "Giao dịch thành công. Bạn vừa nạp thêm vào tài khoản Storage: " . number_format($amount, 0) . " VNĐ";
-                            $datauser['balance'] = (float) ($user->balance + $amount);
-                            if ($user->balance < 0) {
-                                $this->tien_tru = abs($user->balance);
-                                $this->noidung = "Trừ " . number_format(abs($user->balance), 0, '.', ',') . " đ tiền thiếu nợ ngày: " . date("H:i:s d/m/Y");
-                                //Insert lich su tru tien
-                                LichSuTruTien::insertLichSuTruTien(
-                                        [
-                                            "user_id" => $user->id,
-                                            "name" => $user->name,
-                                            "phone" => $user->phone,
-                                            "sotien" => $this->tien_tru,
-                                            "noidung" => $this->noidung
-                                        ]
-                                );
-                            }
-                            //Check balance now of user
-                            if (($user->active == "2") && ($datauser['balance'] >= 0)) {
-                                //active user agian
-                                $response = Api::updateApiUser(['uid' => $user->userid, 'suspended' => False]);
-                                $datauser['access_key'] = $response->keys[0]->access_key;
-                                $datauser['secret_key'] = $response->keys[0]->secret_key;
-                                $datauser['active'] = 1;
-                            }
-                            //update user
-                            User::updateUser($user->id, $datauser);
-                            if (($user->vip != 1) && ($user->hinhthuc_thanhtoan == 1)) {
-                                $package = Package_User::getPackages_Users($user->id);
-                                //if not payment for package service
-                                if (isset($package) && ($package->status == 0)) {
-                                    if (($amount + $package->payment) >= 0) {
-                                        Package_User::updatePackages_Users($user->id, ["payment" => 0, "status" => 1]);
-                                    } else {
-                                        Package_User::updatePackages_Users($user->id, ["payment" => (float) ($amount + $package->payment)]);
-                                    }
-                                }
-                            }
+                            
                             //update transaction
-                            Transaction_history::edit($req, $transStatus);
+                            payment::edit($req, $transStatus);
                         } else {
                             $transStatus = "Lỗi, lệnh giao dịch này đã được thực hiện rồi. Vui lòng thực hiện lệnh giao dịch khác!";
                             $flag = "error";
@@ -506,7 +397,7 @@ class PaymentController extends Controller {
             $note = 'User (' . Auth::user()->name . ') have just paymented ' . $request['vpc_Amount'] . ' USD in to your account';
             $user_nap = "user";
             $id_nap = Auth::user()->id;
-            $transaction_history = Transaction_history::add((float) $amountvn, 'Add', $note, Auth::id(), 0, NULL, $user_nap, $id_nap, Auth::user()->phone);
+            $transaction_history = payment::add((float) $amountvn, 'Add', $note, Auth::id(), 0, NULL, $user_nap, $id_nap, Auth::user()->phone);
             $order_code = $transaction_history->developer_trans_id;
             $data = array(
                 "vpc_Amount" => $request['vpc_Amount'],
@@ -536,10 +427,6 @@ class PaymentController extends Controller {
         $flag = "success";
         $transStatus = "";
         try {
-            $user = User::find(Auth::user()->id);
-            $ty_gia_1 = configs::getConfig("ty_gia");
-            $ty_gia = ($ty_gia_1 != null) ? $ty_gia_1->giatri : 23000;
-
             $paymentId = $request->input("paymentId");
             $PayerID = $request->input("PayerID");
             $result = paypal::getReturn($paymentId, $PayerID);
@@ -549,50 +436,13 @@ class PaymentController extends Controller {
                         $req['status'] = 1;
                         $req['developer_trans_id'] = $result->transactions[0]->item_list->items[0]->sku;
                         $amount = $result->transactions[0]->amount->total;
-                        $datauser['updated_at'] = date("Y-m-d H:i:s");
                         //update balance of user
-                        if (Transaction_history::getTransactionBydeveloper_trans_id($req['developer_trans_id'])->status != 1) {
+                        $pment = payment::where('developer_trans_id', $req['developer_trans_id'])->first();
+                        if ($pment->status != 1) {
                             $transStatus = "Giao dịch thành công. Bạn vừa nạp thêm vào tài khoản Storage: " . $amount . " USD";
-                            $datauser['balance'] = (float) ($user->balance + ($amount * $ty_gia));
-                            if ($user->balance < 0) {
-                                $this->tien_tru = abs($user->balance);
-                                $this->noidung = "Trừ " . number_format(abs($user->balance), 0, '.', ',') . " đ tiền thiếu nợ ngày: " . date("H:i:s d/m/Y");
-                                //Insert lich su tru tien
-                                LichSuTruTien::insertLichSuTruTien(
-                                        [
-                                            "user_id" => $user->id,
-                                            "name" => $user->name,
-                                            "phone" => $user->phone,
-                                            "sotien" => $this->tien_tru,
-                                            "noidung" => $this->noidung
-                                        ]
-                                );
-                            }
-                            //Check balance now of user
-                            if (($user->active == "2") && ($datauser['balance'] >= 0)) {
-                                //active user agian
-                                $response = Api::updateApiUser(['uid' => $user->userid, 'suspended' => False]);
-                                $datauser['access_key'] = $response->keys[0]->access_key;
-                                $datauser['secret_key'] = $response->keys[0]->secret_key;
-                                $datauser['active'] = 1;
-                            }
-                            //Update user
-                            User::updateUser($user->id, $datauser);
-
+                            
                             //update transaction
-                            Transaction_history::edit($req, $transStatus);
-
-                            if (($user->vip != 1) && ($user->hinhthuc_thanhtoan == 1)) {
-                                $package = Package_User::getPackages_Users($user->id);
-                                //if not payment for package service
-                                if (isset($package) && ($package->status == 0)) {
-                                    if ((($amount * $ty_gia) + $package->payment) >= 0) {
-                                        Package_User::updatePackages_Users($user->id, ["payment" => 0, "status" => 1]);
-                                    } else {
-                                        Package_User::updatePackages_Users($user->id, ["payment" => (float) (($amount * $ty_gia) + $package->payment)]);
-                                    }
-                                }
-                            }
+                            payment::edit($req, $transStatus);
                         } else {
                             $transStatus = "Lỗi, lệnh giao dịch này đã được thực hiện rồi. Vui lòng thực hiện lệnh giao dịch khác!";
                             $flag = "error";
@@ -655,7 +505,6 @@ class PaymentController extends Controller {
         $flag = "success";
         $transStatus = "";
         try {
-            $user = User::find(Auth::user()->id);
             $rs = BaoKimPayment::verifyResponseUrl($_GET);
             if ($rs == TRUE) {
                 $transStatus = $_GET['transaction_status'];
@@ -666,45 +515,12 @@ class PaymentController extends Controller {
                     $datauser['updated_at'] = date("Y-m-d H:i:s");
 
                     //update balance of user
-                    if (Transaction_history::getTransactionBydeveloper_trans_id($_GET['order_id'])->status != 1) {
+                    $pment = payment::where('developer_trans_id', $_GET['order_id'])->first();
+                    if ($pment->status != 1) {
                         $transStatus = "Giao dịch thành công. Bạn vừa nạp thêm vào tài khoản Storage: " . number_format($amount, 0) . " VNĐ";
-                        $datauser['balance'] = (float) ($user->balance + $amount);
-                        if ($user->balance < 0) {
-                            $this->tien_tru = abs($user->balance);
-                            $this->noidung = "Trừ " . number_format(abs($user->balance), 0, '.', ',') . " đ tiền thiếu nợ ngày: " . date("H:i:s d/m/Y");
-                            //Insert lich su tru tien
-                            LichSuTruTien::insertLichSuTruTien(
-                                    [
-                                        "user_id" => $user->id,
-                                        "name" => $user->name,
-                                        "phone" => $user->phone,
-                                        "sotien" => $this->tien_tru,
-                                        "noidung" => $this->noidung
-                                    ]
-                            );
-                        }
-                        //Check balance now of user
-                        if (($user->active == 2) && ($datauser['balance'] >= 0)) {
-                            //active user agian
-                            $response = Api::updateApiUser(['uid' => $user->userid, 'suspended' => False]);
-                            $datauser['access_key'] = $response->keys[0]->access_key;
-                            $datauser['secret_key'] = $response->keys[0]->secret_key;
-                            $datauser['active'] = 1;
-                        }
-                        User::updateUser($user->id, $datauser);
-                        if (($user->vip != 1) && ($user->hinhthuc_thanhtoan == 1)) {
-                            $package = Package_User::getPackages_Users($user->id);
-                            //if not payment for package service
-                            if (isset($package) && ($package->status == 0)) {
-                                if (($amount + $package->payment) >= 0) {
-                                    Package_User::updatePackages_Users($user->id, ["payment" => 0, "status" => 1]);
-                                } else {
-                                    Package_User::updatePackages_Users($user->id, ["payment" => (float) ($amount + $package->payment)]);
-                                }
-                            }
-                        }
+                        
                         //Update table transaction
-                        Transaction_history::edit($req, $transStatus);
+                        payment::edit($req, $transStatus);
                     } else {
                         $transStatus = "Lỗi, lệnh giao dịch này đã được thực hiện rồi. Vui lòng thực hiện lệnh giao dịch khác!";
                         $flag = "error";
