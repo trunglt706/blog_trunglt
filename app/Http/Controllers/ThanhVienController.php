@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-usse \App\Http\Requests\UpdateInforUserRequest;
+use \App\Http\Requests\UpdateInforUserRequest;
 use App\Http\Requests\UpdateAccountUserRequest;
 use App\users;
 use App\baiviets;

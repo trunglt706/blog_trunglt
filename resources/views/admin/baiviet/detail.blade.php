@@ -119,7 +119,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="checkbox icheck col-md-2">
+                                <div class="checkbox col-md-2">
                                     <label>
                                         <input type="checkbox" name="important" @if($object['bviet']->important == 1) checked @endif> Tin quan trọng
                                     </label>
